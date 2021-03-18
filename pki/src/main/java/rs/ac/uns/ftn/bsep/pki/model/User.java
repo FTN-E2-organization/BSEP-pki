@@ -40,12 +40,11 @@ public class User implements UserDetails {
 	@OneToOne(cascade = CascadeType.ALL, optional = true)
 	private Client client;
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Collection<Authority> authorities = new ArrayList<Authority>();
     	authorities.add(this.authority);
-		return (Collection<? extends GrantedAuthority>) authorities;
+		return authorities;
 	}
 	
 	@Override
