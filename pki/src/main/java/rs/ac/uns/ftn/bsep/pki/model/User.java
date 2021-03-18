@@ -44,7 +44,7 @@ public class User implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Collection<Authority> authorities = new ArrayList<Authority>();
     	authorities.add(this.authority);
-		return (Collection<? extends GrantedAuthority>) authorities;
+		return authorities;
 	}
 	
 	@Override
