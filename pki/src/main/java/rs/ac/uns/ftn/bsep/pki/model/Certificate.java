@@ -13,9 +13,6 @@ public class Certificate {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(nullable = true)
-	private String revokeReason;
-	
 	@Column(nullable = false)
 	private Boolean isRevoked;
 
@@ -24,10 +21,6 @@ public class Certificate {
 
 	public Long getId() {
 		return id;
-	}
-
-	public String getRevokeReason() {
-		return revokeReason;
 	}
 
 	public Boolean getIsRevoked() {
