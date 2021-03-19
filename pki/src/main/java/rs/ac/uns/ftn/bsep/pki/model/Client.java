@@ -42,6 +42,9 @@ public class Client {
 	
 	@Column
 	private String state;
+	
+	@Column
+	private String locality;
 
 	public Long getId() {
 		return id;
@@ -82,6 +85,13 @@ public class Client {
 	public String getState() {
 		return state;
 	}
-	
+
+	public String getGivenName() {
+		return givenName;
+	}
+
+	public String getLocality() {
+		return locality;
+	}
 	
 }
