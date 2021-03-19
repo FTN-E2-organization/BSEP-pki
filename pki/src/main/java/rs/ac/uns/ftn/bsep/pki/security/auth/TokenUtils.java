@@ -8,14 +8,13 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import rs.ac.uns.ftn.bsep.pki.model.User;
 
 //Utility klasa za rad sa JSON Web Tokenima
 @Component
 public class TokenUtils {
 
 	// Izdavac tokena
-	@Value("spring-isa-project")
+	@Value("security-project")
 	private String APP_NAME;
 
 	// Tajna koju samo backend aplikacija treba da zna kako bi mogla da generise i proveri JWT https://jwt.io/
@@ -32,9 +31,6 @@ public class TokenUtils {
 
 	// Moguce je generisati JWT za razlicite klijente
 	private static final String AUDIENCE_WEB = "web";
-	private static final String AUDIENCE_MOBILE = "mobile";
-	private static final String AUDIENCE_TABLET = "tablet";
-
 	
 	private SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
 
@@ -72,20 +68,10 @@ public class TokenUtils {
 		return refreshedToken;
 	}
 
-	public boolean canTokenBeRefreshed(String token, Date lastPasswordReset) {
-		final Date created = this.getIssuedAtDateFromToken(token);
-		return (!(this.isCreatedBeforeLastPasswordReset(created, lastPasswordReset))
-				&& (!(this.isTokenExpired(token)) || this.ignoreTokenExpiration(token)));
-	}
 
-	public Boolean validateToken(String token, UserDetails userDetails) {
-		
-		User user = (User) userDetails;
-		final String username = getUsernameFromToken(token);
-		final Date created = getIssuedAtDateFromToken(token);
-		
-		return (username != null && username.equals(userDetails.getUsername())
-				/*&& !isCreatedBeforeLastPasswordReset(created, user.getLastPasswordResetDate())*/);
+	public Boolean validateToken(String token, UserDetails userDetails) {		
+		final String username = getUsernameFromToken(token);		
+		return (username != null && username.equals(userDetails.getUsername()));
 	}
 
 	public String getUsernameFromToken(String token) {
@@ -151,20 +137,6 @@ public class TokenUtils {
 		return request.getHeader(AUTH_HEADER);
 	}
 	
-	private Boolean isCreatedBeforeLastPasswordReset(Date created, Date lastPasswordReset) {
-		return (lastPasswordReset != null && created.before(lastPasswordReset));
-	}
-
-	private Boolean isTokenExpired(String token) {
-		final Date expiration = this.getExpirationDateFromToken(token);
-		return expiration.before(new Date());
-	}
-
-	private Boolean ignoreTokenExpiration(String token) {
-		String audience = this.getAudienceFromToken(token);
-		return (audience.equals(AUDIENCE_TABLET) || audience.equals(AUDIENCE_MOBILE));
-	}
-
 	private Claims getAllClaimsFromToken(String token) {
 		Claims claims;
 		try {
