@@ -7,7 +7,7 @@ import rs.ac.uns.ftn.bsep.pki.exception.ValidationException;
 
 public class CertificateValidator {
 
-	public void addCertificateValidation(AddCertificateDTO certificateDTO) throws Exception {
+	public static void addCertificateValidation(AddCertificateDTO certificateDTO) throws Exception {
 		
 		if(certificateDTO.issuerId <= 0 || certificateDTO.subjectId <= 0)
 			throw new ValidationException("Wrong format of issuer and subject ID.");
@@ -21,7 +21,7 @@ public class CertificateValidator {
 			throw new ValidationException("End date must be greater or equal than start date.");
 		if(certificateDTO.commonName == null)
 			throw new ValidationException("Common name is required field.");
-		if(certificateDTO.coutryCode == null)
+		if(certificateDTO.countryCode == null)
 			throw new ValidationException("Country code is required field.");
 		if(certificateDTO.state == null)
 			throw new ValidationException("State is required field.");
@@ -45,7 +45,7 @@ public class CertificateValidator {
 		}
 	}
 	
-	private boolean isValidEmail(String email)
+	private static boolean isValidEmail(String email)
     {
         String emailRegex = "^[a-zA-Z0-9_+&*-] + (?:\\." + "[a-zA-Z0-9_+&*-]+)*@" + "A-Z]{2,7}$";
         Pattern pattern = Pattern.compile(emailRegex);

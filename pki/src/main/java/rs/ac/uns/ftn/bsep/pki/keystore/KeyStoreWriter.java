@@ -1,17 +1,11 @@
 package rs.ac.uns.ftn.bsep.pki.keystore;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.nio.file.Paths;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
@@ -30,17 +24,15 @@ public class KeyStoreWriter {
         this.keyStore = keyStore;
     }
 
-    public KeyStoreWriter() {
+    public KeyStoreWriter() throws Exception {
         try {
             keyStore = KeyStore.getInstance("JKS", "SUN");
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) {
+			throw new Exception(e);
+		}
     }
 
-    public void loadKeyStore(String fileName, char[] password) {
+    public void loadKeyStore(String fileName, char[] password) throws Exception {
         try {
             if(fileName != null) {
                 keyStore.load(new FileInputStream(Paths.get(ResourceUtils.getFile("classpath:")+"\\..\\..\\src\\main\\resources").toRealPath().toString()+"\\"+fileName), password);
@@ -48,47 +40,32 @@ public class KeyStoreWriter {
                 //Ako je cilj kreirati novi KeyStore poziva se i dalje load, pri cemu je prvi parametar null
                 keyStore.load(null, password);
             }
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (CertificateException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) {
+			throw new Exception(e);
+		}
     }
 
-    public void saveKeyStore(String fileName, char[] password) {
+    public void saveKeyStore(String fileName, char[] password) throws Exception {
         try {
             keyStore.store(new FileOutputStream(Paths.get(ResourceUtils.getFile("classpath:")+"\\..\\..\\src\\main\\resources").toRealPath().toString()+"\\"+fileName), password);
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (CertificateException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) {
+			throw new Exception(e);
+		}
     }
 
-    public void write(String alias, PrivateKey privateKey, char[] password, Certificate certificate) {
+    public void write(String alias, PrivateKey privateKey, char[] password, Certificate certificate) throws Exception {
 		try {
 			keyStore.setKeyEntry(alias, privateKey, password, new Certificate[] {certificate});
-		} catch (KeyStoreException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			throw new Exception(e);
 		}
 	}
 
-    public Certificate[] getChain(String alias) {
+    public Certificate[] getChain(String alias) throws Exception {
         try {
             return keyStore.getCertificateChain(alias);
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        }
-        return null;       
+        } catch (Exception e) {
+			throw new Exception(e);
+		}      
     }
 }
