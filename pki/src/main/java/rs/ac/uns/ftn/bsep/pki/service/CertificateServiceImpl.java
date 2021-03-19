@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.bsep.pki.service;
 
+import java.io.FileNotFoundException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -7,6 +8,7 @@ import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.Security;
 import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -91,17 +93,22 @@ public class CertificateServiceImpl implements CertificateService{
 		KeyPair keyPairSubject = getKeyPair();
 		String keyStorePassword = enviroment.getProperty("spring.keystore.password");
 		String keyStorePath;
-		if(certificateDTO.isCA)
+		String issuerKeyStorePath;
+		if(certificateDTO.isCA) {
 			keyStorePath = "./keystore/ca.jks";
-		else
+			issuerKeyStorePath = "./keystore/root_ca.jks";
+		}
+		else {
 			keyStorePath = "./keystore/end_entity.jks";
+			issuerKeyStorePath = "./keystore/ca.jks";
+		}
 		
 		Certificate savedCertificate =  save(certificateDTO);
 		String serialNumber = savedCertificate.getId().toString();
 		
 		SubjectData subjectData = generateSubjectData(certificateDTO, keyPairSubject.getPublic(), serialNumber);
-		IssuerData issuerData = keyStoreReader.readIssuerFromStore(keyStorePath, certificateDTO.issuerId.toString(), 
-								keyStorePassword.toCharArray(), keyStorePassword.toCharArray());
+		IssuerData issuerData = keyStoreReader.readIssuerFromStore(issuerKeyStorePath, certificateDTO.issuerId.toString(), 
+				keyStorePassword.toCharArray(), keyStorePassword.toCharArray());
 		
 		// Generise se sertifikat za subjekta, potpisan od strane issuer-a
 		CertificateGenerator certificateGenerator = new CertificateGenerator();
@@ -131,6 +138,7 @@ public class CertificateServiceImpl implements CertificateService{
         try {
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
             SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
+            Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
             keyGen.initialize(2048, random);
             return keyGen.generateKeyPair();
         } catch (NoSuchAlgorithmException e) {
