@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.bsep.pki.keystore;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.nio.file.Paths;
 import java.security.KeyStore;
@@ -34,12 +35,9 @@ public class KeyStoreWriter {
 
     public void loadKeyStore(String fileName, char[] password) throws Exception {
         try {
-            if(fileName != null) {
-                keyStore.load(new FileInputStream(Paths.get(ResourceUtils.getFile("classpath:")+"\\..\\..\\src\\main\\resources").toRealPath().toString()+"\\"+fileName), password);
-            } else {
-                //Ako je cilj kreirati novi KeyStore poziva se i dalje load, pri cemu je prvi parametar null
-                keyStore.load(null, password);
-            }
+        	keyStore.load(new FileInputStream(fileName), password);
+        } catch (FileNotFoundException e) {
+    		keyStore.load(null, password);
         } catch (Exception e) {
 			throw new Exception(e);
 		}
@@ -47,7 +45,7 @@ public class KeyStoreWriter {
 
     public void saveKeyStore(String fileName, char[] password) throws Exception {
         try {
-            keyStore.store(new FileOutputStream(Paths.get(ResourceUtils.getFile("classpath:")+"\\..\\..\\src\\main\\resources").toRealPath().toString()+"\\"+fileName), password);
+        	keyStore.store(new FileOutputStream(fileName), password);
         } catch (Exception e) {
 			throw new Exception(e);
 		}

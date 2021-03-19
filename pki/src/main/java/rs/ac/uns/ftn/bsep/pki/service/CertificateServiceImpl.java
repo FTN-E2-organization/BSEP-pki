@@ -65,7 +65,7 @@ public class CertificateServiceImpl implements CertificateService{
 	public void addSelfSignedCertificate(AddCertificateDTO certificateDTO) throws Exception{
 		KeyPair keyPairSubject = getKeyPair();
 		String keyStorePassword = enviroment.getProperty("spring.keystore.password");
-		String keyStorePath = enviroment.getProperty("keystore/root_ca.jks");
+		String keyStorePath = "./keystore/root_ca.jks";
 		
 		Certificate savedCertificate =  save(certificateDTO);
 		String serialNumber = savedCertificate.getId().toString();
@@ -92,9 +92,9 @@ public class CertificateServiceImpl implements CertificateService{
 		String keyStorePassword = enviroment.getProperty("spring.keystore.password");
 		String keyStorePath;
 		if(certificateDTO.isCA)
-			keyStorePath = enviroment.getProperty("keystore/ca.jks");
+			keyStorePath = "./keystore/ca.jks";
 		else
-			keyStorePath = enviroment.getProperty("keystore/end_entity.jks");
+			keyStorePath = "./keystore/end_entity.jks";
 		
 		Certificate savedCertificate =  save(certificateDTO);
 		String serialNumber = savedCertificate.getId().toString();

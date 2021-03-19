@@ -35,8 +35,8 @@ public class CertificateValidator {
 				throw new ValidationException("Surname is required field.");
 			if(certificateDTO.email == null)
 				throw new ValidationException("Email is required field.");
-			if(!isValidEmail(certificateDTO.email))
-				throw new ValidationException("Wrong format of email.");
+			/*if(!isValidEmail(certificateDTO.email))
+				throw new ValidationException("Wrong format of email.");*/
 		}else {
 			if(certificateDTO.organization == null)
 				throw new ValidationException("Organization is required field.");
