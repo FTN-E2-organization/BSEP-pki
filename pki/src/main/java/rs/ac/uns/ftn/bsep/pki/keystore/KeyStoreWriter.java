@@ -75,13 +75,13 @@ public class KeyStoreWriter {
         }
     }
 
-    public void write(String alias, PrivateKey privateKey, char[] password, Certificate[] certificates) {
-        try {
-            keyStore.setKeyEntry(alias, privateKey, password, certificates);
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        }
-    }
+    public void write(String alias, PrivateKey privateKey, char[] password, Certificate certificate) {
+		try {
+			keyStore.setKeyEntry(alias, privateKey, password, new Certificate[] {certificate});
+		} catch (KeyStoreException e) {
+			e.printStackTrace();
+		}
+	}
 
     public Certificate[] getChain(String alias) {
         try {

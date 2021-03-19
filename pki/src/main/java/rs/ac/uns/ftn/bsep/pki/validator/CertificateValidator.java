@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.bsep.pki.validator;
 
+import java.time.LocalDate;
 import java.util.regex.Pattern;
 import rs.ac.uns.ftn.bsep.pki.dto.AddCertificateDTO;
 import rs.ac.uns.ftn.bsep.pki.exception.ValidationException;
@@ -14,6 +15,8 @@ public class CertificateValidator {
 			throw new ValidationException("Start date is required field.");
 		if(certificateDTO.endDate == null)
 			throw new ValidationException("End date is required field.");
+		if(certificateDTO.startDate.isBefore(LocalDate.now()))
+			throw new ValidationException("Start date must be greater or equal than today.");
 		if(certificateDTO.endDate.isBefore(certificateDTO.startDate))
 			throw new ValidationException("End date must be greater or equal than start date.");
 		if(certificateDTO.commonName == null)

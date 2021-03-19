@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.bsep.pki.model;
 
+import java.time.LocalDate;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,6 +26,12 @@ public class Certificate {
 	
 	@Column(nullable = false)
 	private Long issuerId;
+	
+	@Column(nullable = false)
+	private LocalDate startDate;
+	
+	@Column(nullable = false)
+	private LocalDate endDate;
 
 	public Long getId() {
 		return id;
@@ -63,6 +71,22 @@ public class Certificate {
 
 	public void setIssuerId(Long issuerId) {
 		this.issuerId = issuerId;
+	}
+
+	public LocalDate getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(LocalDate startDate) {
+		this.startDate = startDate;
+	}
+
+	public LocalDate getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(LocalDate endDate) {
+		this.endDate = endDate;
 	}
 	
 }

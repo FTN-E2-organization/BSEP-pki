@@ -12,6 +12,8 @@ public class CertificateMapper {
 		certificate.setIssuerId(certificateDTO.issuerId);
 		certificate.setIsCA(certificateDTO.isCA);
 		certificate.setIsRevoked(false);
+		certificate.setStartDate(certificateDTO.startDate);
+		certificate.setEndDate(certificateDTO.endDate);
 		
 		return certificate;
 	}
