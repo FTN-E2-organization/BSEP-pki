@@ -12,7 +12,10 @@ import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +24,12 @@ import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.bsep.pki.certificate.CertificateGenerator;
 import rs.ac.uns.ftn.bsep.pki.data.IssuerData;
 import rs.ac.uns.ftn.bsep.pki.data.SubjectData;
-import rs.ac.uns.ftn.bsep.pki.dto.AddCertificateDTO;
+import rs.ac.uns.ftn.bsep.pki.dto.CertificateDTO;
 import rs.ac.uns.ftn.bsep.pki.exception.BadRequestException;
 import rs.ac.uns.ftn.bsep.pki.exception.ValidationException;
 import rs.ac.uns.ftn.bsep.pki.keystore.KeyStoreReader;
 import rs.ac.uns.ftn.bsep.pki.keystore.KeyStoreWriter;
+import rs.ac.uns.ftn.bsep.pki.mapper.CertificateMapper;
 import rs.ac.uns.ftn.bsep.pki.model.Certificate;
 import rs.ac.uns.ftn.bsep.pki.repository.CertificateRepository;
 
@@ -63,7 +67,7 @@ public class CertificateServiceImpl implements CertificateService{
 		}	
 	}
 	
-	public void addCertificate(AddCertificateDTO certificateDTO, boolean isSelfSigned) throws Exception{
+	public void addCertificate(CertificateDTO certificateDTO, boolean isSelfSigned) throws Exception{
 		KeyPair keyPairSubject = getKeyPair();
 		String keyStorePassword = enviroment.getProperty("spring.keystore.password");
 		String keyStorePath = "";
@@ -74,7 +78,7 @@ public class CertificateServiceImpl implements CertificateService{
 			keyStorePath = "./keystore/root_ca.jks";
 			certificateDTO.isCA = true;
 			
-			Certificate savedCertificate =  save(certificateDTO);
+			Certificate savedCertificate =  save(certificateDTO, keyStorePath);
 			String serialNumber = savedCertificate.getId().toString();
 			
 			subjectData = generateSubjectData(certificateDTO, keyPairSubject.getPublic(), serialNumber);
@@ -90,7 +94,7 @@ public class CertificateServiceImpl implements CertificateService{
 				keyStorePath = "./keystore/end_entity.jks";
 			}
 			
-			Certificate savedCertificate =  save(certificateDTO);
+			Certificate savedCertificate =  save(certificateDTO, keyStorePath);
 			String serialNumber = savedCertificate.getId().toString();
 			
 			subjectData = generateSubjectData(certificateDTO, keyPairSubject.getPublic(), serialNumber);
@@ -119,7 +123,7 @@ public class CertificateServiceImpl implements CertificateService{
 		keyStoreWriter.saveKeyStore(keyStorePath, keyStorePassword.toCharArray());
 	}
 	
-	public Certificate save(AddCertificateDTO certificateDTO) {
+	public Certificate save(CertificateDTO certificateDTO, String keystorePath) {
 		Certificate certificate = new Certificate();
 		
 		certificate.setSubjectId(certificateDTO.subjectId);
@@ -128,6 +132,7 @@ public class CertificateServiceImpl implements CertificateService{
 		certificate.setIsRevoked(false);
 		certificate.setStartDate(certificateDTO.startDate);
 		certificate.setEndDate(certificateDTO.endDate);
+		certificate.setKeystorePath(keystorePath);
 		
 		return certificateRepository.save(certificate);
 	}
@@ -147,7 +152,7 @@ public class CertificateServiceImpl implements CertificateService{
         return null;
     }
 	
-	private SubjectData generateSubjectData(AddCertificateDTO certificateDTO, PublicKey subjectPublicKey, String serialNumber) {
+	private SubjectData generateSubjectData(CertificateDTO certificateDTO, PublicKey subjectPublicKey, String serialNumber) {
 		try {
 			SimpleDateFormat iso8601Formater = new SimpleDateFormat("yyyy-MM-dd");
 			Date startDate = iso8601Formater.parse(certificateDTO.startDate.toString());
@@ -172,7 +177,7 @@ public class CertificateServiceImpl implements CertificateService{
 		return null;
 	}
 	
-	private IssuerData generateSelfSignedIssuerData(AddCertificateDTO certificateDTO, PrivateKey issuerPrivateKey) {
+	private IssuerData generateSelfSignedIssuerData(CertificateDTO certificateDTO, PrivateKey issuerPrivateKey) {
 		
 		X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
 		builder.addRDN(BCStyle.CN, certificateDTO.commonName);
@@ -198,6 +203,66 @@ public class CertificateServiceImpl implements CertificateService{
 			return false;
 		
 		return true;
+	}
+
+	@Override
+	public Collection<CertificateDTO> getAllCA() throws Exception{
+		Collection<CertificateDTO> CAs = new ArrayList<CertificateDTO>();
+		Collection<Certificate> allCertificates = certificateRepository.findAll();
+		for (Certificate certificate : allCertificates) {
+			try {
+				KeyStoreReader ksr = new KeyStoreReader();
+				X509Certificate cer = (X509Certificate) ksr.readCertificate(certificate.getKeystorePath(), enviroment.getProperty("spring.keystore.password"), certificate.getId().toString());
+				
+				if(cer.getBasicConstraints()!=-1) {
+					//if(isValid(Long.valueOf(CertificateMapper.toCertificateDTO(cer).getIssuerId()))) {
+						CAs.add(CertificateMapper.toCertificateDTO(cer, certificate));
+					//}
+				}
+				
+			}catch(Exception e) {
+				throw new Exception(e.getMessage());
+			}
+			
+		}
+		return CAs;
+	}
+
+	@Override
+	public Collection<CertificateDTO> getAll() throws Exception {
+		Collection<CertificateDTO> certificates = new ArrayList<CertificateDTO>();
+		Collection<Certificate> allCertificates = certificateRepository.findAll();
+		for (Certificate certificate : allCertificates) {
+			try {
+				KeyStoreReader ksr = new KeyStoreReader();
+				X509Certificate cer = (X509Certificate) ksr.readCertificate(certificate.getKeystorePath(), enviroment.getProperty("spring.keystore.password"), certificate.getId().toString());
+				
+				//if(isValid(Long.valueOf(CertificateMapper.toCertificateDTO(cer).getIssuerId()))) {
+					certificates.add(CertificateMapper.toCertificateDTO(cer, certificate));
+				//}
+				
+			}catch(Exception e) {
+				throw new Exception(e.getMessage());
+			}
+			
+		}
+		return certificates;
+	}
+
+	@Override
+	public CertificateDTO getById(Long id) throws Exception {
+		Certificate certificate = certificateRepository.getOne(id);
+		try {
+			KeyStoreReader ksr = new KeyStoreReader();
+			X509Certificate cer = (X509Certificate) ksr.readCertificate(certificate.getKeystorePath(), enviroment.getProperty("spring.keystore.password"), certificate.getId().toString());
+			
+			//if(isValid(Long.valueOf(CertificateMapper.toCertificateDTO(cer).getIssuerId()))) {
+				return CertificateMapper.toCertificateDTO(cer, certificate);
+			//}
+			
+		}catch(Exception e) {
+			throw new Exception(e.getMessage());
+		}
 	}
 
 }
