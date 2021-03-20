@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "client")
-public class Client {
+public class Subject {
 
 	@Id
 	@Column(name = "id")
@@ -17,7 +17,7 @@ public class Client {
 	private Long id;
 	
 	@Column(nullable = false)
-	private TypeOfClient typeOfClient;
+	private TypeOfSubject typeOfClient;
 	
 	@Column(nullable = false, length = 64)
 	private String commonName;
@@ -50,7 +50,7 @@ public class Client {
 		return id;
 	}
 
-	public TypeOfClient getTypeOfClient() {
+	public TypeOfSubject getTypeOfClient() {
 		return typeOfClient;
 	}
 
