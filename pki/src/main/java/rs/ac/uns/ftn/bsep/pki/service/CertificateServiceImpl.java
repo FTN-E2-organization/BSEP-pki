@@ -249,4 +249,20 @@ public class CertificateServiceImpl implements CertificateService{
 		return certificates;
 	}
 
+	@Override
+	public CertificateDTO getById(Long id) throws Exception {
+		Certificate certificate = certificateRepository.getOne(id);
+		try {
+			KeyStoreReader ksr = new KeyStoreReader();
+			X509Certificate cer = (X509Certificate) ksr.readCertificate(certificate.getKeystorePath(), enviroment.getProperty("spring.keystore.password"), certificate.getId().toString());
+			
+			//if(isValid(Long.valueOf(CertificateMapper.toCertificateDTO(cer).getIssuerId()))) {
+				return CertificateMapper.toCertificateDTO(cer, certificate);
+			//}
+			
+		}catch(Exception e) {
+			throw new Exception(e.getMessage());
+		}
+	}
+
 }
