@@ -1,8 +1,11 @@
 package rs.ac.uns.ftn.bsep.pki.controller;
 
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -10,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import rs.ac.uns.ftn.bsep.pki.dto.AddCertificateDTO;
+import rs.ac.uns.ftn.bsep.pki.dto.CertificateDTO;
 import rs.ac.uns.ftn.bsep.pki.exception.ValidationException;
 import rs.ac.uns.ftn.bsep.pki.service.CertificateService;
 import rs.ac.uns.ftn.bsep.pki.validator.CertificateValidator;
@@ -38,7 +41,7 @@ public class CertificateController {
 	}
 	
 	@PostMapping(value = "/non-self-signed", consumes = "application/json")
-	public ResponseEntity<?> addNonSelfSignedCertificate(@RequestBody AddCertificateDTO certificateDTO){
+	public ResponseEntity<?> addNonSelfSignedCertificate(@RequestBody CertificateDTO certificateDTO){
 		try {
 			CertificateValidator.addCertificateValidation(certificateDTO);
 			certificateService.addCertificate(certificateDTO, false);
@@ -53,7 +56,7 @@ public class CertificateController {
 	}
 	
 	@PostMapping(value = "/self-signed", consumes = "application/json")
-	public ResponseEntity<?> addSelfSignedCertificate(@RequestBody AddCertificateDTO certificateDTO){
+	public ResponseEntity<?> addSelfSignedCertificate(@RequestBody CertificateDTO certificateDTO){
 		try {
 			CertificateValidator.addCertificateValidation(certificateDTO);
 			certificateService.addCertificate(certificateDTO, true);
@@ -61,6 +64,17 @@ public class CertificateController {
 		}
 		catch (ValidationException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/ca")
+	public ResponseEntity<?> getAllCAs(){
+		try {
+			Collection<CertificateDTO> caDTOs = certificateService.getAllCA();
+			return new ResponseEntity<Collection<CertificateDTO>>(caDTOs, HttpStatus.OK);
 		}
 		catch (Exception e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

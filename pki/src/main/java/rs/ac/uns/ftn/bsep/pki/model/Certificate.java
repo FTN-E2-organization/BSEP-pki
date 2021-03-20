@@ -32,6 +32,9 @@ public class Certificate {
 	
 	@Column(nullable = false)
 	private LocalDate endDate;
+	
+	@Column(nullable = false)
+	private String keystorePath;
 
 	public Long getId() {
 		return id;
@@ -87,6 +90,14 @@ public class Certificate {
 
 	public void setEndDate(LocalDate endDate) {
 		this.endDate = endDate;
+	}
+
+	public String getKeystorePath() {
+		return keystorePath;
+	}
+
+	public void setKeystorePath(String keystorePath) {
+		this.keystorePath = keystorePath;
 	}
 	
 }

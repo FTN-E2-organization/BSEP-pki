@@ -3,12 +3,12 @@ package rs.ac.uns.ftn.bsep.pki.validator;
 import java.time.LocalDate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import rs.ac.uns.ftn.bsep.pki.dto.AddCertificateDTO;
+import rs.ac.uns.ftn.bsep.pki.dto.CertificateDTO;
 import rs.ac.uns.ftn.bsep.pki.exception.ValidationException;
 
 public class CertificateValidator {
 
-	public static void addCertificateValidation(AddCertificateDTO certificateDTO) throws Exception {
+	public static void addCertificateValidation(CertificateDTO certificateDTO) throws Exception {
 		
 		if(certificateDTO.issuerId <= 0 || certificateDTO.subjectId <= 0)
 			throw new ValidationException("Wrong format of issuer or subject ID.");
