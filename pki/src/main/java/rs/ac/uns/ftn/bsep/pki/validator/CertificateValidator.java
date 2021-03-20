@@ -28,21 +28,31 @@ public class CertificateValidator {
 			throw new ValidationException("State is required field.");
 		if(certificateDTO.locality == null || certificateDTO.locality.isEmpty())
 			throw new ValidationException("Locality is required field.");
+		if(certificateDTO.givenName == null)
+			certificateDTO.givenName = "";
+		if(certificateDTO.surname == null)
+			certificateDTO.surname = "";
+		if(certificateDTO.email == null)
+			certificateDTO.email = "";
+		if(certificateDTO.organization == null)
+			certificateDTO.organization = "";
+		if(certificateDTO.organizationUnit == null)
+			certificateDTO.organizationUnit = "";
 		
 		if(certificateDTO.typeOfClient.equals("Person")) {
-			if(certificateDTO.givenName == null || certificateDTO.givenName.isEmpty())
+			if(certificateDTO.givenName.isEmpty())
 				throw new ValidationException("Given name is required field.");
-			if(certificateDTO.surname == null || certificateDTO.surname.isEmpty())
+			if(certificateDTO.surname.isEmpty())
 				throw new ValidationException("Surname is required field.");
-			if(certificateDTO.email == null || certificateDTO.email.isEmpty())
+			if(certificateDTO.email.isEmpty())
 				throw new ValidationException("Email is required field.");
 			if(!isValidEmail(certificateDTO.email))
 				throw new ValidationException("Wrong format of email.");
 		}
 		else if(certificateDTO.typeOfClient.equals("Software")) {
-			if(certificateDTO.organization == null || certificateDTO.organization.isEmpty())
+			if(certificateDTO.organization.isEmpty())
 				throw new ValidationException("Organization is required field.");
-			if(certificateDTO.organizationUnit == null || certificateDTO.organizationUnit.isEmpty())
+			if(certificateDTO.organizationUnit.isEmpty())
 				throw new ValidationException("Organization unit is required field.");
 		}
 		else {
