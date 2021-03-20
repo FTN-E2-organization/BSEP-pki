@@ -2,8 +2,9 @@ package rs.ac.uns.ftn.bsep.pki.dto;
 
 import java.time.LocalDate;
 
-public class AddCertificateDTO {
+public class CertificateDTO {
 
+	public Long id;
 	public Long subjectId;
 	public Long issuerId;
 	public LocalDate startDate;
@@ -21,12 +22,13 @@ public class AddCertificateDTO {
     public String state;
     public String locality;
     
-    public AddCertificateDTO() {}
+    public CertificateDTO() {}
 
-	public AddCertificateDTO(Long subjectId, Long issuerId, LocalDate startDate, LocalDate endDate, boolean isCA,
+	public CertificateDTO(Long id, Long subjectId, Long issuerId, LocalDate startDate, LocalDate endDate, boolean isCA,
 			String typeOfClient, String commonName, String givenName, String surname, String organization, String organizationUnit,
 			String coutryCode, String email, String state, String locality) {
 		super();
+		this.id = id;
 		this.subjectId = subjectId;
 		this.issuerId = issuerId;
 		this.startDate = startDate;
