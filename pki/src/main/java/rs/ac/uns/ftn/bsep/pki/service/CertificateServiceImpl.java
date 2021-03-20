@@ -22,6 +22,7 @@ import rs.ac.uns.ftn.bsep.pki.certificate.CertificateGenerator;
 import rs.ac.uns.ftn.bsep.pki.data.IssuerData;
 import rs.ac.uns.ftn.bsep.pki.data.SubjectData;
 import rs.ac.uns.ftn.bsep.pki.dto.AddCertificateDTO;
+import rs.ac.uns.ftn.bsep.pki.exception.BadRequestException;
 import rs.ac.uns.ftn.bsep.pki.exception.ValidationException;
 import rs.ac.uns.ftn.bsep.pki.keystore.KeyStoreReader;
 import rs.ac.uns.ftn.bsep.pki.keystore.KeyStoreWriter;
@@ -66,7 +67,6 @@ public class CertificateServiceImpl implements CertificateService{
 		KeyPair keyPairSubject = getKeyPair();
 		String keyStorePassword = enviroment.getProperty("spring.keystore.password");
 		String keyStorePath = "";
-		String issuerKeyStorePath = "";
 		SubjectData subjectData;
 		IssuerData issuerData;
 		
@@ -85,19 +85,28 @@ public class CertificateServiceImpl implements CertificateService{
 			
 			if(certificateDTO.isCA) {
 				keyStorePath = "./keystore/ca.jks";
-				issuerKeyStorePath = "./keystore/root_ca.jks";
 			}
 			else {
 				keyStorePath = "./keystore/end_entity.jks";
-				issuerKeyStorePath = "./keystore/ca.jks";
 			}
 			
 			Certificate savedCertificate =  save(certificateDTO);
 			String serialNumber = savedCertificate.getId().toString();
 			
 			subjectData = generateSubjectData(certificateDTO, keyPairSubject.getPublic(), serialNumber);
-			issuerData = keyStoreReader.readIssuerFromStore(issuerKeyStorePath, certificateDTO.issuerId.toString(), 
-					keyStorePassword.toCharArray(), keyStorePassword.toCharArray());
+			
+			try {
+				issuerData = keyStoreReader.readIssuerFromStore("./keystore/root_ca.jks", certificateDTO.issuerId.toString(), 
+						keyStorePassword.toCharArray(), keyStorePassword.toCharArray());
+			}catch (Exception e) {
+				try {
+					issuerData = keyStoreReader.readIssuerFromStore("./keystore/ca.jks", certificateDTO.issuerId.toString(), 
+							keyStorePassword.toCharArray(), keyStorePassword.toCharArray());
+				}
+				catch (Exception ex) {
+					throw new BadRequestException("Issuer certificate not found.");
+				}
+			} 
 		}
 		
 		// Generise se sertifikat za subjekta, potpisan od strane issuer-a
