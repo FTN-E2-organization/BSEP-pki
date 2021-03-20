@@ -298,6 +298,24 @@ public class CertificateServiceImpl implements CertificateService{
 				return false;
 			}
 		}
+		return isDateValid(id);
+	}
+	
+	private boolean isDateValid(Long id) throws Exception {
+		Certificate certificate = certificateRepository.getOne(id);
+		try {
+			KeyStoreReader ksr = new KeyStoreReader();
+			X509Certificate c = (X509Certificate) ksr.readCertificate(certificate.getKeystorePath(), enviroment.getProperty("spring.keystore.password"), certificate.getId().toString());
+		
+			LocalDate endDate = CertificateMapper.toCertificateDTO(c, certificate).endDate;
+			
+			if(endDate.isBefore(LocalDate.now())) {
+				return false;
+			}
+		}catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		
 		return true;
 	}
 
