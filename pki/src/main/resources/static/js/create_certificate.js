@@ -34,6 +34,38 @@ $(document).ready(function () {
 		}
 	});
 	
+	$.ajax({
+		type:"GET", 
+		url: "/api/certificate/ca",
+		headers: {
+            'Authorization': 'Bearer ' + window.localStorage.getItem('token')
+        },
+		contentType: "application/json",
+		success:function(issuers){
+			if(issuers.length == 0){
+				$('#nss').prop('disabled',true);
+				return;
+			}
+			$('#nss').prop('disabled',false);
+			$('#issuers').empty();
+			for (let i of issuers){
+				let  out = "";
+				if(i.givenName != ""){
+					out = "GN=" + i.givenName + ' ' + "SN=" + i.surname + ', ' + "CN=" + i.commonName + ', ' + "EMAIL=" + i.email + ', ' + 
+					"C=" + i.countryCode + ', ' + "S=" + i.state + ', ' + "L=" + i.locality;
+				}
+				else{
+					out = "O=" + i.organization + ', ' + "CN=" + i.commonName + ', ' + "OU=" + i.organizationUnit + ', ' + 
+					"C=" + i.countryCode + ', ' + "S=" + i.state + ', ' + "L=" + i.locality;
+				}
+				$('#issuers').append('<option id="' + i.id + '">' + out +'</option>');
+			}
+		},
+		error:function(){
+			console.log('error getting issuers');
+		}
+	});
+	
 	var $nss = $("input:radio[name=nss]");
 	var $ss = $("input:radio[name=ss]");
 	
@@ -63,8 +95,11 @@ $(document).ready(function () {
 		
 		let selectedSubjectId = $('#subjects option:selected').attr('id');
 		let selectedSubject = subjectArray[selectedSubjectId - 1];
+		let selectedIssuerId = $('#issuers option:selected').attr('id');
 		
-		alert(JSON.stringify(selectedSubject));
+		if($('#ss').is(':checked')){
+			selectedIssuerId = selectedSubjectId;
+		}
 		
 		$.ajax({
 			type:"POST", 
@@ -74,7 +109,7 @@ $(document).ready(function () {
 	        },
 			data: JSON.stringify({ 
 				subjectId: selectedSubject.id,
-				issuerId : 1,
+				issuerId : selectedIssuerId,
 				startDate: $('#startDate').val(),
 				endDate: $('#endDate').val(),
 				isCA: $('#isCa').is(':checked'),
@@ -93,6 +128,7 @@ $(document).ready(function () {
 				let alert = $('<div class="alert alert-success alert-dismissible fade show m-1" role="alert">Successfully certificate creating.'
 					+'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + '</div >')
 				$('#div_alert').append(alert);
+				window.setTimeout(function(){location.reload();},1000);
 				return;
 			},
 			error:function(xhr){
