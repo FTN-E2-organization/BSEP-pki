@@ -265,4 +265,27 @@ public class CertificateServiceImpl implements CertificateService{
 		}
 	}
 
+	@Override
+	public Collection<CertificateDTO> getBySubjectId(Long subjectId) throws Exception {
+		Collection<CertificateDTO> subjectCertificates = new ArrayList<CertificateDTO>();
+		Collection<Certificate> allCertificates = certificateRepository.findAll();
+		for (Certificate certificate : allCertificates) {
+			try {
+				KeyStoreReader ksr = new KeyStoreReader();
+				X509Certificate cer = (X509Certificate) ksr.readCertificate(certificate.getKeystorePath(), enviroment.getProperty("spring.keystore.password"), certificate.getId().toString());
+				
+				if(certificate.getSubjectId() == subjectId) {
+					//if(isValid(Long.valueOf(CertificateMapper.toCertificateDTO(cer).getIssuerId()))) {
+					subjectCertificates.add(CertificateMapper.toCertificateDTO(cer, certificate));
+					//}
+				}
+				
+			}catch(Exception e) {
+				throw new Exception(e.getMessage());
+			}
+			
+		}
+		return subjectCertificates;
+	}
+
 }

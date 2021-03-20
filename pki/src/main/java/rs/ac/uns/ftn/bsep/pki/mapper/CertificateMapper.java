@@ -18,46 +18,46 @@ public class CertificateMapper {
 	
 		CertificateDTO cDTO = new CertificateDTO();
 		try {
-			X500Name subjName = new JcaX509CertificateHolder(cert).getSubject();
+			X500Name subj = new JcaX509CertificateHolder(cert).getSubject();
 			X500Name iss = new JcaX509CertificateHolder(cert).getIssuer();
 
-			RDN cn = subjName.getRDNs(BCStyle.CN)[0];
+			RDN cn = subj.getRDNs(BCStyle.CN)[0];
 			String cname = IETFUtils.valueToString(cn.getFirst().getValue());
 			cDTO.commonName = cname;
 			
-			RDN gn = subjName.getRDNs(BCStyle.GIVENNAME)[0];
+			RDN gn = subj.getRDNs(BCStyle.GIVENNAME)[0];
 			String gname = IETFUtils.valueToString(gn.getFirst().getValue());
 			cDTO.givenName = gname;
 			
-			RDN sn = subjName.getRDNs(BCStyle.SURNAME)[0];
+			RDN sn = subj.getRDNs(BCStyle.SURNAME)[0];
 			String sname = IETFUtils.valueToString(sn.getFirst().getValue());
 			cDTO.surname = sname;
 
-			RDN on = subjName.getRDNs(BCStyle.O)[0];
+			RDN on = subj.getRDNs(BCStyle.O)[0];
 			String oname = IETFUtils.valueToString(on.getFirst().getValue());
 			cDTO.organization = oname;
 
-			RDN oun = subjName.getRDNs(BCStyle.OU)[0];
+			RDN oun = subj.getRDNs(BCStyle.OU)[0];
 			String ouname = IETFUtils.valueToString(oun.getFirst().getValue());
 			cDTO.organizationUnit = ouname;
 
-			RDN con = subjName.getRDNs(BCStyle.C)[0];
+			RDN con = subj.getRDNs(BCStyle.C)[0];
 			String conname = IETFUtils.valueToString(con.getFirst().getValue());
 			cDTO.countryCode = conname;
 
-			RDN loc = subjName.getRDNs(BCStyle.L)[0];
+			RDN loc = subj.getRDNs(BCStyle.L)[0];
 			String locname = IETFUtils.valueToString(loc.getFirst().getValue());
 			cDTO.locality = locname;
 
-			RDN sta = subjName.getRDNs(BCStyle.ST)[0];
+			RDN sta = subj.getRDNs(BCStyle.ST)[0];
 			String staname = IETFUtils.valueToString(sta.getFirst().getValue());
 			cDTO.state = staname;
 
-			RDN en = subjName.getRDNs(BCStyle.E)[0];
+			RDN en = subj.getRDNs(BCStyle.E)[0];
 			String emname = IETFUtils.valueToString(en.getFirst().getValue());
 			cDTO.email = emname;
 
-			RDN subjectId = iss.getRDNs(BCStyle.UID)[0];
+			RDN subjectId = subj.getRDNs(BCStyle.UID)[0];
 			String subId = IETFUtils.valueToString(subjectId.getFirst().getValue());
 			cDTO.subjectId = Long.parseLong(subId);
 			

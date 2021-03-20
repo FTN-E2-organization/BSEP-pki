@@ -93,10 +93,21 @@ public class CertificateController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<?> getAll(@PathVariable Long id){
+	public ResponseEntity<?> getById(@PathVariable Long id){
 		try {
 			CertificateDTO cDTO = certificateService.getById(id);
 			return new ResponseEntity<CertificateDTO>(cDTO, HttpStatus.OK);
+		}
+		catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/{id}/subject")
+	public ResponseEntity<?> getBySubjectId(@PathVariable Long id){
+		try {
+			Collection<CertificateDTO> cDTOs = certificateService.getBySubjectId(id);
+			return new ResponseEntity<Collection<CertificateDTO>>(cDTOs, HttpStatus.OK);
 		}
 		catch (Exception e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
