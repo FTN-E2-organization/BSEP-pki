@@ -20,30 +20,32 @@ public class CertificateValidator {
 			throw new ValidationException("Start date must be greater or equal than today.");
 		if(certificateDTO.endDate.isBefore(certificateDTO.startDate))
 			throw new ValidationException("End date must be greater or equal than start date.");
-		if(certificateDTO.commonName == null)
+		if(certificateDTO.commonName == null || certificateDTO.commonName.isEmpty())
 			throw new ValidationException("Common name is required field.");
-		if(certificateDTO.countryCode == null)
+		if(certificateDTO.countryCode == null || certificateDTO.countryCode.isEmpty())
 			throw new ValidationException("Country code is required field.");
-		if(certificateDTO.state == null)
+		if(certificateDTO.state == null || certificateDTO.state.isEmpty())
 			throw new ValidationException("State is required field.");
-		if(certificateDTO.locality == null)
+		if(certificateDTO.locality == null || certificateDTO.locality.isEmpty())
 			throw new ValidationException("Locality is required field.");
 		
 		if(certificateDTO.typeOfClient.equals("Person")) {
-			if(certificateDTO.givenName == null)
+			if(certificateDTO.givenName == null || certificateDTO.givenName.isEmpty())
 				throw new ValidationException("Given name is required field.");
-			if(certificateDTO.surname == null)
+			if(certificateDTO.surname == null || certificateDTO.surname.isEmpty())
 				throw new ValidationException("Surname is required field.");
-			if(certificateDTO.email == null)
+			if(certificateDTO.email == null || certificateDTO.email.isEmpty())
 				throw new ValidationException("Email is required field.");
 			if(!isValidEmail(certificateDTO.email))
 				throw new ValidationException("Wrong format of email.");
-		}else if(certificateDTO.typeOfClient.equals("Software")) {
-			if(certificateDTO.organization == null)
+		}
+		else if(certificateDTO.typeOfClient.equals("Software")) {
+			if(certificateDTO.organization == null || certificateDTO.organization.isEmpty())
 				throw new ValidationException("Organization is required field.");
-			if(certificateDTO.organizationUnit == null)
+			if(certificateDTO.organizationUnit == null || certificateDTO.organizationUnit.isEmpty())
 				throw new ValidationException("Organization unit is required field.");
-		}else {
+		}
+		else {
 			throw new ValidationException("Wrong type of client.");
 		}
 	}

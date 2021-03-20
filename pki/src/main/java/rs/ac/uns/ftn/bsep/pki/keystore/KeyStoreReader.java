@@ -27,14 +27,16 @@ public class KeyStoreReader {
     // - Tajni kljucevi, koji se koriste u simetricnima siframa
     private KeyStore keyStore;
 
-    public KeyStoreReader() {
+    public KeyStoreReader() throws Exception {
         try {
             keyStore = KeyStore.getInstance("JKS", "SUN");
         } catch (KeyStoreException e) {
-            e.printStackTrace();
+            throw new Exception(e.getMessage());
         } catch (NoSuchProviderException e) {
-            e.printStackTrace();
-        }
+        	throw new Exception(e.getMessage());
+        } catch (Exception e) {
+        	throw new Exception(e.getMessage());
+		}
     }
     /**
      * Zadatak ove funkcije jeste da ucita podatke o izdavaocu i odgovarajuci privatni kljuc.
@@ -134,7 +136,7 @@ public class KeyStoreReader {
         } catch (Exception e) {
 			throw new Exception(e);
 		}
-            return certs;
+        return certs;
     }
 
     public ArrayList<Certificate> readCertificateChain(String keyStoreFile, String keyStorePass, String alias) throws Exception {
