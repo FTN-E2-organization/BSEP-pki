@@ -1,6 +1,5 @@
 package rs.ac.uns.ftn.bsep.pki.service;
 
-import java.io.FileNotFoundException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -62,53 +61,44 @@ public class CertificateServiceImpl implements CertificateService{
 			revokeOneCertificate(id);
 		}	
 	}
-
-	@Override
-	public void addSelfSignedCertificate(AddCertificateDTO certificateDTO) throws Exception{
+	
+	public void addCertificate(AddCertificateDTO certificateDTO, boolean isSelfSigned) throws Exception{
 		KeyPair keyPairSubject = getKeyPair();
 		String keyStorePassword = enviroment.getProperty("spring.keystore.password");
-		String keyStorePath = "./keystore/root_ca.jks";
+		String keyStorePath = "";
+		String issuerKeyStorePath = "";
+		SubjectData subjectData;
+		IssuerData issuerData;
 		
-		Certificate savedCertificate =  save(certificateDTO);
-		String serialNumber = savedCertificate.getId().toString();
-		
-		SubjectData subjectData = generateSubjectData(certificateDTO, keyPairSubject.getPublic(), serialNumber);
-		IssuerData issuerData = generateSelfSignedIssuerData(certificateDTO, keyPairSubject.getPrivate());
-		
-		// Generise se sertifikat za subjekta, potpisan od strane issuer-a
-		CertificateGenerator certificateGenerator = new CertificateGenerator();
-		X509Certificate x509Certificate = certificateGenerator.generateCertificate(subjectData, issuerData, true);
-		
-		// Cuvanje sertifikata u keystore
-		keyStoreWriter.loadKeyStore(keyStorePath, keyStorePassword.toCharArray());
-		keyStoreWriter.write(x509Certificate.getSerialNumber().toString(), keyPairSubject.getPrivate(), keyStorePassword.toCharArray(), x509Certificate);
-		keyStoreWriter.saveKeyStore(keyStorePath, keyStorePassword.toCharArray());
-	}
-
-	@Override
-	public void addNonSelfSignedCertificate(AddCertificateDTO certificateDTO) throws Exception{
-		if(!isValidDate(certificateDTO.issuerId, certificateDTO.startDate, certificateDTO.endDate)) 
-			throw new ValidationException("For the selected period, the issuer certificate is not valid.");
-		
-		KeyPair keyPairSubject = getKeyPair();
-		String keyStorePassword = enviroment.getProperty("spring.keystore.password");
-		String keyStorePath;
-		String issuerKeyStorePath;
-		if(certificateDTO.isCA) {
-			keyStorePath = "./keystore/ca.jks";
-			issuerKeyStorePath = "./keystore/root_ca.jks";
+		if(isSelfSigned) {
+			keyStorePath = "./keystore/root_ca.jks";
+			certificateDTO.isCA = true;
+			
+			Certificate savedCertificate =  save(certificateDTO);
+			String serialNumber = savedCertificate.getId().toString();
+			
+			subjectData = generateSubjectData(certificateDTO, keyPairSubject.getPublic(), serialNumber);
+			issuerData = generateSelfSignedIssuerData(certificateDTO, keyPairSubject.getPrivate());
+		}else {
+			if(!isValidDate(certificateDTO.issuerId, certificateDTO.startDate, certificateDTO.endDate)) 
+				throw new ValidationException("For the selected period, the issuer certificate is not valid.");
+			
+			if(certificateDTO.isCA) {
+				keyStorePath = "./keystore/ca.jks";
+				issuerKeyStorePath = "./keystore/root_ca.jks";
+			}
+			else {
+				keyStorePath = "./keystore/end_entity.jks";
+				issuerKeyStorePath = "./keystore/ca.jks";
+			}
+			
+			Certificate savedCertificate =  save(certificateDTO);
+			String serialNumber = savedCertificate.getId().toString();
+			
+			subjectData = generateSubjectData(certificateDTO, keyPairSubject.getPublic(), serialNumber);
+			issuerData = keyStoreReader.readIssuerFromStore(issuerKeyStorePath, certificateDTO.issuerId.toString(), 
+					keyStorePassword.toCharArray(), keyStorePassword.toCharArray());
 		}
-		else {
-			keyStorePath = "./keystore/end_entity.jks";
-			issuerKeyStorePath = "./keystore/ca.jks";
-		}
-		
-		Certificate savedCertificate =  save(certificateDTO);
-		String serialNumber = savedCertificate.getId().toString();
-		
-		SubjectData subjectData = generateSubjectData(certificateDTO, keyPairSubject.getPublic(), serialNumber);
-		IssuerData issuerData = keyStoreReader.readIssuerFromStore(issuerKeyStorePath, certificateDTO.issuerId.toString(), 
-				keyStorePassword.toCharArray(), keyStorePassword.toCharArray());
 		
 		// Generise se sertifikat za subjekta, potpisan od strane issuer-a
 		CertificateGenerator certificateGenerator = new CertificateGenerator();
@@ -118,7 +108,6 @@ public class CertificateServiceImpl implements CertificateService{
 		keyStoreWriter.loadKeyStore(keyStorePath, keyStorePassword.toCharArray());
 		keyStoreWriter.write(x509Certificate.getSerialNumber().toString(), keyPairSubject.getPrivate(), keyStorePassword.toCharArray(), x509Certificate);
 		keyStoreWriter.saveKeyStore(keyStorePath, keyStorePassword.toCharArray());
-		
 	}
 	
 	public Certificate save(AddCertificateDTO certificateDTO) {

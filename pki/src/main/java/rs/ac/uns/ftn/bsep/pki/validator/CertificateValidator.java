@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.bsep.pki.validator;
 
 import java.time.LocalDate;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import rs.ac.uns.ftn.bsep.pki.dto.AddCertificateDTO;
 import rs.ac.uns.ftn.bsep.pki.exception.ValidationException;
@@ -10,7 +11,7 @@ public class CertificateValidator {
 	public static void addCertificateValidation(AddCertificateDTO certificateDTO) throws Exception {
 		
 		if(certificateDTO.issuerId <= 0 || certificateDTO.subjectId <= 0)
-			throw new ValidationException("Wrong format of issuer and subject ID.");
+			throw new ValidationException("Wrong format of issuer or subject ID.");
 		if(certificateDTO.startDate == null)
 			throw new ValidationException("Start date is required field.");
 		if(certificateDTO.endDate == null)
@@ -35,20 +36,22 @@ public class CertificateValidator {
 				throw new ValidationException("Surname is required field.");
 			if(certificateDTO.email == null)
 				throw new ValidationException("Email is required field.");
-			/*if(!isValidEmail(certificateDTO.email))
-				throw new ValidationException("Wrong format of email.");*/
-		}else {
+			if(!isValidEmail(certificateDTO.email))
+				throw new ValidationException("Wrong format of email.");
+		}else if(certificateDTO.typeOfClient.equals("Software")) {
 			if(certificateDTO.organization == null)
 				throw new ValidationException("Organization is required field.");
 			if(certificateDTO.organizationUnit == null)
 				throw new ValidationException("Organization unit is required field.");
+		}else {
+			throw new ValidationException("Wrong type of client.");
 		}
 	}
 	
 	private static boolean isValidEmail(String email)
     {
-        String emailRegex = "^[a-zA-Z0-9_+&*-] + (?:\\." + "[a-zA-Z0-9_+&*-]+)*@" + "A-Z]{2,7}$";
-        Pattern pattern = Pattern.compile(emailRegex);
-        return pattern.matcher(email).matches();
+        Pattern emailRegex = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = emailRegex.matcher(email);
+        return matcher.find();
     }
 }

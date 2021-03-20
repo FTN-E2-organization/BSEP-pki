@@ -2,7 +2,6 @@ package rs.ac.uns.ftn.bsep.pki.keystore;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
-import java.nio.file.Paths;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchProviderException;
@@ -15,7 +14,6 @@ import java.util.Enumeration;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ResourceUtils;
 import rs.ac.uns.ftn.bsep.pki.data.IssuerData;
 
 
@@ -52,7 +50,6 @@ public class KeyStoreReader {
     public IssuerData readIssuerFromStore(String keyStoreFile, String alias, char[] password, char[] keyPass) throws Exception {
         try {
             //Datoteka se ucitava
-            //BufferedInputStream in = new BufferedInputStream(new FileInputStream(Paths.get(ResourceUtils.getFile("classpath:")+"\\..\\..\\src\\main\\resources").toRealPath().toString() + "\\" + keyStoreFile));
         	BufferedInputStream in = new BufferedInputStream(new FileInputStream(keyStoreFile));
         	keyStore.load(in, password);
             //Iscitava se sertifikat koji ima dati alias
@@ -78,7 +75,6 @@ public class KeyStoreReader {
             //kreiramo instancu KeyStore
             KeyStore ks = KeyStore.getInstance("JKS", "SUN");
             //ucitavamo podatke
-            //BufferedInputStream in = new BufferedInputStream(new FileInputStream(Paths.get(ResourceUtils.getFile("classpath:")+"\\..\\..\\src\\main\\resources").toRealPath().toString() + "\\" + keyStoreFile));
             BufferedInputStream in = new BufferedInputStream(new FileInputStream(keyStoreFile));
             ks.load(in, keyStorePass.toCharArray());
 
@@ -104,7 +100,6 @@ public class KeyStoreReader {
             //kreiramo instancu KeyStore
             KeyStore ks = KeyStore.getInstance("JKS", "SUN");
             //ucitavamo podatke
-            //BufferedInputStream in = new BufferedInputStream(new FileInputStream(Paths.get(ResourceUtils.getFile("classpath:")+"\\..\\..\\src\\main\\resources").toRealPath().toString() + "\\" + keyStoreFile));
             BufferedInputStream in = new BufferedInputStream(new FileInputStream(keyStoreFile));
 
             ks.load(in, keyStorePass.toCharArray());
@@ -124,7 +119,6 @@ public class KeyStoreReader {
         ArrayList<Certificate> certs = new ArrayList<>(50);
         try {
             ks = KeyStore.getInstance("JKS", "SUN");
-            //BufferedInputStream in = new BufferedInputStream(new FileInputStream(Paths.get(ResourceUtils.getFile("classpath:")+"\\..\\..\\src\\main\\resources").toRealPath().toString() + "\\" + keyStoreFile));
             BufferedInputStream in = new BufferedInputStream(new FileInputStream(keyStoreFile));
 
             ks.load(in, keyStorePass.toCharArray());
@@ -146,7 +140,6 @@ public class KeyStoreReader {
     public ArrayList<Certificate> readCertificateChain(String keyStoreFile, String keyStorePass, String alias) throws Exception {
         try {
             KeyStore ks = KeyStore.getInstance("JKS", "SUN");
-            //BufferedInputStream in = new BufferedInputStream(new FileInputStream(Paths.get(ResourceUtils.getFile("classpath:")+"\\..\\..\\src\\main\\resources").toRealPath().toString() + "\\" + keyStoreFile));
             BufferedInputStream in = new BufferedInputStream(new FileInputStream(keyStoreFile));
             ks.load(in, keyStorePass.toCharArray());
 

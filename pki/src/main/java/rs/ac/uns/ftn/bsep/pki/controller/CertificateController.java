@@ -41,14 +41,13 @@ public class CertificateController {
 	public ResponseEntity<?> addNonSelfSignedCertificate(@RequestBody AddCertificateDTO certificateDTO){
 		try {
 			CertificateValidator.addCertificateValidation(certificateDTO);
-			certificateService.addNonSelfSignedCertificate(certificateDTO);
+			certificateService.addCertificate(certificateDTO, false);
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		catch (ValidationException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 		catch (Exception e) {
-			//return new ResponseEntity<>("An error occurred while creating a certificate.", HttpStatus.BAD_REQUEST);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -57,14 +56,13 @@ public class CertificateController {
 	public ResponseEntity<?> addSelfSignedCertificate(@RequestBody AddCertificateDTO certificateDTO){
 		try {
 			CertificateValidator.addCertificateValidation(certificateDTO);
-			certificateService.addSelfSignedCertificate(certificateDTO);
+			certificateService.addCertificate(certificateDTO, true);
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		catch (ValidationException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 		catch (Exception e) {
-			//return new ResponseEntity<>("An error occurred while creating a certificate.", HttpStatus.BAD_REQUEST);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
