@@ -215,9 +215,9 @@ public class CertificateServiceImpl implements CertificateService{
 				X509Certificate cer = (X509Certificate) ksr.readCertificate(certificate.getKeystorePath(), enviroment.getProperty("spring.keystore.password"), certificate.getId().toString());
 				
 				if(cer.getBasicConstraints()!=-1) {
-					//if(isValid(Long.valueOf(CertificateMapper.toCertificateDTO(cer).getIssuerId()))) {
+					if(isCertificateValid(certificate.getId())) {
 						CAs.add(CertificateMapper.toCertificateDTO(cer, certificate));
-					//}
+					}
 				}
 				
 			}catch(Exception e) {
@@ -237,9 +237,9 @@ public class CertificateServiceImpl implements CertificateService{
 				KeyStoreReader ksr = new KeyStoreReader();
 				X509Certificate cer = (X509Certificate) ksr.readCertificate(certificate.getKeystorePath(), enviroment.getProperty("spring.keystore.password"), certificate.getId().toString());
 				
-				//if(isValid(Long.valueOf(CertificateMapper.toCertificateDTO(cer).getIssuerId()))) {
+				if(isCertificateValid(certificate.getId())) {
 					certificates.add(CertificateMapper.toCertificateDTO(cer, certificate));
-				//}
+				}
 				
 			}catch(Exception e) {
 				throw new Exception(e.getMessage());
@@ -255,10 +255,8 @@ public class CertificateServiceImpl implements CertificateService{
 		try {
 			KeyStoreReader ksr = new KeyStoreReader();
 			X509Certificate cer = (X509Certificate) ksr.readCertificate(certificate.getKeystorePath(), enviroment.getProperty("spring.keystore.password"), certificate.getId().toString());
-			
-			//if(isValid(Long.valueOf(CertificateMapper.toCertificateDTO(cer).getIssuerId()))) {
-				return CertificateMapper.toCertificateDTO(cer, certificate);
-			//}
+		
+			return CertificateMapper.toCertificateDTO(cer, certificate);
 			
 		}catch(Exception e) {
 			throw new Exception(e.getMessage());
@@ -275,9 +273,9 @@ public class CertificateServiceImpl implements CertificateService{
 				X509Certificate cer = (X509Certificate) ksr.readCertificate(certificate.getKeystorePath(), enviroment.getProperty("spring.keystore.password"), certificate.getId().toString());
 				
 				if(certificate.getSubjectId() == subjectId) {
-					//if(isValid(Long.valueOf(CertificateMapper.toCertificateDTO(cer).getIssuerId()))) {
-					subjectCertificates.add(CertificateMapper.toCertificateDTO(cer, certificate));
-					//}
+					if(isCertificateValid(certificate.getId())) {
+						subjectCertificates.add(CertificateMapper.toCertificateDTO(cer, certificate));
+					}
 				}
 				
 			}catch(Exception e) {
@@ -286,6 +284,21 @@ public class CertificateServiceImpl implements CertificateService{
 			
 		}
 		return subjectCertificates;
+	}
+	
+	private boolean isCertificateValid(Long id) throws Exception {
+		Certificate certificate = certificateRepository.getOne(id);
+		KeyStoreReader ksr = new KeyStoreReader();
+		X509Certificate c = (X509Certificate) ksr.readCertificate(certificate.getKeystorePath(), enviroment.getProperty("spring.keystore.password"), certificate.getId().toString());
+		Long parentId = null;
+		try {
+			parentId = Long.valueOf(CertificateMapper.toCertificateDTO(c, certificate).issuerId);
+		} catch (Exception e) {
+			if (!isCertificateValid(parentId)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 }
