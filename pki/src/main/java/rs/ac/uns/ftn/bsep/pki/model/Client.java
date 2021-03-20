@@ -14,34 +14,37 @@ public class Client {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Long id;
+	private Long id;
 	
 	@Column(nullable = false)
-	TypeOfClient typeOfClient;
+	private TypeOfClient typeOfClient;
 	
 	@Column(nullable = false, length = 64)
-	String commonName;
+	private String commonName;
 	
 	@Column
-	String givenName;
+	private String givenName;
 	
 	@Column
-	String surname;
+	private String surname;
 	
 	@Column(length = 64)
-	String organization;
+	private String organization;
 	
 	@Column(length = 64)
-	String organizationUnit;
+	private String organizationUnit;
 	
 	@Column(length = 2)
-	String coutryCode;
+	private String coutryCode;
 	
 	@Column
-	String email;
+	private String email;
 	
 	@Column
-	String state;
+	private String state;
+	
+	@Column
+	private String locality;
 
 	public Long getId() {
 		return id;
@@ -82,6 +85,13 @@ public class Client {
 	public String getState() {
 		return state;
 	}
-	
+
+	public String getGivenName() {
+		return givenName;
+	}
+
+	public String getLocality() {
+		return locality;
+	}
 	
 }

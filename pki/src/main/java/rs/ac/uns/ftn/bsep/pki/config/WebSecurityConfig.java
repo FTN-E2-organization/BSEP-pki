@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.bsep.pki.config;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,7 @@ import rs.ac.uns.ftn.bsep.pki.security.auth.RestAuthenticationEntryPoint;
 import rs.ac.uns.ftn.bsep.pki.security.auth.TokenAuthenticationFilter;
 import rs.ac.uns.ftn.bsep.pki.security.auth.TokenUtils;
 import rs.ac.uns.ftn.bsep.pki.service.CustomUserDetailsService;
+
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
