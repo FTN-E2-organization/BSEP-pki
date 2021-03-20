@@ -80,4 +80,15 @@ public class CertificateController {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	@GetMapping("/all")
+	public ResponseEntity<?> getAll(){
+		try {
+			Collection<CertificateDTO> caDTOs = certificateService.getAll();
+			return new ResponseEntity<Collection<CertificateDTO>>(caDTOs, HttpStatus.OK);
+		}
+		catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
 }

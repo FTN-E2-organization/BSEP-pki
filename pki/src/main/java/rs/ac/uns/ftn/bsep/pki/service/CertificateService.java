@@ -12,4 +12,5 @@ public interface CertificateService {
 	void revokeCertificateAndChildren(Long id);
 	Certificate save(CertificateDTO certificateDTO, String keystorePath);
 	Collection<CertificateDTO> getAllCA() throws Exception;
+	Collection<CertificateDTO> getAll() throws Exception;
 }
