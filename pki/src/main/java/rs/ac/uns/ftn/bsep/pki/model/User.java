@@ -38,7 +38,7 @@ public class User implements UserDetails {
 	private Authority authority;
 	
 	@OneToOne(cascade = CascadeType.ALL, optional = true)
-	private Subject client;
+	private Subject subject;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -86,7 +86,7 @@ public class User implements UserDetails {
 	}
 
 	public Subject getClient() {
-		return client;
+		return subject;
 	}
 
 }

@@ -18,7 +18,7 @@
 	<div id="div_alert" style="position: fixed; top: 73px; right: 20px; width: 24%; z-index: 9999; border-radius: 0px"></div>
 
     <div id="container" class="container w-50 mt-5 pt-3 mb-4">
-		<form name="create_cert" >
+		<form id="create_cert">
 			<div class="row">
 			<div class="col p-4">
                 <div class="card">
@@ -28,18 +28,35 @@
                             </h4>
                      </div>
 					<div class="card-body p-3">
+					
 					<div class="row">
+						<div class="col-md-6">
+							<div class="custom-control custom-radio">
+							  <input type="radio" class="custom-control-input" id="ss" name="ss" checked="checked">
+							  <label class="custom-control-label" for="ss">Self-signed</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="custom-control custom-radio">
+							  <input type="radio" class="custom-control-input" id="nss" name="nss">
+							  <label class="custom-control-label" for="nss">Non self-signed</label>
+							</div>
+						</div>
+					</div>
+					<br/>
+					
+					<div class="row" hidden="true" id="issuers_div">
 						<div class="col-md-12">
-							<label>Choose issuer</label>
-							<select class="form-control" id="issuer" required>
+							<label>Choose issuer*</label>
+							<select class="form-control" id="issuers">
 							</select>
 						</div>
 					</div>
 					<br/>
 					<div class="row">
 						<div class="col-md-12">
-							<label>Choose subject</label>
-							<select class="form-control" id="subject" required>
+							<label>Choose subject*</label>
+							<select class="form-control" id="subjects">
 							</select>
 						</div>
 					</div>
@@ -59,29 +76,13 @@
 							</div>
 						</div>
 					</div>
-					<br/>
-					
-					<div class="row">
-						<div class="col-md-6">
-							<div class="custom-control custom-radio">
-							  <input type="radio" class="custom-control-input" id="ss" name="groupOfDefaultRadios" checked>
-							  <label class="custom-control-label" for="ss">Self-signed</label>
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="custom-control custom-radio">
-							  <input type="radio" class="custom-control-input" id="nss" name="groupOfDefaultRadios">
-							  <label class="custom-control-label" for="nss">Non self-signed</label>
-							</div>
-						</div>
-					</div>
-					
+	
 					<br/>
 					<div class="row">
 						<div class="col-md-12">
 							<div class="custom-control custom-checkbox">
-							    <input type="checkbox" class="custom-control-input" id="defaultUnchecked" checked="checked" disabled="disabled">
-							    <label class="custom-control-label" for="defaultUnchecked">CA</label>
+							    <input type="checkbox" class="custom-control-input" id="isCa" checked="checked" disabled="disabled">
+							    <label class="custom-control-label" for="isCa">CA</label>
 							</div>
 						</div>
 					</div>
@@ -93,7 +94,7 @@
 			
 			<div class="row">
                 <div class="col p-4">
-                    <input type="submit" class="btn btn-success btn-lg btn-block mb-4" value="Create" id="create">
+                    <input type="submit" class="btn btn-success btn-lg btn-block mb-4" value="Create">
                 </div>
             </div>
 		</form>

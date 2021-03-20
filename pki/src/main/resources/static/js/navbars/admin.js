@@ -4,7 +4,7 @@ $(document).ready(function () {
         + '<div class="collapse navbar-collapse" id="navbarNav">'
         + ' <ul class="navbar-nav">'
         + '  <li class="nav-item">'
-        + '  <a class="nav-link" href="/html/create_certificate.html">Create</a>'
+        + '  <a class="nav-link" href="/html/create_certificate.html">Create certificate</a>'
         + '  </li>'
         + ' </ul>'
         + ' </div>'

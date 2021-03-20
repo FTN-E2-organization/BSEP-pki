@@ -10,7 +10,7 @@ public class SubjectDTO {
 	public String organization;
 	public String organizationUnit;
 	public String email;
-	public String coutryCode;
+	public String countryCode;
 	public String state;
 	public String locality;
 	
@@ -28,7 +28,7 @@ public class SubjectDTO {
 		this.organization = organization;
 		this.organizationUnit = organizationUnit;
 		this.email = email;
-		this.coutryCode = coutryCode;
+		this.countryCode = coutryCode;
 		this.state = state;
 		this.locality = locality;
 	}
