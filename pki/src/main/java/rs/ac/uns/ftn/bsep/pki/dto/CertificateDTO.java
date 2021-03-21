@@ -11,6 +11,7 @@ public class CertificateDTO {
 	public LocalDate endDate;
 	public boolean isCA;
 	public boolean isRevoked;
+	public boolean isValid;
     
 	public String typeOfSubject;
 	public String commonName;
