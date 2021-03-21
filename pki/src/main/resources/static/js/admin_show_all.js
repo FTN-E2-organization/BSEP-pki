@@ -30,7 +30,7 @@ function addRowInTable(c){
 				'<td>' + c.commonName + '</td><td>' + c.givenName + '</td><td>' + c.surname + '</td>' +
 				'<td>' + c.email + '</td><td>' + c.countryCode + '</td><td>' + c.state + '</td>' +
 				'<td>' + c.locality + '</td><td>' + c.startDate + '</td><td>' + c.endDate + '</td>' + 
-				'<td>' + c.isCA + '</td><td>something</td><td>' + btnCheckValidity +
+				'<td>' + c.isCA + '</td><td>' + c.isRevoked + '</td><td>' + btnCheckValidity +
 				'</td><td>' + btnIssuer + '</td><td>' + btnRevoke + '</td>' +
 				'</tr>');
 				
