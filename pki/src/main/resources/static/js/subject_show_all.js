@@ -1,4 +1,4 @@
-var subjectId = 1; //promijeniti kada se uradi logovanje
+var subjectId = 2; //promijeniti kada se uradi logovanje
 $(document).ready(function () {	
 	
 	$.ajax({
@@ -31,3 +31,22 @@ function addRowInTable(c){
 				
 	$('#certificates').append(row);
 };
+
+
+function download(certificateId){
+	$.ajax({
+		type:"GET", 
+		url: "/api/certificate/download/" + certificateId,
+		headers: {
+            'Authorization': 'Bearer ' + window.localStorage.getItem('token')
+        },
+		contentType: "application/json",
+		success:function(){
+			alert('success');
+		},
+		error:function(){
+			console.log('error');
+		}
+	});
+
+}
