@@ -120,4 +120,15 @@ public class CertificateController {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	@GetMapping("/{id}/valid")
+	public ResponseEntity<?> getValidById(@PathVariable Long id){
+		try {
+			boolean isValid = certificateService.isCertificateValid(id);
+			return new ResponseEntity<Boolean>(isValid, HttpStatus.OK);
+		}
+		catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
 }

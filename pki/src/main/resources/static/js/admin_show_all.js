@@ -22,7 +22,7 @@ $(document).ready(function () {
 
 function addRowInTable(c){
 	
-	let btnCheckValidity = '<button class="btn btn-info btn-sm" type="button" id="' + c.id +'" onclick="checkValidity(this.id)">Validity</button>';
+	let btnCheckValidity = '<button data-toggle="modal" data-target="#centralModalCheckValidation" class="btn btn-info btn-sm" type="button" id="' + c.id +'" onclick="validation(this.id)">Validity</button>';
 	let btnRevoke = '<button class="btn btn-danger btn-sm" type="button" id="' + c.id +'" onclick="revoke(this.id)">Revoke</button>';
 	let btnIssuer = '<button class="btn btn-info btn-sm" type="button" id="' + c.id +'" onclick="getIssuer(this.id)">Issuer</button>';
 	
@@ -37,8 +37,34 @@ function addRowInTable(c){
 	$('#certificates').append(row);
 };
 
-function checkValidity(certificateId){}
+function validation(certificateId) {
+	
+	$.ajax({
+		type:"GET", 
+		url: "/api/certificate/" + certificateId + "/valid",
+		headers: {
+            'Authorization': 'Bearer ' + window.localStorage.getItem('token')
+        },
+		contentType: "application/json",
+		success:function(isValid){
+			if(isValid = true){
+				document.getElementById('idCheckValidation').innerHTML = 'The certificate is valid!';
+			}else{
+				document.getElementById('idCheckValidation').innerHTML = 'The certificate is not valid!';
+			}
+		},
+		error:function(){
+			console.log('error getting certificate validation');
+		}
+	});
 
-function revoke(certificateId) {}
+};
 
-function getIssuer(certificateId) {}
+function revoke(certificateId) {
+ 	
+
+};
+
+function getIssuer(certificateId) {
+
+};
