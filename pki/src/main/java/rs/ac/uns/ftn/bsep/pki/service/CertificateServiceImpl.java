@@ -376,9 +376,7 @@ public class CertificateServiceImpl implements CertificateService{
 		try {
 			KeyStoreReader ksr = new KeyStoreReader();
 			X509Certificate cer = (X509Certificate) ksr.readCertificate(certificate.getKeystorePath(), enviroment.getProperty("spring.keystore.password"), certificate.getId().toString());			
-			//if(isValid(Long.valueOf(CertificateMapper.toCertificateDTO(cer).getIssuerId()))) {
 				return cer;
-			//}			
 		}catch(Exception e) {
 			throw new Exception(e.getMessage());
 		}

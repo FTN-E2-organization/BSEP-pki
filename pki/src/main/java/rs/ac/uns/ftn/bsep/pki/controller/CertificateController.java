@@ -132,9 +132,9 @@ public class CertificateController {
 	}
 	
     @RequestMapping(method = RequestMethod.GET, value = "/download/{id}")
-    public void downloadCertificate(HttpServletRequest request, HttpServletResponse response, @PathVariable Long id){
+    public ResponseEntity<?> downloadCertificate(/*HttpServletRequest request, */ HttpServletResponse response, @PathVariable Long id){
         RegExp reg = new RegExp();
-        if(reg.isValidId(id)){
+        if(reg.isValidId(id)) {
             File certificateForDownload = certificateService.downloadCertificate(id);
             response.setContentType("application/pkix-cert");
             response.setContentLength((int) certificateForDownload.length());
@@ -143,15 +143,16 @@ public class CertificateController {
             try {
                 Files.copy(Paths.get(certificateForDownload.getPath()), response.getOutputStream() );                
                 System.out.println("------------------------" + certificateForDownload.getAbsolutePath());
-                
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } catch (FileNotFoundException e) {
             	e.printStackTrace();
             } catch (IOException e) {
-                e.printStackTrace();
+            	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
             } catch (Exception e) {
-                e.printStackTrace();
+            	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
             }
-        }
+        }        
+        return new ResponseEntity<>("certificate id is not valid", HttpStatus.BAD_REQUEST);
     }
 	
 }
