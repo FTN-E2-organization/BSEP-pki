@@ -1,5 +1,13 @@
 package rs.ac.uns.ftn.bsep.pki.service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.Charset;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -8,6 +16,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Security;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -322,6 +331,55 @@ public class CertificateServiceImpl implements CertificateService{
 		}
 		
 		return isDateValid(id);
+	}
+
+	public File downloadCertificate(Long id) {
+        File downloadFile = null;
+        try {
+        	java.security.cert.Certificate c = getSecurityCertificate(id);
+        	downloadFile  = writeCertificate(c);
+            FileInputStream inStream = new FileInputStream(downloadFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return downloadFile;
+	}
+
+	private File writeCertificate(java.security.cert.Certificate certificate) {
+		File file = new File("certificate.cer");
+		FileOutputStream os = null;
+		byte[] buf = new byte[0];
+		try {
+			buf = certificate.getEncoded();
+			os = new FileOutputStream(file);
+			os.write(buf);
+			Writer wr = new OutputStreamWriter(os, Charset.forName("UTF-8"));
+			wr.write(new sun.misc.BASE64Encoder().encode(buf));   
+			wr.flush();
+			os.close();
+		} catch (CertificateEncodingException e) {
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return file;
+	}
+
+	private java.security.cert.Certificate getSecurityCertificate(Long id) throws Exception {
+		Certificate certificate = certificateRepository.getOne(id);
+		try {
+			KeyStoreReader ksr = new KeyStoreReader();
+			X509Certificate cer = (X509Certificate) ksr.readCertificate(certificate.getKeystorePath(), enviroment.getProperty("spring.keystore.password"), certificate.getId().toString());			
+				return cer;
+		}catch(Exception e) {
+			throw new Exception(e.getMessage());
+		}
 	}
 
 }

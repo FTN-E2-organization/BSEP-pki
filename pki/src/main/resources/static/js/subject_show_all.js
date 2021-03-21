@@ -32,3 +32,22 @@ function addRowInTable(c){
 				
 	$('#certificates').append(row);
 };
+
+
+function download(certificateId){
+	$.ajax({
+		type:"GET", 
+		url: "/api/certificate/download/" + certificateId,
+		headers: {
+            'Authorization': 'Bearer ' + window.localStorage.getItem('token')
+        },
+		contentType: "application/json",
+		success:function(){
+			alert('success');
+		},
+		error:function(){
+			console.log('error');
+		}
+	});
+
+}

@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.bsep.pki.service;
 
+import java.io.File;
 import java.util.Collection;
 
 import rs.ac.uns.ftn.bsep.pki.dto.CertificateDTO;
@@ -16,4 +17,6 @@ public interface CertificateService {
 	CertificateDTO getById(Long id) throws Exception;
 	Collection<CertificateDTO> getBySubjectId(Long subjectId) throws Exception;
 	boolean isCertificateValid(Long id) throws Exception;
+	File downloadCertificate(Long id);
+
 }
