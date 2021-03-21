@@ -61,11 +61,14 @@ public class CertificateMapper {
 			String subId = IETFUtils.valueToString(subjectId.getFirst().getValue());
 			cDTO.subjectId = Long.parseLong(subId);
 			
-			cDTO.issuerId = certificate.getIssuerId();
+			RDN issuerId = iss.getRDNs(BCStyle.UID)[0];
+			String issId = IETFUtils.valueToString(issuerId.getFirst().getValue());
+			cDTO.issuerId = Long.parseLong(issId);
 
 			cDTO.id = Long.parseLong(String.valueOf((cert).getSerialNumber()));
 			cDTO.startDate = certificate.getStartDate();
 			cDTO.endDate = certificate.getEndDate();
+			cDTO.isRevoked = certificate.getIsRevoked();
 			
 			if(cert.getBasicConstraints()!=-1) {
 				cDTO.isCA = true;
