@@ -16,5 +16,7 @@ public interface CertificateService {
 	Collection<CertificateDTO> getAll() throws Exception;
 	CertificateDTO getById(Long id) throws Exception;
 	Collection<CertificateDTO> getBySubjectId(Long subjectId) throws Exception;
+	boolean isCertificateValid(Long id) throws Exception;
 	File downloadCertificate(Long id);
+
 }

@@ -41,7 +41,7 @@ public class CertificateController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> revokeCertificate(@PathVariable Long id){
 		try {
-			certificateService.revokeCertificateAndChildren(id);
+			certificateService.revokeOneCertificate(id);
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 		catch (Exception e) {
@@ -135,6 +135,17 @@ public class CertificateController {
 		}
 	}
 	
+	@GetMapping("/{id}/valid")
+	public ResponseEntity<?> getValidById(@PathVariable Long id){
+		try {
+			boolean isValid = certificateService.isCertificateValid(id);
+			return new ResponseEntity<Boolean>(isValid, HttpStatus.OK);
+		}
+		catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
+
     @RequestMapping(method = RequestMethod.GET, value = "/download/{id}")
     @PreAuthorize("hasRole('SUBJECT')")
     public ResponseEntity<?> downloadCertificate(HttpServletResponse response, @PathVariable Long id){
