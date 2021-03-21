@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import rs.ac.uns.ftn.bsep.pki.dto.CertificateDTO;
+import rs.ac.uns.ftn.bsep.pki.exception.BadRequestException;
 import rs.ac.uns.ftn.bsep.pki.exception.ValidationException;
 import rs.ac.uns.ftn.bsep.pki.service.CertificateService;
 import rs.ac.uns.ftn.bsep.pki.validator.CertificateValidator;
@@ -43,11 +44,17 @@ public class CertificateController {
 	@PostMapping(value = "/non-self-signed", consumes = "application/json")
 	public ResponseEntity<?> addNonSelfSignedCertificate(@RequestBody CertificateDTO certificateDTO){
 		try {
+			CertificateDTO issuerCertificateDTO = certificateService.getById(certificateDTO.issuerId);
+			if(issuerCertificateDTO.subjectId == certificateDTO.subjectId)
+				throw new BadRequestException("Issuer and subject can't be the same in the case of non self-signed certificate.");
 			CertificateValidator.addCertificateValidation(certificateDTO);
 			certificateService.addCertificate(certificateDTO, false);
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		catch (ValidationException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		catch (BadRequestException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 		catch (Exception e) {
