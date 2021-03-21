@@ -1,4 +1,5 @@
-var subjectId = 1; //promijeniti kada se uradi logovanje
+checkUserRole("ROLE_SUBJECT");
+var subjectId = getUserIdFromToken();
 $(document).ready(function () {	
 	
 	$.ajax({

@@ -1,3 +1,4 @@
+checkUserRole("ROLE_ADMIN");
 $(document).ready(function () {	
 	
 	$.ajax({
