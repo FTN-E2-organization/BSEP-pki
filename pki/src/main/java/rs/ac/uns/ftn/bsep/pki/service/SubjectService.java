@@ -7,4 +7,5 @@ import rs.ac.uns.ftn.bsep.pki.model.Subject;
 public interface SubjectService {
 
 	Collection<Subject> getAll();
+	Subject getById(Long id);
 }
