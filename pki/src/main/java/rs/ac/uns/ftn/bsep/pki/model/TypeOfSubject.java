@@ -1,6 +1,6 @@
 package rs.ac.uns.ftn.bsep.pki.model;
 
-public enum TypeOfClient {
+public enum TypeOfSubject {
 
 	Person, Software
 }

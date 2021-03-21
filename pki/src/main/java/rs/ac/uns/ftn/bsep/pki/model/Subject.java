@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "client")
-public class Client {
+@Table(name = "subject")
+public class Subject {
 
 	@Id
 	@Column(name = "id")
@@ -17,7 +17,7 @@ public class Client {
 	private Long id;
 	
 	@Column(nullable = false)
-	private TypeOfClient typeOfClient;
+	private TypeOfSubject typeOfSubject;
 	
 	@Column(nullable = false, length = 64)
 	private String commonName;
@@ -35,7 +35,7 @@ public class Client {
 	private String organizationUnit;
 	
 	@Column(length = 2)
-	private String coutryCode;
+	private String countryCode;
 	
 	@Column
 	private String email;
@@ -50,8 +50,8 @@ public class Client {
 		return id;
 	}
 
-	public TypeOfClient getTypeOfClient() {
-		return typeOfClient;
+	public TypeOfSubject getTypeOfClient() {
+		return typeOfSubject;
 	}
 
 	public String getCommonName() {
@@ -75,7 +75,7 @@ public class Client {
 	}
 
 	public String getCoutryCode() {
-		return coutryCode;
+		return countryCode;
 	}
 
 	public String getEmail() {

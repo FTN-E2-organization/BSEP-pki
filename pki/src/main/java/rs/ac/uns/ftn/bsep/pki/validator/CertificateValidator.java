@@ -39,7 +39,7 @@ public class CertificateValidator {
 		if(certificateDTO.organizationUnit == null)
 			certificateDTO.organizationUnit = "";
 		
-		if(certificateDTO.typeOfClient.equals("Person")) {
+		if(certificateDTO.typeOfSubject.equals("Person")) {
 			if(certificateDTO.givenName.isEmpty())
 				throw new ValidationException("Given name is required field.");
 			if(certificateDTO.surname.isEmpty())
@@ -49,7 +49,7 @@ public class CertificateValidator {
 			if(!isValidEmail(certificateDTO.email))
 				throw new ValidationException("Wrong format of email.");
 		}
-		else if(certificateDTO.typeOfClient.equals("Software")) {
+		else if(certificateDTO.typeOfSubject.equals("Software")) {
 			if(certificateDTO.organization.isEmpty())
 				throw new ValidationException("Organization is required field.");
 			if(certificateDTO.organizationUnit.isEmpty())

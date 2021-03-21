@@ -12,7 +12,7 @@ public class CertificateDTO {
 	public boolean isCA;
 	public boolean isRevoked;
     
-	public String typeOfClient;
+	public String typeOfSubject;
 	public String commonName;
 	public String givenName;
 	public String surname;
@@ -35,7 +35,7 @@ public class CertificateDTO {
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.isCA = isCA;
-		this.typeOfClient = typeOfClient;
+		this.typeOfSubject = typeOfClient;
 		this.commonName = commonName;
 		this.givenName = givenName;
 		this.surname = surname;
