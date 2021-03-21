@@ -281,7 +281,6 @@ public class CertificateServiceImpl implements CertificateService{
 				
 				if(certificate.getSubjectId() == subjectId) {
 					CertificateDTO certificateDTO = CertificateMapper.toCertificateDTO(cer, certificate);
-					certificateDTO.isValid = isCertificateValid(certificateDTO.id);
 					subjectCertificates.add(certificateDTO);
 				}
 				

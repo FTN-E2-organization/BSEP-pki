@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,6 +30,16 @@ public class SubjectController {
 		try {
 			Collection<SubjectDTO> subjectDTOs = SubjectMapper.toSubjectDTOs(subjectService.getAll());
 			return new ResponseEntity<>(subjectDTOs, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>("An error occurred while getting subjects.", HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<?> getById(@PathVariable Long id){
+		try {
+			SubjectDTO subjectDTO = SubjectMapper.toSubjectDTO(subjectService.getById(id));
+			return new ResponseEntity<>(subjectDTO, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>("An error occurred while getting subjects.", HttpStatus.BAD_REQUEST);
 		}
