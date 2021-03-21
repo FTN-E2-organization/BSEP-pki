@@ -28,6 +28,7 @@ $(document).ready(function () {
 							   "organizationUnit":s.organizationUnit, "email":s.email, "countryCode":s.countryCode, "state":s.state, 
 							   "locality":s.locality, "typeOfSubject": s.typeOfSubject});
 			}
+			fillSubjectFields();
 		},
 		error:function(){
 			console.log('error getting subjects');
@@ -66,21 +67,22 @@ $(document).ready(function () {
 		}
 	});
 	
-	var $nss = $("input:radio[name=nss]");
-	var $ss = $("input:radio[name=ss]");
-	
-	$nss.on("change", function() {
+	$("input:radio[name=nss]").on("change", function() {
 		$('#ss').prop('checked',false);
 		$('#nss').prop('checked',true);
 		$('#isCa').prop('disabled',false);
 		$('#issuers_div').attr('hidden',false);
     });
 
-	$ss.on("change", function() {
+	$("input:radio[name=ss]").on("change", function() {
 		$('#nss').prop('checked',false);
 		$('#ss').prop('checked',true);
 		$('#isCa').prop('disabled',true);
 		$('#issuers_div').attr('hidden',true);
+    });
+
+	$('#subjects').on("change", function() {
+		fillSubjectFields();
     });
 
 	$('#create_cert').submit(function(event){
@@ -142,3 +144,17 @@ $(document).ready(function () {
 	});
 	
 });
+
+function fillSubjectFields(){
+	let selectedSubjectId = $('#subjects option:selected').attr('id');
+	let selectedSubject = subjectArray[selectedSubjectId - 1];
+	$('#o').text(selectedSubject.organization);
+	$('#ou').text(selectedSubject.organizationUnit);
+	$('#gn').text(selectedSubject.givenName);
+	$('#sn').text(selectedSubject.surname);
+	$('#cn').text(selectedSubject.commonName);
+	$('#e').text(selectedSubject.email);
+	$('#c').text(selectedSubject.countryCode);
+	$('#s').text(selectedSubject.state);
+	$('#l').text(selectedSubject.locality);
+};
