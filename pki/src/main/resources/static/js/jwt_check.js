@@ -5,11 +5,9 @@ $(document).ready(function () {
     if (token == null) {
 		localStorage.clear();
 		
-		if(window.location.href.indexOf("drug_search.html") > -1 || window.location.href.indexOf("pharmacy_search.html") > -1){			
-			document.body.appendChild(document.createElement('script')).src='../../js/navbars/unauthenticated_user.js';
-		}
-        else if (window.location.href.indexOf("index.html") ==  -1)
-            window.location.href = "../index.html"; 
+		if (window.location.href.indexOf("index.html") ==  -1)
+        	document.body.appendChild(document.createElement('script')).src='../../js/navbars/unauthenticated_user.js';
+            window.location.href = "../html/index.html"; 
 
         return;
     }
@@ -43,7 +41,7 @@ function getRoleFromToken() {
 		return decodeToken(localStorage.getItem("token")).role;
 	}
     catch(err){
-		window.location.href = "../index.html";
+		window.location.href = "../html/index.html";
 	}
 }
 
@@ -52,7 +50,7 @@ function getUserIdFromToken(){
 		return decodeToken(localStorage.getItem("token")).userId;
 	}
     catch(err){
-		window.location.href = "../index.html";
+		window.location.href = "../html/index.html";
 	}
 }
 
@@ -60,15 +58,15 @@ function checkUserRole(trueRole) {
     var role = getRoleFromToken();
     if (role != trueRole) {
 		if(role == "ROLE_ADMIN"){
-			window.location.href = "../admin_show_all.html";
+			window.location.href = "../html/admin_show_all.html";
 		}
 		else if(role == "ROLE_SUBJECT"){
-			window.location.href = "../subject_show_all.html";
+			window.location.href = "../html/subject_show_all.html";
 		}
 	}
 }
 
 function logOut() {
     localStorage.clear();
-    window.location.href = "../index.html";
+    window.location.href = "../html/index.html";
 }
