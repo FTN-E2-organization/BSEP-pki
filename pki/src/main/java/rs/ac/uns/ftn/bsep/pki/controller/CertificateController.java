@@ -1,6 +1,14 @@
 package rs.ac.uns.ftn.bsep.pki.controller;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collection;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import rs.ac.uns.ftn.bsep.pki.dto.CertificateDTO;
@@ -18,6 +27,7 @@ import rs.ac.uns.ftn.bsep.pki.exception.BadRequestException;
 import rs.ac.uns.ftn.bsep.pki.exception.ValidationException;
 import rs.ac.uns.ftn.bsep.pki.service.CertificateService;
 import rs.ac.uns.ftn.bsep.pki.validator.CertificateValidator;
+import rs.ac.uns.ftn.bsep.pki.validator.RegExp;
 
 @RestController
 @RequestMapping(value = "api/certificate")
@@ -120,4 +130,29 @@ public class CertificateController {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+    @RequestMapping(method = RequestMethod.GET, value = "/download/{id}")
+    public ResponseEntity<?> downloadCertificate(/*HttpServletRequest request, */ HttpServletResponse response, @PathVariable Long id){
+        RegExp reg = new RegExp();
+        if(reg.isValidId(id)) {
+            File certificateForDownload = certificateService.downloadCertificate(id);
+            response.setContentType("application/pkix-cert");
+            response.setContentLength((int) certificateForDownload.length());
+            response.addHeader("Content-Disposition", "attachment; filename="+ certificateForDownload.getName());
+
+            try {
+                Files.copy(Paths.get(certificateForDownload.getPath()), response.getOutputStream() );                
+                System.out.println("------------------------" + certificateForDownload.getAbsolutePath());
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            } catch (FileNotFoundException e) {
+            	e.printStackTrace();
+            } catch (IOException e) {
+            	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            } catch (Exception e) {
+            	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            }
+        }        
+        return new ResponseEntity<>("certificate id is not valid", HttpStatus.BAD_REQUEST);
+    }
+	
 }
