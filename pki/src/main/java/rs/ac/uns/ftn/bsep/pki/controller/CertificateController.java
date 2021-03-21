@@ -33,7 +33,7 @@ public class CertificateController {
 	@PutMapping("/{id}/revoke")
 	public ResponseEntity<?> acceptRequest(@PathVariable Long id){
 		try {
-			certificateService.revokeCertificateAndChildren(id);
+			certificateService.revokeOneCertificate(id);
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 		catch (Exception e) {

@@ -23,7 +23,7 @@ $(document).ready(function () {
 function addRowInTable(c){
 	
 	let btnCheckValidity = '<button data-toggle="modal" data-target="#centralModalCheckValidation" class="btn btn-info btn-sm" type="button" id="' + c.id +'" onclick="validation(this.id)">Validity</button>';
-	let btnRevoke = '<button class="btn btn-danger btn-sm" type="button" id="' + c.id +'" onclick="revoke(this.id)">Revoke</button>';
+	let btnRevoke = '<button data-toggle="modal" data-target="#modalConfirmRevoke" class="btn btn-danger btn-sm" type="button" id="' + c.id +'" onclick="revoke(this.id)">Revoke</button>';
 	let btnIssuer = '<button data-toggle="modal" data-target="#centralModalViewIssuer" class="btn btn-info btn-sm" type="button" id="' + c.issuerId +'" onclick="getIssuer(this.id)">Issuer</button>';
 	
 	let row = $('<tr><td>' + c.organization + '</td><td>' + c.organizationUnit + '</td>' +
@@ -61,7 +61,27 @@ function validation(certificateId) {
 };
 
 function revoke(certificateId) {
- 	
+
+	$('a#yes_revoke').click(function(event){
+		
+		event.preventDefault();
+		
+		$.ajax({
+		type:"PUT", 
+		url: "/api/certificate/" + certificateId + "/revoke",
+		headers: {
+            'Authorization': 'Bearer ' + window.localStorage.getItem('token')
+        },
+		contentType: "application/json",
+		success:function(){
+			location.reload();
+		},
+		error:function(){
+			console.log('error revoking certificates');
+		}
+	});
+		
+	}); 	
 
 };
 
