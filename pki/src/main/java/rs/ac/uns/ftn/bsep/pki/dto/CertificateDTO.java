@@ -22,6 +22,12 @@ public class CertificateDTO {
     public String state;
     public String locality;
     
+    public Integer keyUsage;
+    public String issuerAlternativeName;
+    public String subjectAlternativeName;
+    public LocalDate dateOfBirth;
+    public String placeOfBirth;
+    
     public CertificateDTO() {}
 
 	public CertificateDTO(Long id, Long subjectId, Long issuerId, LocalDate startDate, LocalDate endDate, boolean isCA,
