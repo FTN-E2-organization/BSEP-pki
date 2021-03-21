@@ -293,26 +293,6 @@ public class CertificateServiceImpl implements CertificateService{
 		return subjectCertificates;
 	}
 	
-	private boolean isCertificateValid(Long id) throws Exception {
-		Certificate certificate = certificateRepository.getOne(id);
-		KeyStoreReader ksr = new KeyStoreReader();
-		X509Certificate c = (X509Certificate) ksr.readCertificate(certificate.getKeystorePath(), enviroment.getProperty("spring.keystore.password"), certificate.getId().toString());
-	
-		Long parentId = null;
-		try {
-			parentId = CertificateMapper.toCertificateDTO(c, certificate).issuerId;
-		} catch (Exception e) {
-			return false;
-		}
-		if (parentId != id) {
-			if (!isCertificateValid(parentId)) {
-				return false;
-			}
-		}
-		
-		return isDateValid(id);
-	}
-	
 	private boolean isDateValid(Long id) throws Exception {
 		Certificate certificate = certificateRepository.getOne(id);
 		try {
@@ -333,6 +313,26 @@ public class CertificateServiceImpl implements CertificateService{
 	}
 
 	@Override
+	public boolean isCertificateValid(Long id) throws Exception {
+		Certificate certificate = certificateRepository.getOne(id);
+		KeyStoreReader ksr = new KeyStoreReader();
+		X509Certificate c = (X509Certificate) ksr.readCertificate(certificate.getKeystorePath(), enviroment.getProperty("spring.keystore.password"), certificate.getId().toString());
+	
+		Long parentId = null;
+		try {
+			parentId = CertificateMapper.toCertificateDTO(c, certificate).issuerId;
+		} catch (Exception e) {
+			return false;
+		}
+		if (parentId != id) {
+			if (!isCertificateValid(parentId)) {
+				return false;
+			}
+		}
+		
+		return isDateValid(id);
+	}
+
 	public File downloadCertificate(Long id) {
         File downloadFile = null;
         try {
@@ -381,6 +381,5 @@ public class CertificateServiceImpl implements CertificateService{
 			throw new Exception(e.getMessage());
 		}
 	}
-
 
 }

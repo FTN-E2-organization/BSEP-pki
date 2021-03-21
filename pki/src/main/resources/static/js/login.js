@@ -45,6 +45,8 @@ function redirectUser(token){
 	let role = decodeToken(token).role;
 	if(role == "ROLE_ADMIN"){
     	 window.location.href = "admin_show_all.html";
+	}else if(role == "ROLE_SUBJECT"){
+		window.location.href = "subject_show_all.html";
 	}
 }
 

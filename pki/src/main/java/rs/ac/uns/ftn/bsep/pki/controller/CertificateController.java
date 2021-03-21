@@ -43,7 +43,7 @@ public class CertificateController {
 	@PutMapping("/{id}/revoke")
 	public ResponseEntity<?> acceptRequest(@PathVariable Long id){
 		try {
-			certificateService.revokeCertificateAndChildren(id);
+			certificateService.revokeOneCertificate(id);
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		}
 		catch (Exception e) {
@@ -131,6 +131,17 @@ public class CertificateController {
 		}
 	}
 	
+	@GetMapping("/{id}/valid")
+	public ResponseEntity<?> getValidById(@PathVariable Long id){
+		try {
+			boolean isValid = certificateService.isCertificateValid(id);
+			return new ResponseEntity<Boolean>(isValid, HttpStatus.OK);
+		}
+		catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
+
     @RequestMapping(method = RequestMethod.GET, value = "/download/{id}")
     public ResponseEntity<?> downloadCertificate(/*HttpServletRequest request, */ HttpServletResponse response, @PathVariable Long id){
         RegExp reg = new RegExp();

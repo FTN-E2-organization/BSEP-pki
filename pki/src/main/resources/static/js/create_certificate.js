@@ -1,3 +1,4 @@
+checkUserRole("ROLE_ADMIN");
 let subjectArray = [];
 $(document).ready(function () {	
 	
