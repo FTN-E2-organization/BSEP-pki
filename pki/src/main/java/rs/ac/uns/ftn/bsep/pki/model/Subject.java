@@ -93,5 +93,5 @@ public class Subject {
 	public String getLocality() {
 		return locality;
 	}
-	
+
 }

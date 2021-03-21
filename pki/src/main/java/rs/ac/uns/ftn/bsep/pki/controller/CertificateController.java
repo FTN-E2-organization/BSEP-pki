@@ -136,6 +136,7 @@ public class CertificateController {
 	}
 	
 	@GetMapping("/{id}/valid")
+	@PreAuthorize("hasAnyRole('SUBJECT','ADMIN')")
 	public ResponseEntity<?> getValidById(@PathVariable Long id){
 		try {
 			boolean isValid = certificateService.isCertificateValid(id);

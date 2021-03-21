@@ -44,7 +44,8 @@ public class SubjectController {
 			SubjectDTO subjectDTO = SubjectMapper.toSubjectDTO(subjectService.getById(id));
 			return new ResponseEntity<>(subjectDTO, HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<>("An error occurred while getting subjects.", HttpStatus.BAD_REQUEST);
+			//return new ResponseEntity<>("An error occurred while getting subject.", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
 }

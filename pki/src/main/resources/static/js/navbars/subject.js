@@ -10,7 +10,7 @@ $(document).ready(function () {
         + '  <a class="nav-link" href="/html/subject_info.html">Info</a>'
         + '  </li>'
         + ' <li class="nav-item">'
-        + '  <a style="margin-left:1150px;" href="javascript:logOut();" class="nav-link">Log out</a>'
+        + '  <a href="javascript:logOut();" class="nav-link">Log out</a>'
         + '  </li>'
         + ' </ul>'
         + ' </div>'
