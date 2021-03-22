@@ -108,6 +108,7 @@ $(document).ready(function () {
 		
 		if($('#ss').is(':checked')){
 			selectedIssuerId = selectedSubjectId;
+			//selectedIssuerId = -1;
 		}
 		
 		$.ajax({

@@ -25,11 +25,11 @@ $(document).ready(function () {
 function addRowInTable(c){
 	
 	let btnDownload = '<button class="btn btn-info" type="button" id="' + c.id +'" onclick="download(this.id)" style="margin-top:-10px; margin-left:-20px; margin-right:-20px;">Download</button>';
-	let btnCheckValidity = '<button data-toggle="modal" data-target="#centralModalCheckValidation" class="btn btn-info" type="button" id="' + c.id +'" onclick="checkValidity(this.id)" style="margin-top:-10px;  margin-left:-20px; margin-right:-20px;">Validity</button>';
+	let btncheckValidation = '<button data-toggle="modal" data-target="#centralModalCheckValidation" class="btn btn-info" type="button" id="' + c.id +'" onclick="checkValidation(this.id)" style="margin-top:-10px;  margin-left:-20px; margin-right:-20px;">Validity</button>';
 	let btnIssuer = '<button data-toggle="modal" data-target="#centralModalViewIssuer" class="btn btn-info" type="button" id="' + c.id +'" onclick="getIssuer(this.id)" style="margin-top:-10px;  margin-left:-20px; margin-right:-20px;">Issuer</button>';
 	
 	let row = $('<tr><td>' + c.startDate + '</td><td>' + c.endDate + '</td>' + 
-				'<td>' + c.isCA + '</td><td>' + c.isRevoked + '</td><td>' + btnCheckValidity + '</td>' +
+				'<td>' + c.isCA + '</td><td>' + c.isRevoked + '</td><td>' + btncheckValidation + '</td>' +
 				'<td>' + btnIssuer + '</td><td>' + btnDownload + '</td>' +
 				'</tr>');
 				
@@ -60,7 +60,7 @@ function download(certificateId){
 	});
 }
 
-function checkValidity(certificateId){
+function checkValidation(certificateId){
 	$.ajax({
 		type:"GET", 
 		url: "/api/certificate/" + certificateId + "/valid",

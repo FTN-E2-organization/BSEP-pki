@@ -88,6 +88,9 @@ public class CertificateServiceImpl implements CertificateService{
 			certificateDTO.isCA = true;
 			
 			Certificate savedCertificate =  save(certificateDTO, keyStorePath);
+			updateIssuerId(savedCertificate.getId());
+			certificateDTO.issuerId = savedCertificate.getId();
+			
 			String serialNumber = savedCertificate.getId().toString();
 			
 			subjectData = generateSubjectData(certificateDTO, keyPairSubject.getPublic(), serialNumber);
@@ -144,6 +147,12 @@ public class CertificateServiceImpl implements CertificateService{
 		certificate.setKeystorePath(keystorePath);
 		
 		return certificateRepository.save(certificate);
+	}
+	
+	public void updateIssuerId(Long certificateId) {
+		Certificate certificate = certificateRepository.getOne(certificateId);
+		certificate.setIssuerId(certificateId);
+		certificateRepository.save(certificate);
 	}
 	
 	private KeyPair getKeyPair(){
