@@ -23,7 +23,7 @@ public class SubjectServiceImpl implements SubjectService {
 
 	@Override
 	public Subject getById(Long id) {
-		return subjectRepository.getOneByUserId(id);
+		return subjectRepository.getOne(id);
 	}
 
 }

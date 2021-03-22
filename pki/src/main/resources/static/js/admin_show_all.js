@@ -11,6 +11,7 @@ $(document).ready(function () {
 		success:function(certificates){
 			$('#certificates').empty();
 			for (let c of certificates){
+				alert(JSON.stringify(c));
 				addRowInTable(c);
 			}
 		},

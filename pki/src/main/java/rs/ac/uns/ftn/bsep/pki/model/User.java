@@ -9,8 +9,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "users")
 public class User implements UserDetails {
 	
@@ -36,9 +38,6 @@ public class User implements UserDetails {
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
 	private Authority authority;
-	
-	@OneToOne(cascade = CascadeType.ALL, optional = true)
-	private Subject subject;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -83,10 +82,6 @@ public class User implements UserDetails {
 
 	public Authority getAuthority() {
 		return authority;
-	}
-
-	public Subject getClient() {
-		return subject;
 	}
 
 }

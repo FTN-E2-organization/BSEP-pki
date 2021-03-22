@@ -2,19 +2,13 @@ package rs.ac.uns.ftn.bsep.pki.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "subject")
-public class Subject {
+public class Subject extends User {
 
-	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private static final long serialVersionUID = 3696698179159915486L;
 	
 	@Column(nullable = false)
 	private TypeOfSubject typeOfSubject;
@@ -46,9 +40,9 @@ public class Subject {
 	@Column
 	private String locality;
 
-	public Long getId() {
+	/*public Long getId() {
 		return id;
-	}
+	}*/
 
 	public TypeOfSubject getTypeOfClient() {
 		return typeOfSubject;
