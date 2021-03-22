@@ -7,6 +7,7 @@ public class IssuerData {
 
 	private X500Name x500name;
     private PrivateKey privateKey;
+    private String issuerAltName;
 
     public IssuerData() {
     }
@@ -31,4 +32,12 @@ public class IssuerData {
     public void setPrivateKey(PrivateKey privateKey) {
         this.privateKey = privateKey;
     }
+
+	public String getIssuerAltName() {
+		return issuerAltName;
+	}
+
+	public void setIssuerAltName(String issuerAltName) {
+		this.issuerAltName = issuerAltName;
+	}
 }

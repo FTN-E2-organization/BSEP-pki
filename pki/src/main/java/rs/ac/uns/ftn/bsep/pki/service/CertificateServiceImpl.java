@@ -127,7 +127,7 @@ public class CertificateServiceImpl implements CertificateService{
 		
 		// Generise se sertifikat za subjekta, potpisan od strane issuer-a
 		CertificateGenerator certificateGenerator = new CertificateGenerator();
-		X509Certificate x509Certificate = certificateGenerator.generateCertificate(subjectData, issuerData, certificateDTO.isCA);
+		X509Certificate x509Certificate = certificateGenerator.generateCertificate(subjectData, issuerData, certificateDTO.isCA, certificateDTO.keyUsage);
 		
 		// Cuvanje sertifikata u keystore
 		keyStoreWriter.loadKeyStore(keyStorePath, keyStorePassword.toCharArray());
@@ -188,7 +188,11 @@ public class CertificateServiceImpl implements CertificateService{
 			builder.addRDN(BCStyle.E, certificateDTO.email);
 			builder.addRDN(BCStyle.UID, certificateDTO.subjectId.toString());
 
-			return new SubjectData(subjectPublicKey, builder.build(), serialNumber, startDate, endDate);
+			SubjectData subjectData = new SubjectData(subjectPublicKey, builder.build(), serialNumber, startDate, endDate);
+			subjectData.setDateOfBirth(certificateDTO.dateOfBirth);
+			subjectData.setPlaceOfBirth(certificateDTO.placeOfBirth);
+			subjectData.setSubjAltName(certificateDTO.subjectAlternativeName);
+			return subjectData;
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -209,7 +213,9 @@ public class CertificateServiceImpl implements CertificateService{
 		builder.addRDN(BCStyle.E, certificateDTO.email);
 		builder.addRDN(BCStyle.UID, certificateDTO.issuerId.toString());
 		
-		return new IssuerData(issuerPrivateKey, builder.build());
+		IssuerData issuerData = new IssuerData(issuerPrivateKey, builder.build());
+		issuerData.setIssuerAltName(certificateDTO.issuerAlternativeName);
+		return issuerData;
 	}
 	
 	private boolean isValidDate(Long issuerId, LocalDate startDate, LocalDate endDate) {

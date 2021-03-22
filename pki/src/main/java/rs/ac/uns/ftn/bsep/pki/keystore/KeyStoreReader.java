@@ -61,7 +61,15 @@ public class KeyStoreReader {
             //Iscitava se privatni kljuc vezan za javni kljuc koji se nalazi na sertifikatu sa datim aliasom
             PrivateKey privKey = (PrivateKey) keyStore.getKey(alias, keyPass);
             X500Name issuerName = new JcaX509CertificateHolder((X509Certificate) cert).getSubject();
-            return new IssuerData(privKey, issuerName);
+            String issuerAltName = null;
+            try {
+            	issuerAltName = (String) ((X509Certificate) cert).getIssuerAlternativeNames().stream().findFirst().get().get(0);    
+            }catch(Exception e){
+            
+            }
+            IssuerData issuerData = new IssuerData(privKey, issuerName);
+            issuerData.setIssuerAltName(issuerAltName);
+            return issuerData;
 
         } catch (Exception e) {
 			throw new Exception(e);
