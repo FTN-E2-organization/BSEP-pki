@@ -1,8 +1,15 @@
 package rs.ac.uns.ftn.bsep.pki.mapper;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
+import java.util.LinkedList;
 
+import org.bouncycastle.asn1.ASN1InputStream;
+import org.bouncycastle.asn1.ASN1Primitive;
+import org.bouncycastle.asn1.ASN1String;
+import org.bouncycastle.asn1.DEROctetString;
 import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
@@ -13,9 +20,9 @@ import rs.ac.uns.ftn.bsep.pki.dto.CertificateDTO;
 import rs.ac.uns.ftn.bsep.pki.model.Certificate;
 
 public class CertificateMapper {
-	
+
 	public static CertificateDTO toCertificateDTO(X509Certificate cert, Certificate certificate) {
-	
+
 		CertificateDTO cDTO = new CertificateDTO();
 		try {
 			X500Name subj = new JcaX509CertificateHolder(cert).getSubject();
@@ -24,11 +31,11 @@ public class CertificateMapper {
 			RDN cn = subj.getRDNs(BCStyle.CN)[0];
 			String cname = IETFUtils.valueToString(cn.getFirst().getValue());
 			cDTO.commonName = cname;
-			
+
 			RDN gn = subj.getRDNs(BCStyle.GIVENNAME)[0];
 			String gname = IETFUtils.valueToString(gn.getFirst().getValue());
 			cDTO.givenName = gname;
-			
+
 			RDN sn = subj.getRDNs(BCStyle.SURNAME)[0];
 			String sname = IETFUtils.valueToString(sn.getFirst().getValue());
 			cDTO.surname = sname;
@@ -60,7 +67,7 @@ public class CertificateMapper {
 			RDN subjectId = subj.getRDNs(BCStyle.UID)[0];
 			String subId = IETFUtils.valueToString(subjectId.getFirst().getValue());
 			cDTO.subjectId = Long.parseLong(subId);
-			
+
 			RDN issuerId = iss.getRDNs(BCStyle.UID)[0];
 			String issId = IETFUtils.valueToString(issuerId.getFirst().getValue());
 			cDTO.issuerId = Long.parseLong(issId);
@@ -69,18 +76,69 @@ public class CertificateMapper {
 			cDTO.startDate = certificate.getStartDate();
 			cDTO.endDate = certificate.getEndDate();
 			cDTO.isRevoked = certificate.getIsRevoked();
-			
-			if(cert.getBasicConstraints()!=-1) {
+
+			if (cert.getBasicConstraints() != -1) {
 				cDTO.isCA = true;
-			}
-			else {
+			} else {
 				cDTO.isCA = false;
 			}
-			
+			try {
+				cDTO.issuerAlternativeName = cert.getIssuerAlternativeNames().stream().findFirst().get().get(0)
+						.toString();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				cDTO.subjectAlternativeName = cert.getSubjectAlternativeNames().stream().findFirst().get().get(0)
+						.toString();
+			} catch (Exception e) {
+				e.printStackTrace();
+
+			}
+			boolean[] keyUsages = cert.getKeyUsage();
+			cDTO.keyUsage = new LinkedList<>();
+			for (int i = 0; i < keyUsages.length; i++) {
+				if (keyUsages[i])
+					cDTO.keyUsage.add(i);
+			}
+			try {
+				String test = getExtensionValue(cert, "2.5.29.9");  //TODO: testirati
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 			return cDTO;
 
 		} catch (CertificateEncodingException e) {
 			return null;
 		}
+	}
+
+	private static String getExtensionValue(X509Certificate X509Certificate, String oid) throws IOException {
+		String decoded = null;
+		byte[] extensionValue = X509Certificate.getExtensionValue(oid);
+
+		if (extensionValue != null) {
+			ASN1Primitive derObject = toDERObject(extensionValue);
+			if (derObject instanceof DEROctetString) {
+				DEROctetString derOctetString = (DEROctetString) derObject;
+
+				derObject = toDERObject(derOctetString.getOctets());
+				if (derObject instanceof ASN1String) {
+					ASN1String s = (ASN1String) derObject;
+					decoded = s.getString();
+				}
+
+			}
+		}
+		return decoded;
+	}
+
+	private static ASN1Primitive toDERObject(byte[] data) throws IOException {
+		ByteArrayInputStream inStream = new ByteArrayInputStream(data);
+		ASN1InputStream asnInputStream = new ASN1InputStream(inStream);
+
+		return asnInputStream.readObject();
 	}
 }
