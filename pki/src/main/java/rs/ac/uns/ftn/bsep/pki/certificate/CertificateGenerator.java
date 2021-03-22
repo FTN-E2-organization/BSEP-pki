@@ -2,10 +2,10 @@ package rs.ac.uns.ftn.bsep.pki.certificate;
 
 import java.math.BigInteger;
 import java.security.cert.X509Certificate;
+import java.util.List;
 import java.util.Vector;
 
 import org.bouncycastle.asn1.ASN1EncodableVector;
-import org.bouncycastle.asn1.DERObjectIdentifier;
 import org.bouncycastle.asn1.DERSet;
 import org.bouncycastle.asn1.DERUTF8String;
 import org.bouncycastle.asn1.x509.Attribute;
@@ -31,7 +31,7 @@ public class CertificateGenerator {
 	}
 
 	public X509Certificate generateCertificate(SubjectData subjectData, IssuerData issuerData, boolean isCa,
-			Integer keyUsage) throws Exception {
+			List<Integer> keyUsage) throws Exception {
 		try {
 			// Posto klasa za generisanje sertifikata ne moze da primi direktno privatni
 			// kljuc pravi se builder za objekat
@@ -65,7 +65,12 @@ public class CertificateGenerator {
 				certGen.addExtension(Extension.issuerAlternativeName, false, issuerAlternativeName);
 			}
 			if (keyUsage != null) {
-				certGen.addExtension(Extension.keyUsage, true, new KeyUsage(keyUsage));
+				int ky=0;
+				for(Integer i: keyUsage) {
+					int pow= (int) Math.pow(2, i);
+					ky = pow | ky;
+				}
+				certGen.addExtension(Extension.keyUsage, true, new KeyUsage(ky));
 			}
 
 			Vector<Attribute> attributes = new Vector();
