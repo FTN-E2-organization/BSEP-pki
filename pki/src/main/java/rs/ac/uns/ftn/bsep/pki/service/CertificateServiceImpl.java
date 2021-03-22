@@ -65,16 +65,6 @@ public class CertificateServiceImpl implements CertificateService{
 		certificate.setIsRevoked(true);
 		certificateRepository.save(certificate);	
 	}
-
-	@Override
-	public void revokeCertificateAndChildren(Long id) {
-		Certificate certificate = certificateRepository.getOne(id);
-		if(certificate.getIsCA()) {
-			// TODO dodati nakon sto odradimo cuvanje sve 3 vrste setifikata u keyStoreFile (konvencija imenovanja)
-		}else {
-			revokeOneCertificate(id);
-		}	
-	}
 	
 	public void addCertificate(CertificateDTO certificateDTO, boolean isSelfSigned) throws Exception{
 		KeyPair keyPairSubject = getKeyPair();

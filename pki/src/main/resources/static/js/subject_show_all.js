@@ -28,8 +28,14 @@ function addRowInTable(c){
 	let btncheckValidation = '<button data-toggle="modal" data-target="#centralModalCheckValidation" class="btn btn-info" type="button" id="' + c.id +'" onclick="checkValidation(this.id)" style="margin-top:-10px;  margin-left:-20px; margin-right:-20px;">Validity</button>';
 	let btnIssuer = '<button data-toggle="modal" data-target="#centralModalViewIssuer" class="btn btn-info" type="button" id="' + c.id +'" onclick="getIssuer(this.id)" style="margin-top:-10px;  margin-left:-20px; margin-right:-20px;">Issuer</button>';
 	
-	let row = $('<tr><td>' + c.startDate + '</td><td>' + c.endDate + '</td>' + 
-				'<td>' + c.isCA + '</td><td>' + c.isRevoked + '</td><td>' + btncheckValidation + '</td>' +
+	let row = $('<tr><td>' + c.organization + '</td><td>' + c.organizationUnit + '</td>' + 
+				'<td>' + c.startDate + '</td><td>' + c.endDate + '</td>' + 
+				'<td>' + c.commonName + '</td><td>' + c.givenName + '</td>' + 
+				'<td>' + c.surname + '</td><td>' + c.email + '</td>' + 
+				'<td>' + c.countryCode + '</td><td>' + c.state + '</td>' + 
+				'<td>' + c.locality + '</td><td>' + c.startDate + '</td>' + 
+				'<td>' + c.endDate + '</td><td>' + c.isCA + '</td>' + 
+				'<td>' + c.isRevoked + '</td><td>' + btncheckValidation + '</td>' +
 				'<td>' + btnIssuer + '</td><td>' + btnDownload + '</td>' +
 				'</tr>');
 				
@@ -46,9 +52,7 @@ function download(certificateId){
         },
 		contentType: "application/json",
 		success:function(){
-			let alert = $('<div class="alert alert-success alert-dismissible fade show m-1" role="alert">Successfully downloaded.'
-			+'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + '</div >')
-			$('#div_alert').append(alert);
+			console.log('Successfully downloaded.');
 			return;
 		},
 		error:function(){
