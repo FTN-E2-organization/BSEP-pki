@@ -6,6 +6,7 @@ $(document).ready(function () {
 	$('#endDate').val("");
 	$('#startDate').prop("min",new Date().toISOString().split("T")[0]);
 	$('#endDate').prop("min",new Date().toISOString().split("T")[0]);
+	fillSelectForTemplates(true);
 	
 	$.ajax({
 		type:"GET", 
@@ -73,8 +74,13 @@ $(document).ready(function () {
     });
 
 	$("input:radio[name=person]").on("change", function() {
+		fillSelectForTemplates(true);
+		
 		$('#system').prop('checked',false);
 		$('#person').prop('checked',true);
+		
+		$('#subjectAltName').attr("hidden",true);
+		$('#subjectDirAttr').attr("hidden",false);
 		
 		$("#name_surname_div").attr("hidden",false);
 		$('#gn').prop("required",true);
@@ -82,8 +88,13 @@ $(document).ready(function () {
     });
 
 	$("input:radio[name=system]").on("change", function() {
+		fillSelectForTemplates(false);
+		
 		$('#system').prop('checked',true);
 		$('#person').prop('checked',false);
+		
+		$('#subjectAltName').attr("hidden",false);
+		$('#subjectDirAttr').attr("hidden",true);
 		
 		$("#name_surname_div").attr("hidden",true);
 		$('#gn').prop("required",false);
@@ -150,7 +161,6 @@ $(document).ready(function () {
 			}
 		}
 		
-		
 		$.ajax({
 			type:"POST", 
 			url: url,
@@ -212,4 +222,17 @@ function subjectDirAttrVisibility(flag){
 	$("#subDirAttrDiv").attr("hidden",flag);
 }
 
+function fillSelectForTemplates(isPerson){
+	$('#templates').empty();
+	$('#templates').append('<option id="keyUsage">Key usage</option>');
+	$('#templates').append('<option id="issuerAltName">Issuer alternative name</option>');
+	
+	if(isPerson){
+		$('#templates').append('<option id="subjectDirAttr">Subject directory attribute</option>');
+		subjectAltNameVisibility(true);
+	}else{
+		$('#templates').append('<option id="subjectAltName" hidden="true">Subject alternative name</option>');
+		subjectDirAttrVisibility(true);
+	}
+}
 
