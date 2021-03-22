@@ -21,4 +21,9 @@ public class SubjectServiceImpl implements SubjectService {
 		return subjectRepository.findAll();
 	}
 
+	@Override
+	public Subject getById(Long id) {
+		return subjectRepository.getOne(id);
+	}
+
 }

@@ -21,7 +21,7 @@ $(document).ready(function () {
 			$("form#logging_in").removeClass("unsuccessful");
 			
 			$.ajax({
-				url: "/auth/login",
+				url: "/api/auth/login",
 				type: 'POST',
 				contentType: 'application/json',
 				data: JSON.stringify(userInfoDTO),
@@ -44,7 +44,9 @@ $(document).ready(function () {
 function redirectUser(token){
 	let role = decodeToken(token).role;
 	if(role == "ROLE_ADMIN"){
-    	 window.location.href = "create_certificate.html";
+    	 window.location.href = "admin_show_all.html";
+	}else if(role == "ROLE_SUBJECT"){
+		window.location.href = "subject_show_all.html";
 	}
 }
 

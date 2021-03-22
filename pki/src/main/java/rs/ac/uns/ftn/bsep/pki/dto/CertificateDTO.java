@@ -10,6 +10,7 @@ public class CertificateDTO {
 	public LocalDate startDate;
 	public LocalDate endDate;
 	public boolean isCA;
+	public boolean isRevoked;
     
 	public String typeOfSubject;
 	public String commonName;
@@ -32,7 +33,7 @@ public class CertificateDTO {
 
 	public CertificateDTO(Long id, Long subjectId, Long issuerId, LocalDate startDate, LocalDate endDate, boolean isCA,
 			String typeOfClient, String commonName, String givenName, String surname, String organization, String organizationUnit,
-			String coutryCode, String email, String state, String locality) {
+			String coutryCode, String email, String state, String locality, boolean isRevoked) {
 		super();
 		this.id = id;
 		this.subjectId = subjectId;
@@ -50,6 +51,7 @@ public class CertificateDTO {
 		this.email = email;
 		this.state = state;
 		this.locality = locality;
+		this.isRevoked = isRevoked;
 	}
     
 }
