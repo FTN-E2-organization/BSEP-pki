@@ -97,8 +97,14 @@ $(document).ready(function () {
 		}
 		
 		let selectedSubjectId = $('#subjects option:selected').attr('id');
-		let selectedSubject = subjectArray[selectedSubjectId - 1];
 		let selectedIssuerId = $('#issuers option:selected').attr('id');
+		let selectedSubject;
+		
+		for(let s of subjectArray){
+			if(s.id == selectedSubjectId){
+				selectedSubject = s;
+			}
+		}
 		
 		if($('#ss').is(':checked')){
 			selectedIssuerId = selectedSubjectId;
@@ -148,14 +154,18 @@ $(document).ready(function () {
 
 function fillSubjectFields(){
 	let selectedSubjectId = $('#subjects option:selected').attr('id');
-	let selectedSubject = subjectArray[selectedSubjectId - 1];
-	$('#o').text(selectedSubject.organization);
-	$('#ou').text(selectedSubject.organizationUnit);
-	$('#gn').text(selectedSubject.givenName);
-	$('#sn').text(selectedSubject.surname);
-	$('#cn').text(selectedSubject.commonName);
-	$('#e').text(selectedSubject.email);
-	$('#c').text(selectedSubject.countryCode);
-	$('#s').text(selectedSubject.state);
-	$('#l').text(selectedSubject.locality);
+	
+	for(let selectedSubject of subjectArray){
+		if(selectedSubject.id == selectedSubjectId){
+			$('#o').text(selectedSubject.organization);
+			$('#ou').text(selectedSubject.organizationUnit);
+			$('#gn').text(selectedSubject.givenName);
+			$('#sn').text(selectedSubject.surname);
+			$('#cn').text(selectedSubject.commonName);
+			$('#e').text(selectedSubject.email);
+			$('#c').text(selectedSubject.countryCode);
+			$('#s').text(selectedSubject.state);
+			$('#l').text(selectedSubject.locality);
+		}
+	}
 };
