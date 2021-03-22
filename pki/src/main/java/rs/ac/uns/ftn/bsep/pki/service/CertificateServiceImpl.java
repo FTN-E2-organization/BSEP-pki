@@ -345,7 +345,7 @@ public class CertificateServiceImpl implements CertificateService{
         File downloadFile = null;
         try {
         	java.security.cert.Certificate c = getSecurityCertificate(id);
-        	downloadFile  = writeCertificate(c);
+        	downloadFile  = writeCertificate(c, id);
             FileInputStream inStream = new FileInputStream(downloadFile);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -355,8 +355,9 @@ public class CertificateServiceImpl implements CertificateService{
         return downloadFile;
 	}
 
-	private File writeCertificate(java.security.cert.Certificate certificate) {
-		File file = new File("certificate.cer");
+	private File writeCertificate(java.security.cert.Certificate certificate, long certificateId) {
+		String home = System.getProperty("user.home");
+		File file = new File(home + "\\Downloads\\", "certificate" + certificateId + ".cer");
 		FileOutputStream os = null;
 		byte[] buf = new byte[0];
 		try {
