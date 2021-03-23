@@ -119,6 +119,10 @@ public class CertificateServiceImpl implements CertificateService{
 		CertificateGenerator certificateGenerator = new CertificateGenerator();
 		X509Certificate x509Certificate = certificateGenerator.generateCertificate(subjectData, issuerData, certificateDTO.isCA, certificateDTO.keyUsage);
 		
+		System.out.println("-------------------------------------------");
+		System.out.println(keyStorePath);
+		System.out.println("-------------------------------------------");
+		
 		// Cuvanje sertifikata u keystore
 		keyStoreWriter.loadKeyStore(keyStorePath, keyStorePassword.toCharArray());
 		keyStoreWriter.write(x509Certificate.getSerialNumber().toString(), keyPairSubject.getPrivate(), keyStorePassword.toCharArray(), x509Certificate);
