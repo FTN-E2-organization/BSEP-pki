@@ -25,7 +25,10 @@ $(document).ready(function () {
 function addRowInTable(c){
 	
 	let btnCheckValidity = '<button data-toggle="modal" data-target="#centralModalCheckValidation" class="btn btn-info btn-sm" type="button" id="' + c.id +'" onclick="validation(this.id)">Validity</button>';
-	let btnRevoke = '<button data-toggle="modal" data-target="#modalConfirmRevoke" class="btn btn-danger btn-sm" type="button" id="' + c.id +'" onclick="revoke(this.id)">Revoke</button>';
+	let btnRevoke = '';
+	if(c.isRevoked == false){
+		btnRevoke = '<button data-toggle="modal" data-target="#modalConfirmRevoke" class="btn btn-danger btn-sm" type="button" id="' + c.id +'" onclick="revoke(this.id)">Revoke</button>';
+	}
 	let btnIssuer = '<button data-toggle="modal" data-target="#centralModalViewIssuer" class="btn btn-info btn-sm" type="button" id="' + c.issuerId +'" onclick="getIssuer(this.id)">Issuer</button>';
 	
 	let row = $('<tr><td>' + c.organization + '</td><td>' + c.organizationUnit + '</td>' +
@@ -98,7 +101,7 @@ function getIssuer(issuerId) {
         },
 		contentType: "application/json",
 		success:function(certificate){
-			let table_info =  '<table style="margin-top:30px; margin-bottom:30px;">'
+			let table_info =  '<table style="margin-left:30px; margin-top:30px; margin-bottom:30px;">'
 						+ '<tr> <td>Organization:</td><td>' + certificate.organization + '</td> </tr>' 
 						+ '<tr> <td>Organization unit:</td><td>' + certificate.organizationUnit + '</td> </tr>' 
 						+ '<tr> <td>Common name:</td><td>' + certificate.commonName + '</td></tr>' 
