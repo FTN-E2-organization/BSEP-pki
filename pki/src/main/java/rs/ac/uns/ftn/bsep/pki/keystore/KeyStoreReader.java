@@ -72,10 +72,6 @@ public class KeyStoreReader {
             IssuerData issuerData = new IssuerData(privKey, issuerName);
             issuerData.setIssuerAltName(issuerAltName);
             
-            System.out.println("-------------------------------------------");
-            System.out.println(issuerName);
-            System.out.println("-------------------------------------------");
-            
             return issuerData;
 
         } catch (Exception e) {
