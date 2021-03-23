@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.bsep.pki.validator;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import rs.ac.uns.ftn.bsep.pki.dto.CertificateDTO;
@@ -10,60 +11,79 @@ public class CertificateValidator {
 
 	public static void addCertificateValidation(CertificateDTO certificateDTO) throws Exception {
 		
-		if(certificateDTO.issuerId <= 0 || certificateDTO.subjectId <= 0)
-			throw new ValidationException("Wrong format of issuer or subject ID.");
-		if(certificateDTO.startDate == null)
-			throw new ValidationException("Start date is required field.");
-		if(certificateDTO.endDate == null)
-			throw new ValidationException("End date is required field.");
-		if(certificateDTO.startDate.isBefore(LocalDate.now()))
-			throw new ValidationException("Start date must be greater or equal than today.");
-		if(certificateDTO.endDate.isBefore(certificateDTO.startDate))
-			throw new ValidationException("End date must be greater or equal than start date.");
-		if(certificateDTO.commonName == null || certificateDTO.commonName.isEmpty())
-			throw new ValidationException("Common name is required field.");
-		if(certificateDTO.countryCode == null || certificateDTO.countryCode.isEmpty())
-			throw new ValidationException("Country code is required field.");
-		if(certificateDTO.state == null || certificateDTO.state.isEmpty())
-			throw new ValidationException("State is required field.");
-		if(certificateDTO.locality == null || certificateDTO.locality.isEmpty())
-			throw new ValidationException("Locality is required field.");
+		validateId(certificateDTO.subjectId, "Wrong format of subject ID.");
+		validateId(certificateDTO.issuerId, "Wrong format of issuer ID.");
+		validateField(certificateDTO.organization, "Organization is required field.");
+		validateField(certificateDTO.organizationUnit, "Organization unit is required field.");
+		validateField(certificateDTO.commonName, "Common name is required field.");
+		validateField(certificateDTO.email, "Email is required field.");
+		validateEmailFormat(certificateDTO.email);
+		validateStartDate(certificateDTO.startDate);
+		validateEndDate(certificateDTO.endDate, certificateDTO.startDate);
+		validateField(certificateDTO.countryCode, "Country code is required field.");
+		validateField(certificateDTO.state, "State code is required field.");
+		validateField(certificateDTO.locality, "Locality code is required field.");
+		
+		if(certificateDTO.typeOfSubject.equals("Person")) {
+			validateField(certificateDTO.givenName, "Given name code is required field.");
+			validateField(certificateDTO.surname, "Surname code is required field.");
+		}
+		
+		if(certificateDTO.usedTemplate.equals("keyUsage")) {
+			validateKeyUsage(certificateDTO.keyUsage);
+		}else if(certificateDTO.usedTemplate.equals("issuerAltName")) {
+			validateField(certificateDTO.issuerAlternativeName, "Issuer alternative name is required field.");
+		}else if(certificateDTO.usedTemplate.equals("subjectDirAttr")) {
+			validateField(certificateDTO.placeOfBirth, "Place of birth is required field.");
+		}else if(certificateDTO.usedTemplate.equals("subjectAltName")) {
+			validateField(certificateDTO.subjectAlternativeName, "Subject alternative name is required field.");
+		}else {
+			throw new ValidationException("Wrong template.");
+		}
+		
 		if(certificateDTO.givenName == null)
 			certificateDTO.givenName = "";
 		if(certificateDTO.surname == null)
 			certificateDTO.surname = "";
-		if(certificateDTO.email == null)
-			certificateDTO.email = "";
-		if(certificateDTO.organization == null)
-			certificateDTO.organization = "";
-		if(certificateDTO.organizationUnit == null)
-			certificateDTO.organizationUnit = "";
-		
-		if(certificateDTO.typeOfSubject.equals("Person")) {
-			if(certificateDTO.givenName.isEmpty())
-				throw new ValidationException("Given name is required field.");
-			if(certificateDTO.surname.isEmpty())
-				throw new ValidationException("Surname is required field.");
-			if(certificateDTO.email.isEmpty())
-				throw new ValidationException("Email is required field.");
-			if(!isValidEmail(certificateDTO.email))
-				throw new ValidationException("Wrong format of email.");
-		}
-		else if(certificateDTO.typeOfSubject.equals("Software")) {
-			if(certificateDTO.organization.isEmpty())
-				throw new ValidationException("Organization is required field.");
-			if(certificateDTO.organizationUnit.isEmpty())
-				throw new ValidationException("Organization unit is required field.");
-		}
-		else {
-			throw new ValidationException("Wrong type of client.");
+	}
+	
+	private static void validateId(Long id, String message) throws Exception{
+		if(id < 0)
+			throw new ValidationException(message);
+	}
+	
+	private static void validateField(String field, String message) throws Exception {
+		if(field == null || field.isEmpty()) {
+			throw new ValidationException(message);
 		}
 	}
 	
-	private static boolean isValidEmail(String email)
-    {
+	private static void validateEmailFormat(String email) throws Exception {
         Pattern emailRegex = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
         Matcher matcher = emailRegex.matcher(email);
-        return matcher.find();
+        if(!matcher.find())
+        	throw new ValidationException("Wrong format of email.");
     }
+	
+	private static void validateStartDate(LocalDate startDate) throws Exception{
+		if(startDate == null)
+			throw new ValidationException("Start date is required field.");
+		if(startDate.isBefore(LocalDate.now()))
+			throw new ValidationException("Start date must be earlier or equal than today.");
+	}
+	
+	private static void validateEndDate(LocalDate endDate, LocalDate startDate) throws Exception{
+		if(endDate == null)
+			throw new ValidationException("Start date is required field.");
+		if(endDate.isBefore(startDate))
+			throw new ValidationException("End date must be greater or equal than start date.");
+	}
+	
+	private static void validateKeyUsage(List<Integer> keyUsage) throws Exception {
+		for(Integer ku:keyUsage) {
+			if(ku < 0 || ku > 8)
+				throw new ValidationException("Wrong key usage format.");
+		}
+	}
+	
 }

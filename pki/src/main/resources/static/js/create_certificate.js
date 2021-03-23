@@ -6,10 +6,11 @@ $(document).ready(function () {
 	$('#endDate').val("");
 	$('#startDate').prop("min",new Date().toISOString().split("T")[0]);
 	$('#endDate').prop("min",new Date().toISOString().split("T")[0]);
+	fillSelectForTemplates(true);
 	
 	$.ajax({
 		type:"GET", 
-		url: "/api/subject",
+		url: "/api/user/subjects",
 		headers: {
             'Authorization': 'Bearer ' + window.localStorage.getItem('token')
         },
@@ -17,19 +18,9 @@ $(document).ready(function () {
 		success:function(subjects){
 			$('#subjects').empty();
 			for (let s of subjects){
-				let  out = "";
-				if(s.typeOfSubject == "Person"){
-					out = s.givenName + ' ' + s.surname + ', ' + s.commonName + ', ' + s.email + ', ' + s.countryCode + ', ' + s.state + ', ' + s.locality;
-				}
-				else{
-					out = s.organization + ', ' + s.commonName + ', ' + s.organizationUnit + ', ' + s.countryCode + ', ' + s.state + ', ' + s.locality;
-				}
-				$('#subjects').append('<option id="' + s.id + '">' + out +'</option>');
-				subjectArray.push({"id":s.id, "commonName":s.commonName, "givenName":s.givenName, "surname":s.surname, "organization":s.organization, 
-							   "organizationUnit":s.organizationUnit, "email":s.email, "countryCode":s.countryCode, "state":s.state, 
-							   "locality":s.locality, "typeOfSubject": s.typeOfSubject});
+				$('#subjects').append('<option id="' + s.id + '">' + s.username +'</option>');
+				subjectArray.push({"id":s.id, "username":s.username});
 			}
-			fillSubjectFields();
 		},
 		error:function(){
 			console.log('error getting subjects');
@@ -51,15 +42,9 @@ $(document).ready(function () {
 			$('#nss').prop('disabled',false);
 			$('#issuers').empty();
 			for (let i of issuers){
-				let  out = "";
-				if(i.givenName != ""){
-					out = "GN=" + i.givenName + ' ' + "SN=" + i.surname + ', ' + "CN=" + i.commonName + ', ' + "EMAIL=" + i.email + ', ' + 
-					"C=" + i.countryCode + ', ' + "S=" + i.state + ', ' + "L=" + i.locality;
-				}
-				else{
-					out = "O=" + i.organization + ', ' + "CN=" + i.commonName + ', ' + "OU=" + i.organizationUnit + ', ' + 
-					"C=" + i.countryCode + ', ' + "S=" + i.state + ', ' + "L=" + i.locality;
-				}
+				let  out = "O=" + i.organization + ', ' + "OU=" + i.organizationUnit + ', ' + "CN=" + i.commonName + ', ' + 
+						   "GN=" + i.givenName + ', ' + "SN=" + i.surname + ', ' + "EMAIL=" + i.email + ', ' +
+						   "C=" + i.countryCode + ', ' + "S=" + i.state + ', ' + "L=" + i.locality;
 				$('#issuers').append('<option id="' + i.id + '">' + out +'</option>');
 			}
 		},
@@ -82,9 +67,62 @@ $(document).ready(function () {
 		$('#issuers_div').attr('hidden',true);
     });
 
-	$('#subjects').on("change", function() {
-		fillSubjectFields();
+	$("input:radio[name=person]").on("change", function() {
+		fillSelectForTemplates(true);
+		
+		$('#system').prop('checked',false);
+		$('#person').prop('checked',true);
+		
+		$('#subjectAltName').attr("hidden",true);
+		$('#subjectDirAttr').attr("hidden",false);
+		
+		$("#name_surname_div").attr("hidden",false);
+		$('#gn').prop("required",true);
+		$('#sn').prop("required",true);
     });
+
+	$("input:radio[name=system]").on("change", function() {
+		fillSelectForTemplates(false);
+		
+		$('#system').prop('checked',true);
+		$('#person').prop('checked',false);
+		
+		$('#subjectAltName').attr("hidden",false);
+		$('#subjectDirAttr').attr("hidden",true);
+		
+		$("#name_surname_div").attr("hidden",true);
+		$('#gn').prop("required",false);
+		$('#sn').prop("required",false);
+    });
+
+	$("#templates").on("change", function() {
+		let selectedOptionId = $('#templates option:selected').attr('id');
+		
+		if(selectedOptionId == "keyUsage"){
+			keyUsageVisibility(false);
+			issuerAltNameVisibility(true);
+			subjectAltNameVisibility(true);
+			subjectDirAttrVisibility(true);
+		}else if(selectedOptionId == "issuerAltName"){
+			keyUsageVisibility(true);
+			issuerAltNameVisibility(false);
+			subjectAltNameVisibility(true);
+			subjectDirAttrVisibility(true);
+		}
+		else if(selectedOptionId == "subjectDirAttr"){
+			keyUsageVisibility(true);
+			issuerAltNameVisibility(true);
+			subjectAltNameVisibility(true);
+			subjectDirAttrVisibility(false);
+		}else if(selectedOptionId == "subjectAltName"){
+			keyUsageVisibility(true);
+			issuerAltNameVisibility(true);
+			subjectAltNameVisibility(false);
+			subjectDirAttrVisibility(true);
+		}
+    });
+
+
 
 	$('#create_cert').submit(function(event){
 		event.preventDefault();
@@ -98,17 +136,23 @@ $(document).ready(function () {
 		
 		let selectedSubjectId = $('#subjects option:selected').attr('id');
 		let selectedIssuerId = $('#issuers option:selected').attr('id');
-		let selectedSubject;
-		
-		for(let s of subjectArray){
-			if(s.id == selectedSubjectId){
-				selectedSubject = s;
-			}
-		}
 		
 		if($('#ss').is(':checked')){
 			selectedIssuerId = selectedSubjectId;
-			//selectedIssuerId = -1;
+		}
+		
+		let typeOfSubject = "Person";
+		if($('#system').is(':checked')){
+			typeOfSubject = "System";
+		}
+		
+		let keyUsages = [];
+		
+		for(let i=0;i<=8;i++){
+			let idKu = i + 'ku';
+			if($('#' + idKu).is(':checked')){
+				keyUsages.push(i);
+			}
 		}
 		
 		$.ajax({
@@ -118,21 +162,27 @@ $(document).ready(function () {
 	            'Authorization': 'Bearer ' + window.localStorage.getItem('token')
 	        },
 			data: JSON.stringify({ 
-				subjectId: selectedSubject.id,
+				subjectId: selectedSubjectId,
 				issuerId : selectedIssuerId,
 				startDate: $('#startDate').val(),
 				endDate: $('#endDate').val(),
 				isCA: $('#isCa').is(':checked'),
-				typeOfSubject: selectedSubject.typeOfSubject,
-				commonName: selectedSubject.commonName,
-				givenName: selectedSubject.givenName,
-				surname: selectedSubject.surname,
-				organization: selectedSubject.organization,
-				organizationUnit: selectedSubject.organizationUnit,
-				email: selectedSubject.email,
-				countryCode: selectedSubject.countryCode,
-				state: selectedSubject.state,
-				locality: selectedSubject.locality}),
+				typeOfSubject: typeOfSubject,
+				commonName: $('#cn').val(),
+				givenName: $('#gn').val(),
+				surname: $('#sn').val(),
+				organization: $('#o').val(),
+				organizationUnit: $('#ou').val(),
+				email: $('#e').val(),
+				countryCode: $('#c').val(),
+				state: $('#s').val(),
+				locality: $('#l').val(),
+				issuerAlternativeName: $('#issAltName').val(),
+				subjectAlternativeName: $('#subAltName').val(),
+				dateOfBirth: $('#birthDate').val(),
+				placeOfBirth : $('#birthPlace').val(),
+				keyUsage: keyUsages,
+				usedTemplate : $('#templates option:selected').attr('id')}),
 			contentType: "application/json",
 			success:function(){
 				let alert = $('<div class="alert alert-success alert-dismissible fade show m-1" role="alert">Successfully certificate creating.'
@@ -153,20 +203,36 @@ $(document).ready(function () {
 	
 });
 
-function fillSubjectFields(){
-	let selectedSubjectId = $('#subjects option:selected').attr('id');
+function keyUsageVisibility(flag){
+	$("#ku1").attr("hidden",flag);
+	$("#ku2").attr("hidden",flag);
+}
+
+function issuerAltNameVisibility(flag){
+	$("#issAltNameDiv").attr("hidden",flag);
+	$('#issAltName').prop("required",!flag);
+}
+
+function subjectAltNameVisibility(flag){
+	$("#subAltNameDiv").attr("hidden",flag);
+	$('#subAltName').prop("required",!flag);
+}
+
+function subjectDirAttrVisibility(flag){
+	$("#subDirAttrDiv").attr("hidden",flag);
+}
+
+function fillSelectForTemplates(isPerson){
+	$('#templates').empty();
+	$('#templates').append('<option id="keyUsage">Key usage</option>');
+	$('#templates').append('<option id="issuerAltName">Issuer alternative name</option>');
 	
-	for(let selectedSubject of subjectArray){
-		if(selectedSubject.id == selectedSubjectId){
-			$('#o').text(selectedSubject.organization);
-			$('#ou').text(selectedSubject.organizationUnit);
-			$('#gn').text(selectedSubject.givenName);
-			$('#sn').text(selectedSubject.surname);
-			$('#cn').text(selectedSubject.commonName);
-			$('#e').text(selectedSubject.email);
-			$('#c').text(selectedSubject.countryCode);
-			$('#s').text(selectedSubject.state);
-			$('#l').text(selectedSubject.locality);
-		}
+	if(isPerson){
+		$('#templates').append('<option id="subjectDirAttr">Subject directory attribute</option>');
+		subjectAltNameVisibility(true);
+	}else{
+		$('#templates').append('<option id="subjectAltName" hidden="true">Subject alternative name</option>');
+		subjectDirAttrVisibility(true);
 	}
-};
+}
+

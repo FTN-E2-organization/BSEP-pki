@@ -17,7 +17,7 @@
 	
 	<div id="div_alert" style="position: fixed; top: 73px; right: 20px; width: 24%; z-index: 9999; border-radius: 0px"></div>
 
-    <div id="container" class="container w-50 mt-5 pt-3 mb-4">
+    <div id="container" class="container w-70 mt-5 pt-3 mb-4">
 		<form id="create_cert">
 			<div class="row">
 			<div class="col p-4">
@@ -28,6 +28,164 @@
                             </h4>
                      </div>
 					<div class="card-body p-3">
+					<br/>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="custom-control custom-radio">
+							  <input type="radio" class="custom-control-input" id="person" name="person" checked="checked">
+							  <label class="custom-control-label" for="person">Person</label>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="custom-control custom-radio">
+							  <input type="radio" class="custom-control-input" id="system" name="system">
+							  <label class="custom-control-label" for="system">System</label>
+							</div>
+						</div>
+					</div>
+					<br/><br/>
+					
+					<div class="row">
+						<div class="col-md-12">
+							<label>Choose template*</label>
+							<select class="form-control" id="templates">
+							</select>
+						</div>
+					</div>
+					<br/>
+					
+					<div class="row">
+						<div class="col-md-12">
+							<label>Choose subject*</label>
+							<select class="form-control" id="subjects">
+							</select>
+						</div>
+					</div>
+					<br/><br/>
+					<div class="row" id="name_surname_div">
+						<div class="col-md-6">
+							<label>Enter the given name*</label>
+							<input id="gn" class="form-control" type="text" placeholder="Given name" required>
+						</div>
+						<div class="col-md-6">
+							<label>Enter the surname*:</label>
+							<input id="sn" class="form-control" type="text" placeholder="Surname" required>
+						</div>
+					</div>
+					<br/>
+					<div class="row">
+						<div class="col-md-6">
+							<label>Enter the organization*</label>
+							<input id="o" class="form-control" type="text" placeholder="Organization" required>
+						</div>
+						<div class="col-md-6">
+							<label>Enter the organization unit*</label>
+							<input id="ou" class="form-control" type="text" placeholder="Organization unit" required>
+						</div>
+					</div>
+					<br/>
+					<div class="row">
+						<div class="col-md-6">
+							<label>Enter the common name*</label>
+							<input id="cn" class="form-control" type="text" placeholder="Common name" required>
+						</div>
+						<div class="col-md-6">
+							<label>Enter the email*:</label>
+							<input id="e" class="form-control" type="text" placeholder="Email" required>
+						</div>
+					</div>
+					<br/>
+					<div class="row">
+						<div class="col-md-6">
+							<label>Choose start date*</label>
+							<input id="startDate" type="date"  class="form-control" required>
+						</div>
+						<div class="col-md-6">
+							<label>Choose end date*</label>
+							<input id="endDate" type="date"  class="form-control" required>
+						</div>
+					</div>
+					<br/>
+					<div class="row">
+						<div class="col-md-6">
+							<label>Enter the country code*</label>
+							<input id="c" class="form-control" type="text" placeholder="Country code" required>
+						</div>
+						<div class="col-md-6">
+							<label>Enter the state*:</label>
+							<input id="s" class="form-control" type="text" placeholder="State" required>
+						</div>
+					</div>
+					<br/>
+					<div class="row">
+						<div class="col-md-6">
+							<label>Enter the locality*</label>
+							<input id="l" class="form-control" type="text" placeholder="Locality" required>
+						</div>
+						<div class="col-md-6" id="issAltNameDiv" hidden="true">
+							<label>Enter the issuer alternative name*</label>
+							<input id="issAltName" class="form-control" type="text" placeholder="Issuer alternative name">
+						</div>
+						<div class="col-md-6" id="subAltNameDiv" hidden="true">
+							<label>Enter the subject alternative name*</label>
+							<input id="subAltName" class="form-control" type="text" placeholder="Subject alternative name">
+						</div>
+					</div>
+					<br/>
+					<div class="row" id="subDirAttrDiv" hidden="true">
+						<div class="col-md-6">
+							<label>Enter date of birth*</label>
+							<input id="birthDate" class="form-control" type="date" placeholder="Date of birth">
+						</div>
+						<div class="col-md-6">
+							<label>Enter the place of birth*:</label>
+							<input id="birthPlace" class="form-control" type="text" placeholder="Place of birth">
+						</div>
+					</div>
+					<br/>
+					
+					<div class="row" id="ku1" style="margin-left:10px;">
+						<div class="form-check form-check-inline" style="margin-left:10px;">
+						  <input class="form-check-input" type="checkbox" id="0ku">
+						  <label class="form-check-label" for="0ku">Digital signature</label>
+						</div>
+						<div class="form-check form-check-inline" style="margin-left:40px;">
+						  <input class="form-check-input" type="checkbox" id="1ku">
+						  <label class="form-check-label" for="1ku">Non repudiation</label>
+						</div>
+						<div class="form-check form-check-inline" style="margin-left:40px;">
+						  <input class="form-check-input" type="checkbox" id="2ku">
+						  <label class="form-check-label" for="2ku">Key encipherment</label>
+						</div>
+						<div class="form-check form-check-inline" style="margin-left:40px;">
+						  <input class="form-check-input" type="checkbox" id="3ku">
+						  <label class="form-check-label" for="3ku">Data encipherment</label>
+						</div>
+					</div><br/>
+					
+					<div class="row" id="ku2" style="margin-left:10px;">
+						<div class="form-check form-check-inline" style="margin-left:10px;">
+						  <input class="form-check-input" type="checkbox" id="4ku">
+						  <label class="form-check-label" for="4ku">Key agreement</label>
+						</div>
+						<div class="form-check form-check-inline" style="margin-left:40px;">
+						  <input class="form-check-input" type="checkbox" id="5ku">
+						  <label class="form-check-label" for="5ku">Key cert sign</label>
+						</div>
+						<div class="form-check form-check-inline" style="margin-left:40px;">
+						  <input class="form-check-input" type="checkbox" id="6ku">
+						  <label class="form-check-label" for="6ku">CRL sign</label>
+						</div>
+						<div class="form-check form-check-inline" style="margin-left:40px;">
+						  <input class="form-check-input" type="checkbox" id="7ku">
+						  <label class="form-check-label" for="7ku">Encipher only</label>
+						</div>
+						<div class="form-check form-check-inline" style="margin-left:40px;">
+						  <input class="form-check-input" type="checkbox" id="8ku">
+						  <label class="form-check-label" for="8ku">Decipher only</label>
+						</div>
+					</div>
+					<br/><br/>
 					
 					<div class="row">
 						<div class="col-md-6">
@@ -53,83 +211,8 @@
 						</div>
 					</div>
 					<br/>
-					<div class="row">
-						<div class="col-md-12">
-							<label>Choose subject*</label>
-							<select class="form-control" id="subjects">
-							</select>
-						</div>
-					</div>
-					<br/>
-					<div class="row">
-						<div class="col-md-6">
-							<label>ORGANIZATION:</label>
-							<label id="o"></label>
-						</div>
-						<div class="col-md-6">
-							<label>ORGANIZATION UNIT:</label>
-							<label id="ou"></label>
-						</div>
-					</div>
-					<br/>
-					<div class="row">
-						<div class="col-md-6">
-							<label>GIVEN NAME:</label>
-							<label id="gn"></label>
-						</div>
-						<div class="col-md-6">
-							<label>SURNAME:</label>
-							<label id="sn"></label>
-						</div>
-					</div>
-					<br/>
-					<div class="row">
-						<div class="col-md-6">
-							<label>COMMON NAME:</label>
-							<label id="cn"></label>
-						</div>
-						<div class="col-md-6">
-							<label>EMAIL:</label>
-							<label id="e"></label>
-						</div>
-					</div>
-					<br/>
-					<div class="row">
-						<div class="col-md-6">
-							<label>COUNTRY CODE:</label>
-							<label id="c"></label>
-						</div>
-						<div class="col-md-6">
-							<label>STATE:</label>
-							<label id="s"></label>
-						</div>
-					</div>
-					<br/>
-					<div class="row">
-						<div class="col-md-6">
-							<label>LOCALITY:</label>
-							<label id="l"></label>
-						</div>
-					</div>
-					<br/><br/>
-					<div class="row">
-						<div class="col-md-5">
-							<div class="form-group">
-								<label>Date from*</label>
-								<input id="startDate" type="date"  class="form-control" required>
-							</div>
-						</div>
-						<div class="col-md-2"></div>
-						<div class="col-md-5">
-							<div class="form-group">
-								<label>Date to*</label>
-								<input id="endDate" type="date"  class="form-control" required>
-							</div>
-						</div>
-					</div>
-	
-					<br/>
-					<div class="row">
+					
+					<div class="row" style="margin-left:10px;">
 						<div class="col-md-12">
 							<div class="custom-control custom-checkbox">
 							    <input type="checkbox" class="custom-control-input" id="isCa" checked="checked" disabled="disabled">

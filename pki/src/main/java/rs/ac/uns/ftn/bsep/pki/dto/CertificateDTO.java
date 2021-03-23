@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.bsep.pki.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class CertificateDTO {
 
@@ -23,11 +24,13 @@ public class CertificateDTO {
     public String state;
     public String locality;
     
-    public Integer keyUsage;
+    public List<Integer> keyUsage;
     public String issuerAlternativeName;
     public String subjectAlternativeName;
     public LocalDate dateOfBirth;
     public String placeOfBirth;
+    
+    public String usedTemplate;
     
     public CertificateDTO() {}
 
