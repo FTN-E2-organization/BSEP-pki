@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.bsep.pki.data;
 
 import java.security.PublicKey;
+import java.time.LocalDate;
 import java.util.Date;
 import org.bouncycastle.asn1.x500.X500Name;
 
@@ -11,6 +12,9 @@ public class SubjectData {
     private String serialNumber;
     private Date startDate;
     private Date endDate;
+    private String subjAltName;
+    private String placeOfBirth;
+    private LocalDate dateOfBirth;
 
     public SubjectData() {}
     
@@ -61,4 +65,28 @@ public class SubjectData {
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
     }
+
+	public String getSubjAltName() {
+		return subjAltName;
+	}
+
+	public void setSubjAltName(String subjAltName) {
+		this.subjAltName = subjAltName;
+	}
+
+	public String getPlaceOfBirth() {
+		return placeOfBirth;
+	}
+
+	public void setPlaceOfBirth(String placeOfBirth) {
+		this.placeOfBirth = placeOfBirth;
+	}
+
+	public LocalDate getDateOfBirth() {
+		return dateOfBirth;
+	}
+
+	public void setDateOfBirth(LocalDate dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
 }
