@@ -57,13 +57,8 @@ public class CertificateMapper {
 			String emname = IETFUtils.valueToString(en.getFirst().getValue());
 			cDTO.email = emname;
 
-			RDN subjectId = subj.getRDNs(BCStyle.UID)[0];
-			String subId = IETFUtils.valueToString(subjectId.getFirst().getValue());
-			cDTO.subjectId = Long.parseLong(subId);
-			
-			RDN issuerId = iss.getRDNs(BCStyle.UID)[0];
-			String issId = IETFUtils.valueToString(issuerId.getFirst().getValue());
-			cDTO.issuerId = Long.parseLong(issId);
+			cDTO.subjectId = certificate.getSubjectId();
+			cDTO.issuerId = certificate.getIssuerId();
 
 			cDTO.id = Long.parseLong(String.valueOf((cert).getSerialNumber()));
 			cDTO.startDate = certificate.getStartDate();

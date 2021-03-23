@@ -26,7 +26,7 @@ function addRowInTable(c){
 	
 	let btnDownload = '<button class="btn btn-info btn-sm" type="button" id="' + c.id +'" onclick="download(this.id)">Download</button>';
 	let btncheckValidation = '<button data-toggle="modal" data-target="#centralModalCheckValidation" class="btn btn-info btn-sm" type="button" id="' + c.id +'" onclick="checkValidation(this.id)" >Validity</button>';
-	let btnIssuer = '<button data-toggle="modal" data-target="#centralModalViewIssuer" class="btn btn-info btn-sm" type="button" id="' + c.id +'" onclick="getIssuer(this.id)">Issuer</button>';
+	let btnIssuer = '<button data-toggle="modal" data-target="#centralModalViewIssuer" class="btn btn-info btn-sm" type="button" id="' + c.issuerId +'" onclick="getIssuer(this.id)">Issuer</button>';
 	
 	let row = $('<tr><td>' + c.organization + '</td><td>' + c.organizationUnit + '</td>' + 
 				'<td>' + c.commonName + '</td><td>' + c.givenName + '</td>' + 

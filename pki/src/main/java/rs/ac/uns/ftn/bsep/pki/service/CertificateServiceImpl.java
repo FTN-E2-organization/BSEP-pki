@@ -102,10 +102,14 @@ public class CertificateServiceImpl implements CertificateService{
 			subjectData = generateSubjectData(certificateDTO, keyPairSubject.getPublic(), serialNumber);
 			
 			try {
+				System.out.println("Issuera je nasao u root ca");
+				System.out.println("Issuer id=" + certificateDTO.issuerId);
 				issuerData = keyStoreReader.readIssuerFromStore(enviroment.getProperty("spring.rootca.path"), certificateDTO.issuerId.toString(), 
 							 keyStorePassword.toCharArray(), keyStorePassword.toCharArray());
 			}catch (Exception e) {
 				try {
+					System.out.println("Issuera je nasao u ca");
+					System.out.println("Issuer id=" + certificateDTO.issuerId);
 					issuerData = keyStoreReader.readIssuerFromStore(enviroment.getProperty("spring.ca.path"), certificateDTO.issuerId.toString(), 
 								 keyStorePassword.toCharArray(), keyStorePassword.toCharArray());
 				}
