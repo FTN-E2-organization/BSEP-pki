@@ -30,6 +30,8 @@ public class CertificateDTO {
     public LocalDate dateOfBirth;
     public String placeOfBirth;
     
+    public String usedTemplate;
+    
     public CertificateDTO() {}
 
 	public CertificateDTO(Long id, Long subjectId, Long issuerId, LocalDate startDate, LocalDate endDate, boolean isCA,

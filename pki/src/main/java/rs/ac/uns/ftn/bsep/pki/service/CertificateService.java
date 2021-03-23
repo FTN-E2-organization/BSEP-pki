@@ -10,7 +10,6 @@ public interface CertificateService {
 
 	void addCertificate(CertificateDTO certificateDTO, boolean isSelfSigned) throws Exception;
 	void revokeOneCertificate(Long id);
-	void revokeCertificateAndChildren(Long id);
 	Certificate save(CertificateDTO certificateDTO, String keystorePath);
 	Collection<CertificateDTO> getAllCA() throws Exception;
 	Collection<CertificateDTO> getAll() throws Exception;
