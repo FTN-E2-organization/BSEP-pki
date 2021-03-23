@@ -24,12 +24,11 @@ $(document).ready(function () {
 
 function addRowInTable(c){
 	
-	let btnDownload = '<button class="btn btn-info" type="button" id="' + c.id +'" onclick="download(this.id)" style="margin-top:-10px; margin-left:-20px; margin-right:-20px;">Download</button>';
-	let btncheckValidation = '<button data-toggle="modal" data-target="#centralModalCheckValidation" class="btn btn-info" type="button" id="' + c.id +'" onclick="checkValidation(this.id)" style="margin-top:-10px;  margin-left:-20px; margin-right:-20px;">Validity</button>';
-	let btnIssuer = '<button data-toggle="modal" data-target="#centralModalViewIssuer" class="btn btn-info" type="button" id="' + c.id +'" onclick="getIssuer(this.id)" style="margin-top:-10px;  margin-left:-20px; margin-right:-20px;">Issuer</button>';
+	let btnDownload = '<button class="btn btn-info btn-sm" type="button" id="' + c.id +'" onclick="download(this.id)">Download</button>';
+	let btncheckValidation = '<button data-toggle="modal" data-target="#centralModalCheckValidation" class="btn btn-info btn-sm" type="button" id="' + c.id +'" onclick="checkValidation(this.id)" >Validity</button>';
+	let btnIssuer = '<button data-toggle="modal" data-target="#centralModalViewIssuer" class="btn btn-info btn-sm" type="button" id="' + c.id +'" onclick="getIssuer(this.id)">Issuer</button>';
 	
 	let row = $('<tr><td>' + c.organization + '</td><td>' + c.organizationUnit + '</td>' + 
-				'<td>' + c.startDate + '</td><td>' + c.endDate + '</td>' + 
 				'<td>' + c.commonName + '</td><td>' + c.givenName + '</td>' + 
 				'<td>' + c.surname + '</td><td>' + c.email + '</td>' + 
 				'<td>' + c.countryCode + '</td><td>' + c.state + '</td>' + 
@@ -52,7 +51,9 @@ function download(certificateId){
         },
 		contentType: "application/json",
 		success:function(){
-			console.log('Successfully downloaded.');
+			let alert = $('<div class="alert alert-success alert-dismissible fade show m-1" role="alert">Successfully downloaded.'
+			+'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + '</div >')
+			$('#div_alert').append(alert);
 			return;
 		},
 		error:function(){

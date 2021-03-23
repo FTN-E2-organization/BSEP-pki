@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.bsep.pki.validator;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import rs.ac.uns.ftn.bsep.pki.dto.CertificateDTO;
@@ -28,6 +29,18 @@ public class CertificateValidator {
 			validateField(certificateDTO.surname, "Surname code is required field.");
 		}
 		
+		if(certificateDTO.usedTemplate.equals("keyUsage")) {
+			validateKeyUsage(certificateDTO.keyUsage);
+		}else if(certificateDTO.usedTemplate.equals("issuerAltName")) {
+			validateField(certificateDTO.issuerAlternativeName, "Issuer alternative name is required field.");
+		}else if(certificateDTO.usedTemplate.equals("subjectDirAttr")) {
+			validateField(certificateDTO.placeOfBirth, "Place of birth is required field.");
+		}else if(certificateDTO.usedTemplate.equals("subjectAltName")) {
+			validateField(certificateDTO.subjectAlternativeName, "Subject alternative name is required field.");
+		}else {
+			throw new ValidationException("Wrong template.");
+		}
+		
 		if(certificateDTO.givenName == null)
 			certificateDTO.givenName = "";
 		if(certificateDTO.surname == null)
@@ -35,7 +48,8 @@ public class CertificateValidator {
 	}
 	
 	private static void validateId(Long id, String message) throws Exception{
-		throw new ValidationException(message);
+		if(id < 0)
+			throw new ValidationException(message);
 	}
 	
 	private static void validateField(String field, String message) throws Exception {
@@ -64,4 +78,12 @@ public class CertificateValidator {
 		if(endDate.isBefore(startDate))
 			throw new ValidationException("End date must be greater or equal than start date.");
 	}
+	
+	private static void validateKeyUsage(List<Integer> keyUsage) throws Exception {
+		for(Integer ku:keyUsage) {
+			if(ku < 0 || ku > 8)
+				throw new ValidationException("Wrong key usage format.");
+		}
+	}
+	
 }

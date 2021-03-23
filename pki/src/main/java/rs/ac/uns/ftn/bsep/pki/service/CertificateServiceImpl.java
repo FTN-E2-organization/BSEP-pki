@@ -74,7 +74,7 @@ public class CertificateServiceImpl implements CertificateService{
 		IssuerData issuerData;
 		
 		if(isSelfSigned) {
-			keyStorePath = "./keystore/root_ca.jks";
+			keyStorePath = enviroment.getProperty("spring.rootca.path");
 			certificateDTO.isCA = true;
 			
 			Certificate savedCertificate =  save(certificateDTO, keyStorePath);
@@ -90,10 +90,10 @@ public class CertificateServiceImpl implements CertificateService{
 				throw new ValidationException("For the selected period, the issuer certificate is not valid.");
 			
 			if(certificateDTO.isCA) {
-				keyStorePath = "./keystore/ca.jks";
+				keyStorePath = enviroment.getProperty("spring.ca.path");
 			}
 			else {
-				keyStorePath = "./keystore/end_entity.jks";
+				keyStorePath = enviroment.getProperty("spring.end.path");
 			}
 			
 			Certificate savedCertificate =  save(certificateDTO, keyStorePath);
@@ -102,12 +102,12 @@ public class CertificateServiceImpl implements CertificateService{
 			subjectData = generateSubjectData(certificateDTO, keyPairSubject.getPublic(), serialNumber);
 			
 			try {
-				issuerData = keyStoreReader.readIssuerFromStore("./keystore/root_ca.jks", certificateDTO.issuerId.toString(), 
-						keyStorePassword.toCharArray(), keyStorePassword.toCharArray());
+				issuerData = keyStoreReader.readIssuerFromStore(enviroment.getProperty("spring.rootca.path"), certificateDTO.issuerId.toString(), 
+							 keyStorePassword.toCharArray(), keyStorePassword.toCharArray());
 			}catch (Exception e) {
 				try {
-					issuerData = keyStoreReader.readIssuerFromStore("./keystore/ca.jks", certificateDTO.issuerId.toString(), 
-							keyStorePassword.toCharArray(), keyStorePassword.toCharArray());
+					issuerData = keyStoreReader.readIssuerFromStore(enviroment.getProperty("spring.ca.path"), certificateDTO.issuerId.toString(), 
+								 keyStorePassword.toCharArray(), keyStorePassword.toCharArray());
 				}
 				catch (Exception ex) {
 					throw new BadRequestException("Issuer certificate not found.");

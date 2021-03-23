@@ -42,15 +42,9 @@ $(document).ready(function () {
 			$('#nss').prop('disabled',false);
 			$('#issuers').empty();
 			for (let i of issuers){
-				let  out = "";
-				if(i.givenName != ""){
-					out = "GN=" + i.givenName + ' ' + "SN=" + i.surname + ', ' + "CN=" + i.commonName + ', ' + "EMAIL=" + i.email + ', ' + 
-					"C=" + i.countryCode + ', ' + "S=" + i.state + ', ' + "L=" + i.locality;
-				}
-				else{
-					out = "O=" + i.organization + ', ' + "CN=" + i.commonName + ', ' + "OU=" + i.organizationUnit + ', ' + 
-					"C=" + i.countryCode + ', ' + "S=" + i.state + ', ' + "L=" + i.locality;
-				}
+				let  out = "O=" + i.organization + ', ' + "OU=" + i.organizationUnit + ', ' + "CN=" + i.commonName + ', ' + 
+						   "GN=" + i.givenName + ', ' + "SN=" + i.surname + ', ' + "EMAIL=" + i.email + ', ' +
+						   "C=" + i.countryCode + ', ' + "S=" + i.state + ', ' + "L=" + i.locality;
 				$('#issuers').append('<option id="' + i.id + '">' + out +'</option>');
 			}
 		},
@@ -152,12 +146,12 @@ $(document).ready(function () {
 			typeOfSubject = "System";
 		}
 		
-		let subjectDirectoryAttributes = [];
+		let keyUsages = [];
 		
 		for(let i=0;i<=8;i++){
 			let idKu = i + 'ku';
 			if($('#' + idKu).is(':checked')){
-				subjectDirectoryAttributes.push(i);
+				keyUsages.push(i);
 			}
 		}
 		
@@ -182,7 +176,13 @@ $(document).ready(function () {
 				email: $('#e').val(),
 				countryCode: $('#c').val(),
 				state: $('#s').val(),
-				locality: $('#l').val()}),
+				locality: $('#l').val(),
+				issuerAlternativeName: $('#issAltName').val(),
+				subjectAlternativeName: $('#subAltName').val(),
+				dateOfBirth: $('#birthDate').val(),
+				placeOfBirth : $('#birthPlace').val(),
+				keyUsage: keyUsages,
+				usedTemplate : $('#templates option:selected').attr('id')}),
 			contentType: "application/json",
 			success:function(){
 				let alert = $('<div class="alert alert-success alert-dismissible fade show m-1" role="alert">Successfully certificate creating.'
