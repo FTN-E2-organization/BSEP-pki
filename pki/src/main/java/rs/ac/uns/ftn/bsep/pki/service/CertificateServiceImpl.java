@@ -316,6 +316,13 @@ public class CertificateServiceImpl implements CertificateService{
 		return true;
 	}
 
+	public Boolean isRevoked(Long id) {
+		Certificate c = certificateRepository.findById(id).get();
+		if (c == null)
+			return null;
+		return c.getIsRevoked();
+	}
+	
 	@Override
 	public boolean isCertificateValid(Long id) throws Exception {
 		Certificate certificate = certificateRepository.getOne(id);
@@ -334,7 +341,7 @@ public class CertificateServiceImpl implements CertificateService{
 			}
 		}
 		
-		return isDateValid(id);
+		return isDateValid(id) && !isRevoked(id);
 	}
 
 	public File downloadCertificate(Long id) {
