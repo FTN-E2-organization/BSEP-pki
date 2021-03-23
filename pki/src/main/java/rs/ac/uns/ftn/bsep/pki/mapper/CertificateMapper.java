@@ -4,12 +4,18 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
+import java.time.LocalDate;
+import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 
+import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1String;
 import org.bouncycastle.asn1.DEROctetString;
+import org.bouncycastle.asn1.DLSequence;
 import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
@@ -83,16 +89,16 @@ public class CertificateMapper {
 				cDTO.isCA = false;
 			}
 			try {
-				cDTO.issuerAlternativeName = cert.getIssuerAlternativeNames().stream().findFirst().get().get(0)
+				cDTO.issuerAlternativeName = cert.getIssuerAlternativeNames().stream().findFirst().get().get(1)
 						.toString();
 			} catch (Exception e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 			try {
-				cDTO.subjectAlternativeName = cert.getSubjectAlternativeNames().stream().findFirst().get().get(0)
+				cDTO.subjectAlternativeName = cert.getSubjectAlternativeNames().stream().findFirst().get().get(1)
 						.toString();
 			} catch (Exception e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 
 			}
 			boolean[] keyUsages = cert.getKeyUsage();
@@ -102,10 +108,13 @@ public class CertificateMapper {
 					cDTO.keyUsage.add(i);
 			}
 			try {
-				String test = getExtensionValue(cert, "2.5.29.9");  //TODO: testirati
+				cDTO.placeOfBirth= getExtensionValue(cert, "2.5.29.9",0); 
+				String a = getExtensionValue(cert, "2.5.29.9",1); 
+				cDTO.dateOfBirth=LocalDate.parse(a);
+				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 
 			return cDTO;
@@ -115,7 +124,7 @@ public class CertificateMapper {
 		}
 	}
 
-	private static String getExtensionValue(X509Certificate X509Certificate, String oid) throws IOException {
+	private static String getExtensionValue(X509Certificate X509Certificate, String oid,int index) throws IOException {
 		String decoded = null;
 		byte[] extensionValue = X509Certificate.getExtensionValue(oid);
 
@@ -125,9 +134,9 @@ public class CertificateMapper {
 				DEROctetString derOctetString = (DEROctetString) derObject;
 
 				derObject = toDERObject(derOctetString.getOctets());
-				if (derObject instanceof ASN1String) {
-					ASN1String s = (ASN1String) derObject;
-					decoded = s.getString();
+				if (derObject instanceof DLSequence) {
+					ASN1Encodable s = ((DLSequence) derObject).getObjectAt(index);
+					decoded=s.toASN1Primitive().toString().split(",")[1].trim().replace("]" , "").replace("[" , "");
 				}
 
 			}
