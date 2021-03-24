@@ -55,19 +55,23 @@ public class KeyStoreReader {
         	BufferedInputStream in = new BufferedInputStream(new FileInputStream(keyStoreFile));
         	keyStore.load(in, password);
             //Iscitava se sertifikat koji ima dati alias
-            Certificate cert = keyStore.getCertificate(alias);
+        	Certificate[] chain = keyStore.getCertificateChain(alias);
+            Certificate cert = chain[chain.length-1];
+            //Certificate cert = keyStore.getCertificate(alias);
             //Iscitava se privatni kljuc vezan za javni kljuc koji se nalazi na sertifikatu sa datim aliasom
             PrivateKey privKey = (PrivateKey) keyStore.getKey(alias, keyPass);
             
             X500Name issuerName = new JcaX509CertificateHolder((X509Certificate) cert).getSubject();
+            
             String issuerAltName = null;
             try {
-            	issuerAltName = (String) ((X509Certificate) cert).getIssuerAlternativeNames().stream().findFirst().get().get(0);    
-            }catch(Exception e){
-            
+            	issuerAltName = (String) ((X509Certificate) cert).getIssuerAlternativeNames().stream().findFirst().get().get(0);
             }
+            catch (Exception e) {}
+              
             IssuerData issuerData = new IssuerData(privKey, issuerName);
             issuerData.setIssuerAltName(issuerAltName);
+            
             return issuerData;
 
         } catch (Exception e) {

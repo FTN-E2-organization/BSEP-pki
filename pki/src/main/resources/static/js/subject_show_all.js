@@ -26,7 +26,7 @@ function addRowInTable(c){
 	
 	let btnDownload = '<button class="btn btn-info btn-sm" type="button" id="' + c.id +'" onclick="download(this.id)">Download</button>';
 	let btncheckValidation = '<button data-toggle="modal" data-target="#centralModalCheckValidation" class="btn btn-info btn-sm" type="button" id="' + c.id +'" onclick="checkValidation(this.id)" >Validity</button>';
-	let btnIssuer = '<button data-toggle="modal" data-target="#centralModalViewIssuer" class="btn btn-info btn-sm" type="button" id="' + c.id +'" onclick="getIssuer(this.id)">Issuer</button>';
+	let btnIssuer = '<button data-toggle="modal" data-target="#centralModalViewIssuer" class="btn btn-info btn-sm" type="button" id="' + c.issuerId +'" onclick="getIssuer(this.id)">Issuer</button>';
 	
 	let row = $('<tr><td>' + c.organization + '</td><td>' + c.organizationUnit + '</td>' + 
 				'<td>' + c.commonName + '</td><td>' + c.givenName + '</td>' + 
@@ -98,7 +98,7 @@ function getIssuer(issuerId){
 		contentType: "application/json",
 		success:function(certificate){
 			let table_info =  '<table style="margin-top:30px; margin-bottom:30px;">'
-						+ '<tr> <td>Organization:</td><td>' + certificate.organization + '</td> </tr>' 
+						+ '<tr> <td style="width:40%">Organization:</td><td>' + certificate.organization + '</td> </tr>' 
 						+ '<tr> <td>Organization unit:</td><td>' + certificate.organizationUnit + '</td> </tr>' 
 						+ '<tr> <td>Common name:</td><td>' + certificate.commonName + '</td></tr>' 
 						+ '<tr> <td>Given name:</td><td>' + certificate.givenName + '</td> </tr>'
@@ -108,7 +108,7 @@ function getIssuer(issuerId){
 						+ '<tr> <td>State:</td><td>' + certificate.state + '</td> </tr>' 
 						+ '<tr> <td>Locality:</td><td>' + certificate.locality + '</td> </tr>' 
 						+ '<tr> <td>Start date:</td><td>' + certificate.startDate + '</td> </tr>' 
-						+ '<tr> <td>End date:</td><td>' + certificate.startDate + '</td> </tr>' 
+						+ '<tr> <td>End date:</td><td>' + certificate.endDate + '</td> </tr>' 
 						+ '<tr> <td>CA:</td><td>' + certificate.isCA + '</td> </tr>' 
 						+ '<tr> <td>Is revoked:</td><td>' + certificate.isRevoked + '</td> </tr>' 
                         + '</table>';

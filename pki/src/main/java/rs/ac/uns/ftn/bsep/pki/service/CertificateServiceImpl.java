@@ -148,6 +148,7 @@ public class CertificateServiceImpl implements CertificateService{
 	private KeyPair getKeyPair(){
         try {
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+            // Generator pseudo slucajnih brojeva
             SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
             Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
             keyGen.initialize(2048, random);

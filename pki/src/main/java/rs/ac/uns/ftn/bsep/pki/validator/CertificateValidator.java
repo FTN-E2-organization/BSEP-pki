@@ -29,16 +29,8 @@ public class CertificateValidator {
 			validateField(certificateDTO.surname, "Surname code is required field.");
 		}
 		
-		if(certificateDTO.usedTemplate.equals("keyUsage")) {
+		if(!certificateDTO.keyUsage.isEmpty()) {
 			validateKeyUsage(certificateDTO.keyUsage);
-		}else if(certificateDTO.usedTemplate.equals("issuerAltName")) {
-			validateField(certificateDTO.issuerAlternativeName, "Issuer alternative name is required field.");
-		}else if(certificateDTO.usedTemplate.equals("subjectDirAttr")) {
-			validateField(certificateDTO.placeOfBirth, "Place of birth is required field.");
-		}else if(certificateDTO.usedTemplate.equals("subjectAltName")) {
-			validateField(certificateDTO.subjectAlternativeName, "Subject alternative name is required field.");
-		}else {
-			throw new ValidationException("Wrong template.");
 		}
 		
 		if(certificateDTO.givenName == null)

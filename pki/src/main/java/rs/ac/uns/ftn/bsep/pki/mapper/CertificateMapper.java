@@ -5,10 +5,7 @@ import java.io.IOException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
 
 import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.ASN1InputStream;
@@ -32,7 +29,6 @@ public class CertificateMapper {
 		CertificateDTO cDTO = new CertificateDTO();
 		try {
 			X500Name subj = new JcaX509CertificateHolder(cert).getSubject();
-			X500Name iss = new JcaX509CertificateHolder(cert).getIssuer();
 
 			RDN cn = subj.getRDNs(BCStyle.CN)[0];
 			String cname = IETFUtils.valueToString(cn.getFirst().getValue());
@@ -70,13 +66,8 @@ public class CertificateMapper {
 			String emname = IETFUtils.valueToString(en.getFirst().getValue());
 			cDTO.email = emname;
 
-			RDN subjectId = subj.getRDNs(BCStyle.UID)[0];
-			String subId = IETFUtils.valueToString(subjectId.getFirst().getValue());
-			cDTO.subjectId = Long.parseLong(subId);
-
-			RDN issuerId = iss.getRDNs(BCStyle.UID)[0];
-			String issId = IETFUtils.valueToString(issuerId.getFirst().getValue());
-			cDTO.issuerId = Long.parseLong(issId);
+			cDTO.subjectId = certificate.getSubjectId();
+			cDTO.issuerId = certificate.getIssuerId();
 
 			cDTO.id = Long.parseLong(String.valueOf((cert).getSerialNumber()));
 			cDTO.startDate = certificate.getStartDate();
@@ -89,18 +80,12 @@ public class CertificateMapper {
 				cDTO.isCA = false;
 			}
 			try {
-				cDTO.issuerAlternativeName = cert.getIssuerAlternativeNames().stream().findFirst().get().get(1)
-						.toString();
-			} catch (Exception e) {
-				//e.printStackTrace();
-			}
+				cDTO.issuerAlternativeName = cert.getIssuerAlternativeNames().stream().findFirst().get().get(1).toString();
+			} catch (Exception e) { }
 			try {
-				cDTO.subjectAlternativeName = cert.getSubjectAlternativeNames().stream().findFirst().get().get(1)
-						.toString();
-			} catch (Exception e) {
-				//e.printStackTrace();
-
-			}
+				cDTO.subjectAlternativeName = cert.getSubjectAlternativeNames().stream().findFirst().get().get(1).toString();
+			} catch (Exception e) {}
+			
 			boolean[] keyUsages = cert.getKeyUsage();
 			cDTO.keyUsage = new LinkedList<>();
 			for (int i = 0; i < keyUsages.length; i++) {
@@ -112,10 +97,7 @@ public class CertificateMapper {
 				String a = getExtensionValue(cert, "2.5.29.9",1); 
 				cDTO.dateOfBirth=LocalDate.parse(a);
 				
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				//e.printStackTrace();
-			}
+			} catch (Exception e) { }
 
 			return cDTO;
 
@@ -138,7 +120,6 @@ public class CertificateMapper {
 					ASN1Encodable s = ((DLSequence) derObject).getObjectAt(index);
 					decoded=s.toASN1Primitive().toString().split(",")[1].trim().replace("]" , "").replace("[" , "");
 				}
-
 			}
 		}
 		return decoded;
