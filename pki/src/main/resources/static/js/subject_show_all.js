@@ -27,20 +27,71 @@ function addRowInTable(c){
 	let btnDownload = '<button class="btn btn-info btn-sm" type="button" id="' + c.id +'" onclick="download(this.id)">Download</button>';
 	let btncheckValidation = '<button data-toggle="modal" data-target="#centralModalCheckValidation" class="btn btn-info btn-sm" type="button" id="' + c.id +'" onclick="checkValidation(this.id)" >Validity</button>';
 	let btnIssuer = '<button data-toggle="modal" data-target="#centralModalViewIssuer" class="btn btn-info btn-sm" type="button" id="' + c.issuerId +'" onclick="getIssuer(this.id)">Issuer</button>';
-	
-	let row = $('<tr><td>' + c.organization + '</td><td>' + c.organizationUnit + '</td>' + 
-				'<td>' + c.commonName + '</td><td>' + c.givenName + '</td>' + 
-				'<td>' + c.surname + '</td><td>' + c.email + '</td>' + 
-				'<td>' + c.countryCode + '</td><td>' + c.state + '</td>' + 
-				'<td>' + c.locality + '</td><td>' + c.startDate + '</td>' + 
-				'<td>' + c.endDate + '</td><td>' + c.isCA + '</td>' + 
-				'<td>' + c.isRevoked + '</td><td>' + btncheckValidation + '</td>' +
-				'<td>' + btnIssuer + '</td><td>' + btnDownload + '</td>' +
+	let btnDetails = '<button data-toggle="modal" data-target="#centralModalViewDetails" class="btn btn-info btn-sm" type="button" id="' + c.id +'" onclick="getDetails(this.id)">Details</button>';
+	localStorage.setItem(c.id,JSON.stringify(c));
+	let row = $('<tr><td>' + c.organization + '</td><td>' + c.organizationUnit + '</td>' +
+				'<td>' + c.email + '</td>' +
+				'<td>' + c.startDate + '</td><td>' + c.endDate + '</td>' + 
+				'<td>' + c.isCA + '</td><td>' + c.isRevoked + '</td><td>' + btncheckValidation +
+				'</td><td>' + btnIssuer + '</td><td>' + btnDownload + '</td><td>' + btnDetails + '</td>'  + 
 				'</tr>');
 				
 	$('#certificates').append(row);
 };
 
+function getDetails(certificateId) {
+	$('#div_details').empty();
+	let certificate = JSON.parse(localStorage.getItem(certificateId));
+	
+	let keyUsageList = [];
+
+  	certificate.keyUsage.forEach(function(number) {
+		if(number == 0){
+			keyUsageList.push(" Digital signature");
+		}
+		if(number == 1){
+			keyUsageList.push(" Non repudiation");
+		}
+		if(number == 2){
+			keyUsageList.push(" Key encipherment");
+		}
+		if(number == 3){
+			keyUsageList.push(" Data encipherment");
+		}
+		if(number == 4){
+			keyUsageList.push(" Key agreement");
+		}
+		if(number == 5){
+			keyUsageList.push(" Key cert sign");
+		}
+		if(number == 6){
+			keyUsageList.push(" CRL sign");
+		}
+		if(number == 7){
+			keyUsageList.push(" Encipher only");
+		}
+		if(number == 8){
+			keyUsageList.push(" Decipher only");
+		}
+  	});
+	
+	
+	let table_details =  '<table style="margin-top:30px; margin-bottom:30px;">'
+						+ '<tr> <td style="width:40%">Subject common name:</td><td>' + certificate.commonName + '</td></tr>' 
+						+ '<tr> <td style="width:40%">Subject given name:</td><td>' + certificate.givenName + '</td> </tr>'
+						+ '<tr> <td style="width:40%">Subject surname:</td><td>' + certificate.surname + '</td> </tr>' 
+						+ '<tr> <td style="width:40%">Country code:</td><td>' + certificate.countryCode + '</td> </tr>' 
+						+ '<tr> <td style="width:40%">State:</td><td>' + certificate.state + '</td> </tr>' 
+						+ '<tr> <td style="width:40%">Locality:</td><td>' + certificate.locality + '</td> </tr>' 
+						+ '<tr> <td style="width:40%">Subject alternative name:</td><td>' +( certificate.subjectAlternativeName ? certificate.subjectAlternativeName:"") + '</td> </tr>' 
+						+ '<tr> <td style="width:40%">Issuer alternative name:</td><td>' + (certificate.issuerAlternativeName ? certificate.issuerAlternativeName:"") + '</td> </tr>' 
+                        + '<tr> <td style="width:40%">Subject date of birth:</td><td>' + (certificate.dateOfBirth ? certificate.dateOfBirth:"") + '</td> </tr>' 
+                        + '<tr> <td style="width:40%">Subject place of birth:</td><td>' + (certificate.placeOfBirth ? certificate.placeOfBirth:"") + '</td> </tr>' 
+                        + '<tr> <td style="width:40%">Key usages:</td><td>' + keyUsageList +'</td></tr>';   	
+
+      $(div_details).append(table_details);
+			
+};
 
 function download(certificateId){
 	$.ajax({
