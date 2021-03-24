@@ -112,7 +112,7 @@ public class CertificateMapper {
 				String a = getExtensionValue(cert, "2.5.29.9",1); 
 				cDTO.dateOfBirth=LocalDate.parse(a);
 				
-			} catch (IOException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				//e.printStackTrace();
 			}
