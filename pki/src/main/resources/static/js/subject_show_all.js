@@ -97,8 +97,8 @@ function getIssuer(issuerId){
         },
 		contentType: "application/json",
 		success:function(certificate){
-			let table_info =  '<table style="margin-left:30px; margin-top:30px; margin-bottom:30px;">'
-						+ '<tr> <td>Organization:</td><td>' + certificate.organization + '</td> </tr>' 
+			let table_info =  '<table style="margin-top:30px; margin-bottom:30px;">'
+						+ '<tr> <td style="width:40%">Organization:</td><td>' + certificate.organization + '</td> </tr>' 
 						+ '<tr> <td>Organization unit:</td><td>' + certificate.organizationUnit + '</td> </tr>' 
 						+ '<tr> <td>Common name:</td><td>' + certificate.commonName + '</td></tr>' 
 						+ '<tr> <td>Given name:</td><td>' + certificate.givenName + '</td> </tr>'
