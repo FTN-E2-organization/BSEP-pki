@@ -108,7 +108,7 @@ function getIssuer(issuerId){
 						+ '<tr> <td>State:</td><td>' + certificate.state + '</td> </tr>' 
 						+ '<tr> <td>Locality:</td><td>' + certificate.locality + '</td> </tr>' 
 						+ '<tr> <td>Start date:</td><td>' + certificate.startDate + '</td> </tr>' 
-						+ '<tr> <td>End date:</td><td>' + certificate.startDate + '</td> </tr>' 
+						+ '<tr> <td>End date:</td><td>' + certificate.endDate + '</td> </tr>' 
 						+ '<tr> <td>CA:</td><td>' + certificate.isCA + '</td> </tr>' 
 						+ '<tr> <td>Is revoked:</td><td>' + certificate.isRevoked + '</td> </tr>' 
                         + '</table>';

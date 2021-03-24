@@ -47,15 +47,6 @@
 					
 					<div class="row">
 						<div class="col-md-12">
-							<label>Choose extension*</label>
-							<select class="form-control" id="templates">
-							</select>
-						</div>
-					</div>
-					<br/>
-					
-					<div class="row">
-						<div class="col-md-12">
 							<label>Choose subject*</label>
 							<select class="form-control" id="subjects">
 							</select>
@@ -90,7 +81,7 @@
 							<input id="cn" class="form-control" type="text" placeholder="Common name" required>
 						</div>
 						<div class="col-md-6">
-							<label>Enter the email*:</label>
+							<label>Enter the email*</label>
 							<input id="e" class="form-control" type="text" placeholder="Email" required>
 						</div>
 					</div>
@@ -112,7 +103,7 @@
 							<input id="c" class="form-control" type="text" placeholder="Country code" required>
 						</div>
 						<div class="col-md-6">
-							<label>Enter the state*:</label>
+							<label>Enter the state*</label>
 							<input id="s" class="form-control" type="text" placeholder="State" required>
 						</div>
 					</div>
@@ -122,27 +113,36 @@
 							<label>Enter the locality*</label>
 							<input id="l" class="form-control" type="text" placeholder="Locality" required>
 						</div>
-						<div class="col-md-6" id="issAltNameDiv" hidden="true">
-							<label>Enter the issuer alternative name*</label>
+						<div class="col-md-6" id="issAltNameDiv">
+							<label>Enter the issuer alternative name</label>
 							<input id="issAltName" class="form-control" type="text" placeholder="Issuer alternative name">
 						</div>
+					</div>
+					<br/>
+					<div class="row">
 						<div class="col-md-6" id="subAltNameDiv" hidden="true">
-							<label>Enter the subject alternative name*</label>
+							<label>Enter the subject alternative name</label>
 							<input id="subAltName" class="form-control" type="text" placeholder="Subject alternative name">
 						</div>
 					</div>
 					<br/>
-					<div class="row" id="subDirAttrDiv" hidden="true">
+					<div class="row" id="subDirAttrDiv">
 						<div class="col-md-6">
-							<label>Enter date of birth*</label>
+							<label>Enter date of birth</label>
 							<input id="birthDate" class="form-control" type="date" placeholder="Date of birth">
 						</div>
 						<div class="col-md-6">
-							<label>Enter the place of birth*:</label>
+							<label>Enter the place of birth</label>
 							<input id="birthPlace" class="form-control" type="text" placeholder="Place of birth">
 						</div>
 					</div>
-					<br/>
+					<br/><br/>
+					
+					<div class="row">
+						<div class="col-md-6">
+							<label>Select key usages</label>
+						</div>
+					</div><br/>
 					
 					<div class="row" id="ku1" style="margin-left:10px;">
 						<div class="form-check form-check-inline" style="margin-left:10px;">

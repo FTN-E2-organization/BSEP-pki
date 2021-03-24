@@ -30,21 +30,19 @@ public class CertificateGenerator {
 	public CertificateGenerator() {
 	}
 
+	@SuppressWarnings("deprecation")
 	public X509Certificate generateCertificate(SubjectData subjectData, IssuerData issuerData, boolean isCa,
 			List<Integer> keyUsage) throws Exception {
 		try {
-			// Posto klasa za generisanje sertifikata ne moze da primi direktno privatni
-			// kljuc pravi se builder za objekat
-			// Ovaj objekat sadrzi privatni kljuc izdavaoca sertifikata i koristiti se za
-			// potpisivanje sertifikata
-			// Parametar koji se prosledjuje je algoritam koji se koristi za potpisivanje
-			// sertifiakta
+			// SHA256WithRSAEncryption algoritam za potpisivanje sertifikata (256-bitni algoritam)
+			// Spada u familiju algoritama za hash podataka
+			// Podaci se prvo kriptuju pa onda sifruju
+			// RSA se odnosi na algoritam pomocu kojeg su svi podaci kriptovani
 			JcaContentSignerBuilder builder = new JcaContentSignerBuilder("SHA256WithRSAEncryption");
-			// Takodje se navodi koji provider se koristi, u ovom slucaju Bouncy Castle
+			// Provajder koji se koristi je Bouncy Castle
 			builder = builder.setProvider("BC");
 
-			// Formira se objekat koji ce sadrzati privatni kljuc i koji ce se koristiti za
-			// potpisivanje sertifikata
+			// Formira se objekat koji ce sadrzati privatni kljuc i koji ce se koristiti za potpisivanje sertifikata
 			ContentSigner contentSigner = builder.build(issuerData.getPrivateKey());
 
 			// Postavljaju se podaci za generisanje sertifikata
@@ -101,8 +99,7 @@ public class CertificateGenerator {
 			X509CertificateHolder certHolder = certGen.build(contentSigner);
 
 			// Builder generise sertifikat kao objekat klase X509CertificateHolder
-			// Nakon toga je potrebno certHolder konvertovati u sertifikat, za sta se
-			// koristi certConverter
+			// Nakon toga je potrebno certHolder konvertovati u sertifikat, za sta se koristi certConverter
 			JcaX509CertificateConverter certConverter = new JcaX509CertificateConverter();
 			certConverter = certConverter.setProvider("BC");
 

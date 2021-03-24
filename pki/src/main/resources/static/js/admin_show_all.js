@@ -50,31 +50,31 @@ function getDetails(certificateId) {
 
   	certificate.keyUsage.forEach(function(number) {
 		if(number == 0){
-			keyUsageList.push("Digital signature");
+			keyUsageList.push(" Digital signature");
 		}
 		if(number == 1){
-			keyUsageList.push("Non repudiation");
+			keyUsageList.push(" Non repudiation");
 		}
 		if(number == 2){
-			keyUsageList.push("Key encipherment");
+			keyUsageList.push(" Key encipherment");
 		}
 		if(number == 3){
-			keyUsageList.push("Data encipherment");
+			keyUsageList.push(" Data encipherment");
 		}
 		if(number == 4){
-			keyUsageList.push("Key agreement");
+			keyUsageList.push(" Key agreement");
 		}
 		if(number == 5){
-			keyUsageList.push("Key cert sign");
+			keyUsageList.push(" Key cert sign");
 		}
 		if(number == 6){
-			keyUsageList.push("CRL sign");
+			keyUsageList.push(" CRL sign");
 		}
 		if(number == 7){
-			keyUsageList.push("Encipher only");
+			keyUsageList.push(" Encipher only");
 		}
 		if(number == 8){
-			keyUsageList.push("Decipher only");
+			keyUsageList.push(" Decipher only");
 		}
   	});
 	
@@ -166,7 +166,7 @@ function getIssuer(issuerId) {
 						+ '<tr> <td>State:</td><td>' + certificate.state + '</td> </tr>' 
 						+ '<tr> <td>Locality:</td><td>' + certificate.locality + '</td> </tr>' 
 						+ '<tr> <td>Start date:</td><td>' + certificate.startDate + '</td> </tr>' 
-						+ '<tr> <td>End date:</td><td>' + certificate.startDate + '</td> </tr>' 
+						+ '<tr> <td>End date:</td><td>' + certificate.endDate + '</td> </tr>' 
 						+ '<tr> <td>CA:</td><td>' + certificate.isCA + '</td> </tr>' 
 						+ '<tr> <td>Is revoked:</td><td>' + certificate.isRevoked + '</td> </tr>' 
                         + '</table>';
