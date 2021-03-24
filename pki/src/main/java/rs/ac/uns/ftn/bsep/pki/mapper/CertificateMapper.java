@@ -108,7 +108,6 @@ public class CertificateMapper {
 				cDTO.dateOfBirth=LocalDate.parse(a);
 				
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				//e.printStackTrace();
 			}
 
