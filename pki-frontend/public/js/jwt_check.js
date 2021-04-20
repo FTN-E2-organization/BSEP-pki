@@ -68,5 +68,5 @@ function checkUserRole(trueRole) {
 
 function logOut() {
     localStorage.clear();
-    window.location.href = "../html/index.html";
+    window.location.href = "../html/login.html";
 }
