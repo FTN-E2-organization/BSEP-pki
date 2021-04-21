@@ -47,7 +47,7 @@ public class UserController {
 		try {
 			UserValidator.addSubjectValidator(userDTO);
 			userService.addSubject(userDTO);
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<>(HttpStatus.CREATED);
 		}
 		catch (ValidationException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

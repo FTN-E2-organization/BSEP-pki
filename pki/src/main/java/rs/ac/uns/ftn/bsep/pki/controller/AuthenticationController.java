@@ -13,25 +13,30 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import rs.ac.uns.ftn.bsep.pki.model.User;
 import rs.ac.uns.ftn.bsep.pki.security.auth.JwtAuthenticationRequest;
 import rs.ac.uns.ftn.bsep.pki.security.auth.TokenUtils;
 import rs.ac.uns.ftn.bsep.pki.security.auth.UserTokenState;
+import rs.ac.uns.ftn.bsep.pki.service.UserService;
 
 @RestController
 @RequestMapping(value = "api/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthenticationController {
 
 	private TokenUtils tokenUtils;
-
 	private AuthenticationManager authenticationManager;
+	private UserService userService;
 	
 	@Autowired
-	public AuthenticationController(TokenUtils tokenUtils, AuthenticationManager authenticationManager) {
+	public AuthenticationController(TokenUtils tokenUtils, AuthenticationManager authenticationManager, UserService userService) {
 		this.authenticationManager = authenticationManager;
 		this.tokenUtils = tokenUtils;
+		this.userService = userService;
 	}
 	
 	
@@ -47,8 +52,7 @@ public class AuthenticationController {
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 
 			User user = (User) authentication.getPrincipal();
-			String jwt = tokenUtils.generateToken(user.getUsername(), user.getId(), user.getAuthority().getName());
-			
+			String jwt = tokenUtils.generateToken(user.getUsername(), user.getId(), user.getAuthority().getName());			
 			int expiresIn = tokenUtils.getExpiredIn();
 
 			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
@@ -59,6 +63,22 @@ public class AuthenticationController {
 		catch (Exception e) {
 			return new ResponseEntity<>("An error occurred while sending request for log in.", HttpStatus.BAD_REQUEST);
 		}		
+	}	
+	
+	
+	/* kad klikne na link iz mejla, aktivira nalog */
+	@RequestMapping(value="/confirm-account", method= {RequestMethod.GET, RequestMethod.POST})
+	public ModelAndView confirmUserAccount(ModelAndView modelAndView, @RequestParam("token")String confirmationToken)
+	{
+			if(userService.confirmUser(confirmationToken)) {
+      		modelAndView.setViewName("accountVerified");
+		}
+		else {
+			modelAndView.addObject("message","The link is invalid or broken!");
+			modelAndView.setViewName("error");
+		}
+		return modelAndView;
 	}		
+	
 		
 }

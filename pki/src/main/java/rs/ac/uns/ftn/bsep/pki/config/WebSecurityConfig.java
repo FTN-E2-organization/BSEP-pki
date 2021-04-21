@@ -63,7 +63,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
 
 				.authorizeRequests()
+					.antMatchers("/auth/**").permitAll()
 					.antMatchers("/h2-console/**").permitAll()
+					.antMatchers("/api/auth/confirm-account").permitAll()  //aktiviranje naloga preko mejla
 				.anyRequest().authenticated().and()
 				.cors().and()
 				.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService),
