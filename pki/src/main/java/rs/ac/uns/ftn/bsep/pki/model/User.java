@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,7 +27,8 @@ public class User implements UserDetails {
 	private static final long serialVersionUID = 8009194023894445151L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(name = "usersSeqGen", sequenceName = "usersSeq", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usersSeqGen")
 	private Long id;
 	
 	@Column(nullable = false, unique = true)
@@ -35,6 +37,9 @@ public class User implements UserDetails {
 	@JsonProperty(access = Access.WRITE_ONLY)
 	@Column(nullable = false)
 	private String password;
+	
+    @Column(unique = false, nullable = false)
+    private boolean enabled;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
 	private Authority authority;
@@ -71,11 +76,6 @@ public class User implements UserDetails {
 		return true;
 	}
 
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
 	public Long getId() {
 		return id;
 	}
@@ -84,4 +84,33 @@ public class User implements UserDetails {
 		return authority;
 	}
 
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setAuthority(Authority authority) {
+		this.authority = authority;
+	}
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+    
 }
