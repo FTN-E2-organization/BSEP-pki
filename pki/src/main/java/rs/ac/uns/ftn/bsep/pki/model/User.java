@@ -36,6 +36,9 @@ public class User implements UserDetails {
 	@Column(nullable = false)
 	private String password;
 	
+    @Column(unique = false, nullable = false)
+    private boolean enabled;
+	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
 	private Authority authority;
 
@@ -71,11 +74,6 @@ public class User implements UserDetails {
 		return true;
 	}
 
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
 	public Long getId() {
 		return id;
 	}
@@ -104,4 +102,13 @@ public class User implements UserDetails {
 		this.authority = authority;
 	}
 
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+    
 }

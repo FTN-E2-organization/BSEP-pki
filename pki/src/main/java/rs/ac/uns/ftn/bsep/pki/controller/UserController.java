@@ -49,7 +49,7 @@ public class UserController {
 		try {
 			UserValidator.addSubjectValidator(userDTO);
 			userService.addSubject(userDTO);
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<>(HttpStatus.CREATED);
 		}
 		catch (ValidationException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -58,7 +58,7 @@ public class UserController {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 		catch (Exception e) {
-			return new ResponseEntity<>("An error occurred while sending request for registration.", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(/*"An error occurred while sending request for registration."*/ e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
 }
