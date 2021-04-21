@@ -9,6 +9,7 @@ public class UserValidator {
 
 	public static void addSubjectValidator(AddUserDTO userDTO) throws Exception {
 		validateField(userDTO.username, "Username is required field.");
+		validateUsernameFormat(userDTO.username);
 		validateField(userDTO.password, "Password is required field.");
 		validatePasswordFormat(userDTO.password);
 	}
@@ -31,5 +32,12 @@ public class UserValidator {
         if(!matcher.matches()) {
         	throw new ValidationException("Wrong format of password.");
         }
+	}
+	
+	private static void validateUsernameFormat(String username) throws Exception{
+		Pattern usernameRegex = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = usernameRegex.matcher(username);
+        if(!matcher.find())
+        	throw new ValidationException("Wrong format of username.");
 	}
 }

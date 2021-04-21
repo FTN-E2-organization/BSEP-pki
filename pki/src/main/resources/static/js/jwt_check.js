@@ -5,9 +5,9 @@ $(document).ready(function () {
     if (token == null) {
 		localStorage.clear();
 		
-		if (window.location.href.indexOf("index.html") ==  -1)
+		if (window.location.href.indexOf("login.html") ==  -1)
         	document.body.appendChild(document.createElement('script')).src='../../js/navbars/unauthenticated_user.js';
-            window.location.href = "../html/index.html"; 
+            window.location.href = "../html/login.html"; 
 
         return;
     }
@@ -41,7 +41,7 @@ function getRoleFromToken() {
 		return decodeToken(localStorage.getItem("token")).role;
 	}
     catch(err){
-		window.location.href = "../html/index.html";
+		window.location.href = "../html/login.html";
 	}
 }
 
@@ -50,7 +50,7 @@ function getUserIdFromToken(){
 		return decodeToken(localStorage.getItem("token")).userId;
 	}
     catch(err){
-		window.location.href = "../html/index.html";
+		window.location.href = "../html/login.html";
 	}
 }
 
