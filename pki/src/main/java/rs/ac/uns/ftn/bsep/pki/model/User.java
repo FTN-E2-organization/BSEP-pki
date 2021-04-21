@@ -84,4 +84,24 @@ public class User implements UserDetails {
 		return authority;
 	}
 
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setAuthority(Authority authority) {
+		this.authority = authority;
+	}
+
 }
