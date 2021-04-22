@@ -1,6 +1,8 @@
 package rs.ac.uns.ftn.bsep.pki.service;
 
 import java.util.Collection;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -44,8 +46,10 @@ public class UserServiceImpl implements UserService {
 		
 		User user = new User();
 		Authority authority = authorityService.findByname("ROLE_SUBJECT");
-		user.setUsername(userDTO.username);
-		user.setPassword(passwordEncoder.encode(userDTO.password));
+		String salt = generateSalt();
+		user.setUsername(userDTO.username);	
+		user.setSalt(salt);
+		user.setPassword(passwordEncoder.encode(userDTO.password + salt));
 		user.setAuthority(authority);
 		user.setEnabled(false);
 		
@@ -68,4 +72,16 @@ public class UserServiceImpl implements UserService {
 		}		
 		return false;
 	}
+	
+	@Override
+	public String getSaltByUsername(String username) {
+		return userRepository.getSaltByUsername(username);
+	}
+	
+	private String generateSalt() {
+		String salt = UUID.randomUUID().toString().substring(0, 8);
+		System.out.println("-------------------------- salt: " + salt);
+		return salt;
+	}
+
 }

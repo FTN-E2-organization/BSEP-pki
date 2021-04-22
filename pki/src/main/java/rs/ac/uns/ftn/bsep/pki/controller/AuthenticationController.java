@@ -43,10 +43,9 @@ public class AuthenticationController {
 	@PostMapping("/login")
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest, HttpServletResponse response) {
 		
-		try {			
-			Authentication authentication = authenticationManager
-					.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
-							authenticationRequest.getPassword()));
+		try {		
+			Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
+							authenticationRequest.getPassword() + userService.getSaltByUsername(authenticationRequest.getUsername())));
 
 			// Ubaci korisnika u trenutni security kontekst
 			SecurityContextHolder.getContext().setAuthentication(authentication);
