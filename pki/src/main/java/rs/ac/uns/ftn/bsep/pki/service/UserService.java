@@ -11,4 +11,5 @@ public interface UserService {
 	void addSubject(AddUserDTO userDTO) throws Exception;
 	boolean confirmUser(String confirmationToken);
 	String getSaltByUsername(String username);
+	void sendNewActivationLink(String username) throws Exception;
 }

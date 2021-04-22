@@ -79,6 +79,25 @@ public class UserServiceImpl implements UserService {
 		return userRepository.getSaltByUsername(username);
 	}
 	
+	@Override
+	public void sendNewActivationLink(String username) throws Exception {
+		ConfirmationToken oldToken = confirmationTokenRepository.getTokenByUsername(username);
+		if (oldToken == null) {
+			throw new Exception("You did not register!");
+		}
+		else if (oldToken.getUser().isEnabled()) {
+			throw new Exception("Your account is already active!");
+		}
+		else if (oldToken.getCreationDate().plusDays((long) 7).isAfter(LocalDate.now())) {
+			throw new Exception("Your old activation link is still valid!");
+		}
+		
+		ConfirmationToken newToken = new ConfirmationToken(oldToken.getUser());
+		newToken.setTokenid(oldToken.getTokenid());
+		confirmationTokenRepository.save(newToken);
+		emailService.sendActivationEmail(username, newToken);
+	}	
+	
 	private String generateSalt() {
 		String salt = UUID.randomUUID().toString().substring(0, 8);
 		System.out.println("-------------------------- salt: " + salt);

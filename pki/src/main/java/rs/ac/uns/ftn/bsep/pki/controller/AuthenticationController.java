@@ -77,6 +77,17 @@ public class AuthenticationController {
 		}
 		return modelAndView;
 	}		
-	
+
+	@PostMapping("/new-activation-link")
+	public ResponseEntity<?> sendNewActivationLink(@RequestBody String username) {
+		
+		try {		
+			userService.sendNewActivationLink(username);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}		
+	}	
 		
 }
