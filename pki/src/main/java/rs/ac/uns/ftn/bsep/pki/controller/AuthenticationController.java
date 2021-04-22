@@ -67,10 +67,9 @@ public class AuthenticationController {
 	
 	/* kad klikne na link iz mejla, aktivira nalog */
 	@RequestMapping(value="/confirm-account", method= {RequestMethod.GET, RequestMethod.POST})
-	public ModelAndView confirmUserAccount(ModelAndView modelAndView, @RequestParam("token")String confirmationToken)
-	{
-			if(userService.confirmUser(confirmationToken)) {
-      		modelAndView.setViewName("accountVerified");
+	public ModelAndView confirmUserAccount(ModelAndView modelAndView, @RequestParam("token")String confirmationToken) {
+		if(userService.confirmUser(confirmationToken)) {
+			modelAndView.setViewName("accountVerified");
 		}
 		else {
 			modelAndView.addObject("message","The link is invalid or broken!");

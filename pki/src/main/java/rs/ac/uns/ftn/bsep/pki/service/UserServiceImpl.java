@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.bsep.pki.service;
 
 import java.util.Collection;
 import java.util.UUID;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -63,8 +64,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean confirmUser(String confirmationToken) {
 		ConfirmationToken token = confirmationTokenRepository.findByConfirmationToken(confirmationToken);
-				
-		if(token != null) {
+						
+		if(token != null && (token.getCreationDate().plusDays((long) 7).isAfter(LocalDate.now()))) {			
 	      	User user = userRepository.findByUsername(token.getUser().getUsername());
 	      	user.setEnabled(true);
 	      	userRepository.save(user);
