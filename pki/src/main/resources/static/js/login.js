@@ -1,3 +1,14 @@
+var entityMap = {
+	'&': '&amp;',
+	'<': '&lt;',
+	'>': '&gt;',
+	'"': '&quot;',
+	"'": '&#39;',
+	'/': '&#x2F;',
+	'`': '&#x60;',
+	'=': '&#x3D;'
+};
+
 $(document).ready(function () {	
 
 	/*Login patient on submit*/
@@ -7,7 +18,7 @@ $(document).ready(function () {
 		$('#div_alert').empty();
 
 		let username = $('#email').val();
-		let password = $('#password').val();
+		let password = escapeHtml($('#password').val());
 
 		var userInfoDTO = {
 			"username": username,
@@ -40,6 +51,12 @@ $(document).ready(function () {
 		}
 	});
 });
+
+function escapeHtml(string) {
+	return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+		return entityMap[s];
+	});
+}
 
 function redirectUser(token){
 	let role = decodeToken(token).role;
