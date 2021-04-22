@@ -27,7 +27,7 @@ public class UserValidator {
 		Must have at least one special symbol among @#$%
 		Password length should be between 8 and 20.
 		For example: Helloword#123*/
-		Pattern pattern = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20}$");
+		Pattern pattern = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{10,20}$");
         Matcher matcher = pattern.matcher(password);
         if(!matcher.matches()) {
         	throw new ValidationException("Wrong format of password.");
