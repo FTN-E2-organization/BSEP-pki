@@ -16,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import rs.ac.uns.ftn.bsep.pki.security.auth.RestAuthenticationEntryPoint;
 import rs.ac.uns.ftn.bsep.pki.security.auth.TokenAuthenticationFilter;
@@ -77,7 +78,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .contentSecurityPolicy("script-src 'self'");
 		http.headers().defaultsDisabled();
 		
-		http.csrf().disable();
+		http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 	}
 
 
