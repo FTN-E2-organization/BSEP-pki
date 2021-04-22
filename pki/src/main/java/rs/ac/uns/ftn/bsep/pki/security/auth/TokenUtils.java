@@ -42,7 +42,6 @@ public class TokenUtils {
 				.setAudience(AUDIENCE_WEB)
 				.setIssuedAt(new Date())
 				.setExpiration(generateExpirationDate())
-				// .claim("key", value) //moguce je postavljanje proizvoljnih podataka u telo JWT tokena
 				.claim("userId", userId)
 				.claim("role", role)
 				.signWith(SIGNATURE_ALGORITHM, SECRET).compact();

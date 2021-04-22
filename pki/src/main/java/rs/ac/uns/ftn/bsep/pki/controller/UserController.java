@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,8 +29,8 @@ public class UserController {
 		this.userService = userService;
 	}
 	
+	@PreAuthorize("hasAuthority('USER_getSubjects')")
 	@GetMapping("/subjects")
-	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> getSubjects(){
 		try {
 			Collection<UserDTO> userDTOs = UserMapper.toUserDTOs(userService.getAllSubjects());
