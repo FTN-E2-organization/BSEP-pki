@@ -37,7 +37,7 @@ public class CertificateController {
 		this.certificateService = certificateService;
 	}
 	
-	@PreAuthorize("hasAuthority('CERTIFICATE_revokeCertificate')")
+	@PreAuthorize("hasAuthority('CERTIFICATE_revoke')")
 	@PutMapping("/{id}/revoke")
 	public ResponseEntity<?> revokeCertificate(@PathVariable Long id){
 		try {
@@ -49,7 +49,7 @@ public class CertificateController {
 		}
 	}
 	
-	@PreAuthorize("hasAuthority('CERTIFICATE_addNonSelfSignedCertificate')")
+	@PreAuthorize("hasAuthority('CERTIFICATE_add')")
 	@PostMapping(value = "/non-self-signed", consumes = "application/json")
 	public ResponseEntity<?> addNonSelfSignedCertificate(@RequestBody CertificateDTO certificateDTO){
 		try {
@@ -71,7 +71,7 @@ public class CertificateController {
 		}
 	}
 	
-	@PreAuthorize("hasAuthority('CERTIFICATE_addSelfSignedCertificate')")
+	@PreAuthorize("hasAuthority('CERTIFICATE_add')")
 	@PostMapping(value = "/self-signed", consumes = "application/json")
 	public ResponseEntity<?> addSelfSignedCertificate(@RequestBody CertificateDTO certificateDTO){
 		try {
@@ -101,7 +101,6 @@ public class CertificateController {
 	
 	@PreAuthorize("hasAuthority('CERTIFICATE_getAll')")
 	@GetMapping("/all")
-	//@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> getAll(){
 		try {
 			Collection<CertificateDTO> cDTOs = certificateService.getAll();
@@ -114,7 +113,6 @@ public class CertificateController {
 	
 	@PreAuthorize("hasAuthority('CERTIFICATE_getById')")
 	@GetMapping("/{id}")
-	//@PreAuthorize("hasAnyRole('ADMIN','SUBJECT')")
 	public ResponseEntity<?> getById(@PathVariable Long id){
 		try {
 			CertificateDTO cDTO = certificateService.getById(id);
@@ -127,7 +125,6 @@ public class CertificateController {
 	
 	@PreAuthorize("hasAuthority('CERTIFICATE_getBySubjectId')")
 	@GetMapping("/{id}/subject")
-	//@PreAuthorize("hasRole('SUBJECT')")
 	public ResponseEntity<?> getBySubjectId(@PathVariable Long id){
 		try {
 			Collection<CertificateDTO> cDTOs = certificateService.getBySubjectId(id);
@@ -140,7 +137,6 @@ public class CertificateController {
 	
 	@PreAuthorize("hasAuthority('CERTIFICATE_getValidById')")
 	@GetMapping("/{id}/valid")
-	//@PreAuthorize("hasAnyRole('SUBJECT','ADMIN')")
 	public ResponseEntity<?> getValidById(@PathVariable Long id){
 		try {
 			boolean isValid = certificateService.isCertificateValid(id);
@@ -151,9 +147,8 @@ public class CertificateController {
 		}
 	}
 
-	@PreAuthorize("hasAuthority('CERTIFICATE_downloadCertificate')")
+	@PreAuthorize("hasAuthority('CERTIFICATE_download')")
     @RequestMapping(method = RequestMethod.GET, value = "/download/{id}")
-    //@PreAuthorize("hasRole('SUBJECT')")
     public ResponseEntity<?> downloadCertificate(HttpServletResponse response, @PathVariable Long id){
         RegExp reg = new RegExp();
         if(reg.isValidId(id)) {

@@ -31,7 +31,6 @@ public class UserController {
 	
 	@PreAuthorize("hasAuthority('USER_getSubjects')")
 	@GetMapping("/subjects")
-	//@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> getSubjects(){
 		try {
 			Collection<UserDTO> userDTOs = UserMapper.toUserDTOs(userService.getAllSubjects());
