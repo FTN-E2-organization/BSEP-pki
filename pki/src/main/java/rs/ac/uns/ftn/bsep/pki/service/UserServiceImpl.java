@@ -3,6 +3,10 @@ package rs.ac.uns.ftn.bsep.pki.service;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.UUID;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +56,9 @@ public class UserServiceImpl implements UserService {
 	public void addSubject(AddUserDTO userDTO) throws Exception {
 		if (userRepository.findByUsername(userDTO.username) != null)
 			throw new BadRequestException("Username already exists.");
-
+		if(!checkPassword(userDTO.password)) {
+			throw new BadRequestException("Password is too weak and is currently blacklisted.");
+		}
 		User user = new User();
 		Authority authority = authorityService.findByname("ROLE_SUBJECT");
 		String salt = generateSalt();
@@ -107,7 +113,9 @@ public class UserServiceImpl implements UserService {
 		if(token == null || token.getExparationTime().isBefore(LocalDateTime.now())) {
 			return false;
 		}
-		
+		if(!checkPassword(dto.password)) {
+			return false;
+		}
 		User user = token.getUser();
 
 		String salt = generateSalt();	
@@ -147,6 +155,27 @@ public class UserServiceImpl implements UserService {
 		String salt = UUID.randomUUID().toString().substring(0, 8);
 		System.out.println("-------------------------- salt: " + salt);
 		return salt;
+	}
+	
+	private boolean checkPassword(String password) {
+		String p = password.toLowerCase();
+		
+		try (BufferedReader br = new BufferedReader(new FileReader("src/main/resources/1000-most-common-passwords.txt"))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(p.equals(line)) {
+		    	   return false;
+		       }
+		    }
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return true;
 	}
 
 }
