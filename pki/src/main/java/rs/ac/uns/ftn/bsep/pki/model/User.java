@@ -2,6 +2,10 @@ package rs.ac.uns.ftn.bsep.pki.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +15,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -38,6 +44,10 @@ public class User implements UserDetails {
 	@Column(nullable = false)
 	private String password;
 	
+	@JsonProperty(access = Access.WRITE_ONLY)
+	@Column(nullable = false)
+	private String salt;
+	
     @Column(unique = false, nullable = false)
     private boolean enabled;
 	
@@ -46,9 +56,7 @@ public class User implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		Collection<Authority> authorities = new ArrayList<Authority>();
-    	authorities.add(this.authority);
-		return authorities;
+		return authority.getPermissions();
 	}
 	
 	@Override
@@ -112,5 +120,13 @@ public class User implements UserDetails {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
+
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
     
 }

@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.bsep.pki.service;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.UUID;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
@@ -54,8 +55,10 @@ public class UserServiceImpl implements UserService {
 
 		User user = new User();
 		Authority authority = authorityService.findByname("ROLE_SUBJECT");
-		user.setUsername(userDTO.username);
-		user.setPassword(passwordEncoder.encode(userDTO.password));
+		String salt = generateSalt();
+		user.setUsername(userDTO.username);	
+		user.setSalt(salt);
+		user.setPassword(passwordEncoder.encode(userDTO.password + salt));
 		user.setAuthority(authority);
 		user.setEnabled(false);
 
@@ -70,15 +73,15 @@ public class UserServiceImpl implements UserService {
 	public boolean confirmUser(String confirmationToken) {
 		ConfirmationToken token = confirmationTokenRepository.findByConfirmationToken(confirmationToken);
 
-		if (token != null) {
-			User user = userRepository.findByUsername(token.getUser().getUsername());
-			user.setEnabled(true);
-			userRepository.save(user);
-			return true;
-		}
+						
+		if(token != null && (token.getCreationDate().plusDays((long) 7).isAfter(LocalDate.now()))) {			
+	      	User user = userRepository.findByUsername(token.getUser().getUsername());
+	      	user.setEnabled(true);
+	      	userRepository.save(user);
+	      	return true;
+		}		
 		return false;
 	}
-
 	@Override
 	public boolean recoverPassword(String username) throws MailException, InterruptedException {
 		User user = userRepository.findByUsername(username);
@@ -111,4 +114,36 @@ public class UserServiceImpl implements UserService {
 		recoveryTokenRepository.delete(token);
 		return true;
 	}
+		
+	
+	@Override
+	public String getSaltByUsername(String username) {
+		return userRepository.getSaltByUsername(username);
+	}
+	
+	@Override
+	public void sendNewActivationLink(String username) throws Exception {
+		ConfirmationToken oldToken = confirmationTokenRepository.getTokenByUsername(username);
+		if (oldToken == null) {
+			throw new Exception("You did not register!");
+		}
+		else if (oldToken.getUser().isEnabled()) {
+			throw new Exception("Your account is already active!");
+		}
+		else if (oldToken.getCreationDate().plusDays((long) 7).isAfter(LocalDate.now())) {
+			throw new Exception("Your old activation link is still valid!");
+		}
+		
+		ConfirmationToken newToken = new ConfirmationToken(oldToken.getUser());
+		newToken.setTokenid(oldToken.getTokenid());
+		confirmationTokenRepository.save(newToken);
+		emailService.sendActivationEmail(username, newToken);
+	}	
+	
+	private String generateSalt() {
+		String salt = UUID.randomUUID().toString().substring(0, 8);
+		System.out.println("-------------------------- salt: " + salt);
+		return salt;
+	}
+
 }

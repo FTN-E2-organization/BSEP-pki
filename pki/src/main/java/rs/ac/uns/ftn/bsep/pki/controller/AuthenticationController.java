@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import rs.ac.uns.ftn.bsep.pki.dto.PasswordRequestDTO;
+import rs.ac.uns.ftn.bsep.pki.model.Authority;
 import rs.ac.uns.ftn.bsep.pki.model.User;
 import rs.ac.uns.ftn.bsep.pki.security.auth.JwtAuthenticationRequest;
 import rs.ac.uns.ftn.bsep.pki.security.auth.TokenUtils;
@@ -43,12 +44,10 @@ public class AuthenticationController {
 	
 	
 	@PostMapping("/login")
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest, HttpServletResponse response) {
-		
-		try {			
-			Authentication authentication = authenticationManager
-					.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
-							authenticationRequest.getPassword()));
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest, HttpServletResponse response) {		
+		try {		
+			Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
+							authenticationRequest.getPassword() + userService.getSaltByUsername(authenticationRequest.getUsername())));
 
 			// Ubaci korisnika u trenutni security kontekst
 			SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -56,11 +55,12 @@ public class AuthenticationController {
 			User user = (User) authentication.getPrincipal();
 			String jwt = tokenUtils.generateToken(user.getUsername(), user.getId(), user.getAuthority().getName());			
 			int expiresIn = tokenUtils.getExpiredIn();
+			Authority authority = user.getAuthority();
 
-			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn));
+			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, authority.getName()));
 		}
 		catch (BadCredentialsException e) {
-			return new ResponseEntity<>("Bad credentials.", HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<>("Invalid email or password.", HttpStatus.UNAUTHORIZED);
 		}
 		catch (Exception e) {
 			return new ResponseEntity<>("An error occurred while sending request for log in.", HttpStatus.BAD_REQUEST);
@@ -70,10 +70,9 @@ public class AuthenticationController {
 	
 	/* kad klikne na link iz mejla, aktivira nalog */
 	@RequestMapping(value="/confirm-account", method= {RequestMethod.GET, RequestMethod.POST})
-	public ModelAndView confirmUserAccount(ModelAndView modelAndView, @RequestParam("token")String confirmationToken)
-	{
-			if(userService.confirmUser(confirmationToken)) {
-      		modelAndView.setViewName("accountVerified");
+	public ModelAndView confirmUserAccount(ModelAndView modelAndView, @RequestParam("token")String confirmationToken) {
+		if(userService.confirmUser(confirmationToken)) {
+			modelAndView.setViewName("accountVerified");
 		}
 		else {
 			modelAndView.addObject("message","The link is invalid or broken!");
@@ -95,4 +94,17 @@ public class AuthenticationController {
 	{
 		return userService.changePassword(dto);
 	}
+
+	@PostMapping("/new-activation-link")
+	public ResponseEntity<?> sendNewActivationLink(@RequestBody String username) {
+		
+		try {		
+			userService.sendNewActivationLink(username);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}		
+	}	
+		
 }

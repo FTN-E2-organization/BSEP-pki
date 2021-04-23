@@ -1,3 +1,14 @@
+var entityMap = {
+	'&': '&amp;',
+	'<': '&lt;',
+	'>': '&gt;',
+	'"': '&quot;',
+	"'": '&#39;',
+	'/': '&#x2F;',
+	'`': '&#x60;',
+	'=': '&#x3D;'
+};
+
 $(document).ready(function () {	
 
 	/*Login patient on submit*/
@@ -7,7 +18,7 @@ $(document).ready(function () {
 		$('#div_alert').empty();
 
 		let username = $('#email').val();
-		let password = $('#password').val();
+		let password = escapeHtml($('#password').val());
 
 		var userInfoDTO = {
 			"username": username,
@@ -41,6 +52,12 @@ $(document).ready(function () {
 	});
 });
 
+function escapeHtml(string) {
+	return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+		return entityMap[s];
+	});
+}
+
 function redirectUser(token){
 	let role = decodeToken(token).role;
 	if(role == "ROLE_ADMIN"){
@@ -59,3 +76,33 @@ function decodeToken(token) {
 
     return JSON.parse(jsonPayload);
 }
+
+function sendNewLink() {	
+	let username = $('#email').val();
+	
+	if ((username == "")) {
+		let alert = $('<div class="alert alert-warning alert-dismissible fade show m-1" role="alert">Enter your username!'
+			+ '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + '</div >')
+		$('#div_alert').append(alert);
+		return;
+	} 
+	$.ajax({
+		url: "/api/auth/new-activation-link",
+		type: 'POST',
+		contentType: 'application/json',
+		data: username,
+		success: function () {
+			let alert = $('<div class="alert alert-success alert-dismissible fade show m-1" role="alert">Success.'
+				+ '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + '</div >')
+			$('#div_alert').append(alert);
+			return;
+		},
+		error: function (jqXHR) {
+			let alert = $('<div class="alert alert-danger alert-dismissible fade show m-1" role="alert">ERROR. ' + jqXHR.responseText 
+				+ '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + '</div >')
+			$('#div_alert').append(alert);
+			return;
+		}
+	});		
+};
+

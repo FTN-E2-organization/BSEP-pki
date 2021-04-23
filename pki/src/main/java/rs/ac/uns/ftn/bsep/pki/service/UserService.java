@@ -15,4 +15,6 @@ public interface UserService {
 	boolean confirmUser(String confirmationToken);
 	boolean recoverPassword(String username) throws MailException, InterruptedException;
 	boolean changePassword(PasswordRequestDTO dto);
+	String getSaltByUsername(String username);
+	void sendNewActivationLink(String username) throws Exception;
 }
