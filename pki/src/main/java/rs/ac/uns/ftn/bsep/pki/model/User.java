@@ -44,6 +44,10 @@ public class User implements UserDetails {
 	@Column(nullable = false)
 	private String password;
 	
+	@JsonProperty(access = Access.WRITE_ONLY)
+	@Column(nullable = false)
+	private String salt;
+	
     @Column(unique = false, nullable = false)
     private boolean enabled;
 	
@@ -116,5 +120,13 @@ public class User implements UserDetails {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
+
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
     
 }

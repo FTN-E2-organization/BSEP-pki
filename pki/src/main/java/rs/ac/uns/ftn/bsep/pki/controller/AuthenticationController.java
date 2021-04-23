@@ -42,11 +42,10 @@ public class AuthenticationController {
 	
 	
 	@PostMapping("/login")
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest, HttpServletResponse response) {
-		try {			
-			Authentication authentication = authenticationManager
-					.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
-							authenticationRequest.getPassword()));
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest, HttpServletResponse response) {		
+		try {		
+			Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
+							authenticationRequest.getPassword() + userService.getSaltByUsername(authenticationRequest.getUsername())));
 
 			// Ubaci korisnika u trenutni security kontekst
 			SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -69,8 +68,7 @@ public class AuthenticationController {
 	
 	/* kad klikne na link iz mejla, aktivira nalog */
 	@RequestMapping(value="/confirm-account", method= {RequestMethod.GET, RequestMethod.POST})
-	public ModelAndView confirmUserAccount(ModelAndView modelAndView, @RequestParam("token")String confirmationToken)
-	{
+	public ModelAndView confirmUserAccount(ModelAndView modelAndView, @RequestParam("token")String confirmationToken) {
 		if(userService.confirmUser(confirmationToken)) {
 			modelAndView.setViewName("accountVerified");
 		}
@@ -80,6 +78,17 @@ public class AuthenticationController {
 		}
 		return modelAndView;
 	}		
-	
+
+	@PostMapping("/new-activation-link")
+	public ResponseEntity<?> sendNewActivationLink(@RequestBody String username) {
+		
+		try {		
+			userService.sendNewActivationLink(username);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}		
+	}	
 		
 }
