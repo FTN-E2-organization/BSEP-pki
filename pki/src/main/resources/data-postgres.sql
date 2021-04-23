@@ -27,15 +27,15 @@ INSERT INTO AUTHORITIES_PERMISSIONS (authority_id, permission_id) VALUES (2,8);
 INSERT INTO AUTHORITIES_PERMISSIONS (authority_id, permission_id) VALUES (2,9);
 INSERT INTO AUTHORITIES_PERMISSIONS (authority_id, permission_id) VALUES (2,10);
 
-/* user kom je istekao link za aktiviranje naloga: */
+/* user kome je istekao link za aktiviranje naloga: (lozinka: Helloword6#123*)*/
 INSERT INTO users (id, username, password,authority_id, enabled, salt) VALUES (nextval('users_seq'),'isa.user.test@gmail.com','$2y$10$cbn.yFXEQMvDBnZ3HrWoaeQgrRzknddNV9/.Vi1OWFihcvbCGqafi',2, false, '1234567k');
 INSERT INTO confirmation_token (token_id, confirmation_token, creation_date, user_id) VALUES (10, 'f819e980-58c6-415f-8908-f602ddd0b773', '2021-04-10', 1);
 
-INSERT INTO users (id, username, password,authority_id, enabled, salt) VALUES (nextval('users_seq'),'admin','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra',1, true, '1234567k');
-INSERT INTO users (id, username, password,authority_id, enabled, salt) VALUES (nextval('users_seq'),'ftn.uns.ac.rs','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra',2, true, '1234567k');
-INSERT INTO users (id, username, password,authority_id, enabled, salt) VALUES (nextval('users_seq'),'marija.maric98','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra',2, true, '1234567k');
-INSERT INTO users (id, username, password,authority_id, enabled, salt) VALUES (nextval('users_seq'),'pmf.uns.ac.rs','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra',2, true, '1234567k');
-INSERT INTO users (id, username, password,authority_id, enabled, salt) VALUES (nextval('users_seq'),'pera_peric99','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra',2, true, '1234567k');
-INSERT INTO users (id, username, password,authority_id, enabled, salt) VALUES (nextval('users_seq'),'etf.bg','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra',2, true, '1234567k');
-INSERT INTO users (id, username, password,authority_id, enabled, salt) VALUES (nextval('users_seq'),'nada_nadic','$2a$04$Vbug2lwwJGrvUXTj6z7ff.97IzVBkrJ1XfApfGNl.Z695zqcnPYra',2, true, '1234567k');
+INSERT INTO users (id, username, password,authority_id, enabled, salt) VALUES (nextval('users_seq'),'admin','$2y$10$INwOS1r.kznw/swgQ.AKSOWtjagIK0OEb6onhm0KcuWj/1gk4fWZ.',1, true, '1234567k');
+INSERT INTO users (id, username, password,authority_id, enabled, salt) VALUES (nextval('users_seq'),'ftn.uns.ac.rs','$2y$10$INwOS1r.kznw/swgQ.AKSOWtjagIK0OEb6onhm0KcuWj/1gk4fWZ.',2, true, '1234567k');
+INSERT INTO users (id, username, password,authority_id, enabled, salt) VALUES (nextval('users_seq'),'marija.maric98','$2y$10$INwOS1r.kznw/swgQ.AKSOWtjagIK0OEb6onhm0KcuWj/1gk4fWZ.',2, true, '1234567k');
+INSERT INTO users (id, username, password,authority_id, enabled, salt) VALUES (nextval('users_seq'),'pmf.uns.ac.rs','$2y$10$INwOS1r.kznw/swgQ.AKSOWtjagIK0OEb6onhm0KcuWj/1gk4fWZ.',2, true, '1234567k');
+INSERT INTO users (id, username, password,authority_id, enabled, salt) VALUES (nextval('users_seq'),'pera_peric99','$2y$10$INwOS1r.kznw/swgQ.AKSOWtjagIK0OEb6onhm0KcuWj/1gk4fWZ.',2, true, '1234567k');
+INSERT INTO users (id, username, password,authority_id, enabled, salt) VALUES (nextval('users_seq'),'etf.bg','$2y$10$INwOS1r.kznw/swgQ.AKSOWtjagIK0OEb6onhm0KcuWj/1gk4fWZ.',2, true, '1234567k');
+INSERT INTO users (id, username, password,authority_id, enabled, salt) VALUES (nextval('users_seq'),'nada_nadic','$2y$10$INwOS1r.kznw/swgQ.AKSOWtjagIK0OEb6onhm0KcuWj/1gk4fWZ.',2, true, '1234567k');
 
