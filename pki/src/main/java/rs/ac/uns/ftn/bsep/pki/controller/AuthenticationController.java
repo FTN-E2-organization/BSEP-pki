@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import rs.ac.uns.ftn.bsep.pki.dto.PasswordRequestDTO;
 import rs.ac.uns.ftn.bsep.pki.model.User;
 import rs.ac.uns.ftn.bsep.pki.security.auth.JwtAuthenticationRequest;
 import rs.ac.uns.ftn.bsep.pki.security.auth.TokenUtils;
@@ -80,5 +82,17 @@ public class AuthenticationController {
 		return modelAndView;
 	}		
 	
-		
+
+	/* kad mijenja sifru dobija link na mejl */
+	@PostMapping("/password-recovery")
+	public boolean recoverPassword(@RequestBody String username) throws MailException, InterruptedException
+	{
+		return userService.recoverPassword(username);
+	}
+	
+	@PostMapping("/password-change")
+	public boolean changePassword(@RequestBody PasswordRequestDTO dto)
+	{
+		return userService.changePassword(dto);
+	}
 }

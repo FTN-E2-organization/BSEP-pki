@@ -8,4 +8,6 @@ import rs.ac.uns.ftn.bsep.pki.model.ConfirmationToken;
 public interface ConfirmationTokenRepository extends CrudRepository<ConfirmationToken, String> {
 
 	ConfirmationToken findByConfirmationToken(String confirmationToken);
+
+	
 }
