@@ -58,20 +58,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 
-				.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
+		.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
 
-				.authorizeRequests()
-					.antMatchers("/auth/**").permitAll()
-					.antMatchers("/h2-console/**").permitAll()
-					.antMatchers("/api/auth/confirm-account").permitAll()  //aktiviranje naloga preko mejla
-				.anyRequest().authenticated().and()
-				.cors().and()
-				.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService),
-						BasicAuthenticationFilter.class);
+		.authorizeRequests()
+			.antMatchers("/auth/**").permitAll()
+			.antMatchers("/h2-console/**").permitAll()
+			.antMatchers("/api/auth/confirm-account").permitAll()  //aktiviranje naloga preko mejla
+		.anyRequest().authenticated().and()
+		.cors().and()
+		.addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService),
+				BasicAuthenticationFilter.class)
+		//XSS protection
+        .headers()
+        .xssProtection()
+        .and()
+        .contentSecurityPolicy("script-src 'self'");
+		
 		http.csrf().disable();
 		http.headers().frameOptions().disable();
+
 	}
 
 
