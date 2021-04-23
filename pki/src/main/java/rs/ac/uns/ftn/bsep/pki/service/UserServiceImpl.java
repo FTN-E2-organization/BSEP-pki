@@ -109,7 +109,10 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		User user = token.getUser();
-		user.setPassword(passwordEncoder.encode(dto.password));
+
+		String salt = generateSalt();	
+		user.setSalt(salt);
+		user.setPassword(passwordEncoder.encode(dto.password + salt));
 		userRepository.save(user);
 		recoveryTokenRepository.delete(token);
 		return true;
