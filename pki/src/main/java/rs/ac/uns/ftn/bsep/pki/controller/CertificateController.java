@@ -26,7 +26,6 @@ import rs.ac.uns.ftn.bsep.pki.exception.ValidationException;
 import rs.ac.uns.ftn.bsep.pki.model.User;
 import rs.ac.uns.ftn.bsep.pki.service.CertificateService;
 import rs.ac.uns.ftn.bsep.pki.validator.CertificateValidator;
-import rs.ac.uns.ftn.bsep.pki.validator.RegExp;
 
 @RestController
 @RequestMapping(value = "api/certificate")
@@ -153,8 +152,7 @@ public class CertificateController {
 	@PreAuthorize("hasAuthority('CERTIFICATE_download')")
     @RequestMapping(method = RequestMethod.GET, value = "/download/{id}")
     public ResponseEntity<?> downloadCertificate(HttpServletResponse response, @PathVariable Long id){
-        RegExp reg = new RegExp();
-        if(reg.isValidId(id)) {
+        if(CertificateValidator.downloadCertificateValidation(id)) {
             File certificateForDownload = certificateService.downloadCertificate(id);
             response.setContentType("application/pkix-cert");
             response.setContentLength((int) certificateForDownload.length());
@@ -172,7 +170,7 @@ public class CertificateController {
             	return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
             }
         }        
-        return new ResponseEntity<>("certificate id is not valid", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Certificate id is not valid.", HttpStatus.BAD_REQUEST);
     }
 	
 }

@@ -36,8 +36,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Collection<User> getAllSubjects() {
-		return userRepository.getAllSubjects();
+	public Collection<User> getAllActiveSubjects() {
+		return userRepository.getAllActiveSubjects();
 	}
 
 	@Override

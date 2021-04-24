@@ -33,7 +33,7 @@ public class UserController {
 	@GetMapping("/subjects")
 	public ResponseEntity<?> getSubjects(){
 		try {
-			Collection<UserDTO> userDTOs = UserMapper.toUserDTOs(userService.getAllSubjects());
+			Collection<UserDTO> userDTOs = UserMapper.toUserDTOs(userService.getAllActiveSubjects());
 			return new ResponseEntity<>(userDTOs, HttpStatus.OK);
 		}
 		catch (Exception e) {
