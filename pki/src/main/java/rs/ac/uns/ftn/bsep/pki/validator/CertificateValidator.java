@@ -39,6 +39,14 @@ public class CertificateValidator {
 			certificateDTO.surname = "";
 	}
 	
+	public static boolean downloadCertificateValidation(Long certificateId) {
+		String number = Long.toString(certificateId);
+        String nameRegex = "^[0-9]{1,6}$";
+        Pattern pattern = Pattern.compile(nameRegex);
+        Matcher matcher = pattern.matcher(number);
+        return matcher.find();
+	}
+	
 	private static void validateId(Long id, String message) throws Exception{
 		if(id < 0)
 			throw new ValidationException(message);

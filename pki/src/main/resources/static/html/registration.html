@@ -48,8 +48,22 @@
                                     <div class="invalid-feedback">
                                         Please enter a password.
                                     </div>
+                                    <label id="pswDescription"></label>
                                 </div>
                             </div>
+                            
+                             <div class="form-row">
+                                <div class="form-group col">
+                                    <label for="password" class="text-secondary">Password rules</label><br/>
+                                    <div style="margin-left:10px;">
+                                    <label class="form-check-label" style="color:red;" id="numCharacter">1. Must have at least one numeric character.</label><br/>
+                                    <label class="form-check-label" style="color:red;" id="lowercaseCharacter">2. Must have at least one lowercase character.</label><br/>
+                                    <label class="form-check-label" style="color:red;" id="uppercaseCharacter">3. Must have at least one uppercase character.</label><br/>
+                                    <label class="form-check-label" style="color:red;" id="specialSymbol">4. Must have at least one special symbol.</label><br/>
+                                    <label class="form-check-label" style="color:red;" id="pswLength">5. Password length should be at least 10.</label><br/>
+									</div>
+                                </div>
+                            </div><br/>
                             
                             <div class="form-row">
                                 <div class="form-group col">
@@ -58,6 +72,7 @@
                                     <div class="invalid-feedback">
                                         Please repeat a password.
                                     </div>
+                                    <label id="pswRepeatDescription"></label>
                                 </div>
                             </div>
 

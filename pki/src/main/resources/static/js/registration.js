@@ -10,6 +10,79 @@ var entityMap = {
 };
 
 $(document).ready(function () {	
+	
+	$("#password").on('input',function(){
+ 		let password = $('#password').val();
+		let passwordRepeat = $('#passwordRepeat').val();
+	
+	  	let numCharacter = /[0-9]+/i
+		let lowercaseCharacter = /[a-z]+/g
+		let uppercaseCharacter = /[A-Z]+/g
+		let specialSymbol = /[^A-Za-z0-9]+/i
+		let pswLength = $('#password').val().length;
+		
+		let strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{10,})");
+		let mediumRegex = new RegExp("^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{10,})");
+
+	  	if(numCharacter.test(password))
+			$('#numCharacter').css("color","green");
+		else
+			$('#numCharacter').css("color","red");
+		
+		if(lowercaseCharacter.test(password))
+			$('#lowercaseCharacter').css("color","green");
+		else
+			$('#lowercaseCharacter').css("color","red");
+			
+		if(uppercaseCharacter.test(password))
+			$('#uppercaseCharacter').css("color","green");
+		else
+			$('#uppercaseCharacter').css("color","red");
+			
+		if(specialSymbol.test(password))
+			$('#specialSymbol').css("color","green");
+		else
+			$('#specialSymbol').css("color","red");
+		
+		if(pswLength >= 10)
+			$('#pswLength').css("color","green");
+		else
+			$('#pswLength').css("color","red");
+			
+		if(strongRegex.test(password)){
+			$('#pswDescription').text("Strong password");
+			$('#pswDescription').css("color","green");
+		}
+		else if(mediumRegex.test(password)){
+			$('#pswDescription').text("Medium password");
+			$('#pswDescription').css("color","orange");
+		}
+		else{
+			$('#pswDescription').text("Weak password");
+			$('#pswDescription').css("color","red");
+		}
+		
+		if(passwordRepeat != '' && password != passwordRepeat){
+			$('#pswRepeatDescription').text("Passwords do not match");
+			$('#pswRepeatDescription').css("color","red");
+		}else{
+			$('#pswRepeatDescription').text("");
+		}
+			
+	});
+	
+	$("#passwordRepeat").on('input',function(){
+		let password = $('#password').val();
+		let passwordRepeat = $('#passwordRepeat').val();
+		
+		if(passwordRepeat != '' && password != passwordRepeat){
+			$('#pswRepeatDescription').text("Passwords do not match");
+			$('#pswRepeatDescription').css("color","red");
+		}else{
+			$('#pswRepeatDescription').text("");
+		}
+		
+	});
 
 	$('form#registration').submit(function(event) {
 		

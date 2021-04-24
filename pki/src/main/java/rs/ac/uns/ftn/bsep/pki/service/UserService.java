@@ -7,7 +7,7 @@ import rs.ac.uns.ftn.bsep.pki.model.User;
 
 public interface UserService {
 
-	Collection<User> getAllSubjects();
+	Collection<User> getAllActiveSubjects();
 	void addSubject(AddUserDTO userDTO) throws Exception;
 	boolean confirmUser(String confirmationToken);
 	String getSaltByUsername(String username);
