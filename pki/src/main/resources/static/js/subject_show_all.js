@@ -1,10 +1,9 @@
 checkUserRole("ROLE_SUBJECT");
-var subjectId = getUserIdFromToken();
 $(document).ready(function () {	
 	
 	$.ajax({
 		type:"GET", 
-		url: "/api/certificate/" + subjectId + "/subject",
+		url: "/api/certificate/subject",
 		headers: {
             'Authorization': 'Bearer ' + window.localStorage.getItem('token')
         },

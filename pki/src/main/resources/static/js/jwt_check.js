@@ -22,8 +22,6 @@ $(document).ready(function () {
 		}
 		
 	}
-	
-
 });
 
 function decodeToken(token) {
@@ -45,14 +43,6 @@ function getRoleFromToken() {
 	}
 }
 
-function getUserIdFromToken(){
-	try{
-		return decodeToken(localStorage.getItem("token")).userId;
-	}
-    catch(err){
-		window.location.href = "../html/login.html";
-	}
-}
 
 function checkUserRole(trueRole) {
     var role = getRoleFromToken();

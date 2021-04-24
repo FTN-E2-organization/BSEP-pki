@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import rs.ac.uns.ftn.bsep.pki.dto.CertificateDTO;
 import rs.ac.uns.ftn.bsep.pki.exception.BadRequestException;
 import rs.ac.uns.ftn.bsep.pki.exception.ValidationException;
+import rs.ac.uns.ftn.bsep.pki.model.User;
 import rs.ac.uns.ftn.bsep.pki.service.CertificateService;
 import rs.ac.uns.ftn.bsep.pki.validator.CertificateValidator;
 import rs.ac.uns.ftn.bsep.pki.validator.RegExp;
@@ -124,10 +126,11 @@ public class CertificateController {
 	}
 	
 	@PreAuthorize("hasAuthority('CERTIFICATE_getBySubjectId')")
-	@GetMapping("/{id}/subject")
+	@GetMapping("/subject")
 	public ResponseEntity<?> getBySubjectId(@PathVariable Long id){
 		try {
-			Collection<CertificateDTO> cDTOs = certificateService.getBySubjectId(id);
+			User u = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			Collection<CertificateDTO> cDTOs = certificateService.getBySubjectId(u.getId());
 			return new ResponseEntity<Collection<CertificateDTO>>(cDTOs, HttpStatus.OK);
 		}
 		catch (Exception e) {
