@@ -126,7 +126,7 @@ public class CertificateController {
 	
 	@PreAuthorize("hasAuthority('CERTIFICATE_getBySubjectId')")
 	@GetMapping("/subject")
-	public ResponseEntity<?> getBySubjectId(@PathVariable Long id){
+	public ResponseEntity<?> getBySubjectId(){
 		try {
 			User u = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			Collection<CertificateDTO> cDTOs = certificateService.getBySubjectId(u.getId());
