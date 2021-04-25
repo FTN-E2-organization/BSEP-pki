@@ -90,9 +90,15 @@ public class AuthenticationController {
 	}
 	
 	@PostMapping("/password-change")
-	public boolean changePassword(@RequestBody PasswordRequestDTO dto)
+	public ResponseEntity<?> changePassword(@RequestBody PasswordRequestDTO dto)
 	{
-		return userService.changePassword(dto);
+		try {		
+			return new ResponseEntity<>(userService.changePassword(dto), HttpStatus.OK);
+		}
+		catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}		
+		
 	}
 
 	@PostMapping("/new-activation-link")
