@@ -24,6 +24,7 @@ import rs.ac.uns.ftn.bsep.pki.model.User;
 import rs.ac.uns.ftn.bsep.pki.repository.ConfirmationTokenRepository;
 import rs.ac.uns.ftn.bsep.pki.repository.RecoveryTokenRepository;
 import rs.ac.uns.ftn.bsep.pki.repository.UserRepository;
+import rs.ac.uns.ftn.bsep.pki.validator.UserValidator;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -108,7 +109,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public boolean changePassword(PasswordRequestDTO dto) {
+	public Boolean changePassword(PasswordRequestDTO dto) throws Exception {
 		RecoveryToken token = recoveryTokenRepository.findByRecoveryToken(dto.token);
 		if(token == null || token.getExparationTime().isBefore(LocalDateTime.now())) {
 			return false;
@@ -116,6 +117,7 @@ public class UserServiceImpl implements UserService {
 		if(!checkPassword(dto.password)) {
 			return false;
 		}
+		UserValidator.validatePasswordFormat(dto.password);
 		User user = token.getUser();
 
 		String salt = generateSalt();	

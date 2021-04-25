@@ -46,7 +46,7 @@ public class EmailServiceImpl implements EmailService {
 		mailMessage.setFrom(environment.getProperty("spring.mail.username"));
 		mailMessage.setSubject("Password recovery");
 		mailMessage.setText("This address is associated with the login," + email + ". To set a new password, please click the following link:"
-	            +"http://localhost:" + port + "/html/change_password.html?token=" + recoveryToken.getRecoveryToken());
+	            +"https://localhost:" + port + "/html/change_password.html?token=" + recoveryToken.getRecoveryToken());
 		mailSender.send(mailMessage);			
 	}	
 

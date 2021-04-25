@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.bsep.pki.service;
 
 import java.util.Collection;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 
 import rs.ac.uns.ftn.bsep.pki.dto.AddUserDTO;
@@ -14,7 +15,7 @@ public interface UserService {
 	void addSubject(AddUserDTO userDTO) throws Exception;
 	boolean confirmUser(String confirmationToken);
 	boolean recoverPassword(String username) throws MailException, InterruptedException;
-	boolean changePassword(PasswordRequestDTO dto);
+	Boolean changePassword(PasswordRequestDTO dto) throws Exception;
 	String getSaltByUsername(String username);
 	void sendNewActivationLink(String username) throws Exception;
 }
