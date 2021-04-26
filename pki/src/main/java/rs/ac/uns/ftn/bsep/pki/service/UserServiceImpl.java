@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void addSubject(AddUserDTO userDTO) throws Exception {
 		if (userRepository.findByUsername(userDTO.username) != null)
-			throw new BadRequestException("Username already exists.");
+			throw new BadRequestException("Email already exists.");
 		if(!checkPassword(userDTO.password)) {
 			throw new BadRequestException("Password is too weak and is currently blacklisted.");
 		}
