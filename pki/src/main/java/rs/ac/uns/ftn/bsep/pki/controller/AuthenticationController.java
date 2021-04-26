@@ -20,12 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import rs.ac.uns.ftn.bsep.pki.dto.PasswordRequestDTO;
+import rs.ac.uns.ftn.bsep.pki.exception.BadRequestException;
 import rs.ac.uns.ftn.bsep.pki.model.Authority;
 import rs.ac.uns.ftn.bsep.pki.model.User;
 import rs.ac.uns.ftn.bsep.pki.security.auth.JwtAuthenticationRequest;
 import rs.ac.uns.ftn.bsep.pki.security.auth.TokenUtils;
 import rs.ac.uns.ftn.bsep.pki.security.auth.UserTokenState;
 import rs.ac.uns.ftn.bsep.pki.service.UserService;
+import rs.ac.uns.ftn.bsep.pki.validator.UserValidator;
 
 @RestController
 @RequestMapping(value = "api/auth", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -86,7 +88,14 @@ public class AuthenticationController {
 	@PostMapping("/password-recovery")
 	public boolean recoverPassword(@RequestBody String username) throws MailException, InterruptedException
 	{
-		return userService.recoverPassword(username);
+		try {
+			UserValidator.validateUsernameFormat(username);
+			return userService.recoverPassword(username);
+		}
+		catch (Exception e) {
+			return false;
+		}
+		
 	}
 	
 	@PostMapping("/password-change")

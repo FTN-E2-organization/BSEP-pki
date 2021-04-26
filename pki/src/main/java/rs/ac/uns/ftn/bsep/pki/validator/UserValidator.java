@@ -33,7 +33,7 @@ public class UserValidator {
         }
 	}
 	
-	private static void validateUsernameFormat(String username) throws Exception{
+	public static void validateUsernameFormat(String username) throws Exception{
 		Pattern usernameRegex = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
         Matcher matcher = usernameRegex.matcher(username);
         if(!matcher.find())
