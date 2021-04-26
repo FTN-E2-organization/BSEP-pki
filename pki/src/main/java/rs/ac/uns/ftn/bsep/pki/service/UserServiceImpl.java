@@ -79,9 +79,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean confirmUser(String confirmationToken) {
 		ConfirmationToken token = confirmationTokenRepository.findByConfirmationToken(confirmationToken);
-
 						
-		if(token != null && (token.getCreationDate().plusDays((long) 7).isAfter(LocalDate.now()))) {			
+		if(token != null && (token.getCreationDate().plusDays((long) 3).isAfter(LocalDate.now()))) {			
 	      	User user = userRepository.findByUsername(token.getUser().getUsername());
 	      	user.setEnabled(true);
 	      	userRepository.save(user);
@@ -89,6 +88,7 @@ public class UserServiceImpl implements UserService {
 		}		
 		return false;
 	}
+	
 	@Override
 	public boolean recoverPassword(String username) throws MailException, InterruptedException {
 		User user = userRepository.findByUsername(username);
@@ -143,7 +143,7 @@ public class UserServiceImpl implements UserService {
 		else if (oldToken.getUser().isEnabled()) {
 			throw new Exception("Your account is already active!");
 		}
-		else if (oldToken.getCreationDate().plusDays((long) 7).isAfter(LocalDate.now())) {
+		else if (oldToken.getCreationDate().plusDays((long) 3).isAfter(LocalDate.now())) {
 			throw new Exception("Your old activation link is still valid!");
 		}
 		
@@ -155,7 +155,6 @@ public class UserServiceImpl implements UserService {
 	
 	private String generateSalt() {
 		String salt = UUID.randomUUID().toString().substring(0, 8);
-		System.out.println("-------------------------- salt: " + salt);
 		return salt;
 	}
 	

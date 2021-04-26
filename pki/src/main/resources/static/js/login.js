@@ -39,7 +39,6 @@ $(document).ready(function () {
 			
 			$.getJSON('https://api.ipify.org?format=json', function(data){
 			ipAddress = data.ip;
-			alert(ipAddress + "    ip address")
 			
 			$.ajax({
 				url: "/api/auth/login",
