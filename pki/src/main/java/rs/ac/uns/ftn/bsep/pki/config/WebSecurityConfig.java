@@ -31,7 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	// BCrypt po defalt-u radi 10 rundi hesiranja prosledjene vrednosti.
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
+		return new BCryptPasswordEncoder(12);
 	}
 
 	@Autowired
