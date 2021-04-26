@@ -8,7 +8,7 @@ import rs.ac.uns.ftn.bsep.pki.exception.ValidationException;
 public class UserValidator {
 
 	public static void addSubjectValidator(AddUserDTO userDTO) throws Exception {
-		validateField(userDTO.username, "Username is required field.");
+		validateField(userDTO.username, "Email is required field.");
 		validateUsernameFormat(userDTO.username);
 		validateField(userDTO.password, "Password is required field.");
 		validatePasswordFormat(userDTO.password);
@@ -37,6 +37,6 @@ public class UserValidator {
 		Pattern usernameRegex = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
         Matcher matcher = usernameRegex.matcher(username);
         if(!matcher.find())
-        	throw new ValidationException("Wrong format of username.");
+        	throw new ValidationException("Wrong format of email.");
 	}
 }
