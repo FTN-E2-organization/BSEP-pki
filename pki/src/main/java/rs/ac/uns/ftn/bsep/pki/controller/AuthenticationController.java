@@ -17,13 +17,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
 import rs.ac.uns.ftn.bsep.pki.model.Authority;
 import rs.ac.uns.ftn.bsep.pki.model.User;
 import rs.ac.uns.ftn.bsep.pki.security.auth.JwtAuthenticationRequest;
 import rs.ac.uns.ftn.bsep.pki.security.auth.TokenUtils;
 import rs.ac.uns.ftn.bsep.pki.security.auth.UserTokenState;
 import rs.ac.uns.ftn.bsep.pki.service.UserService;
+//***********
+import org.springframework.security.core.AuthenticationException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @RestController
 @RequestMapping(value = "api/auth", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -32,6 +35,7 @@ public class AuthenticationController {
 	private TokenUtils tokenUtils;
 	private AuthenticationManager authenticationManager;
 	private UserService userService;
+	private static Logger logger = LogManager.getLogger(UserController.class);
 	
 	@Autowired
 	public AuthenticationController(TokenUtils tokenUtils, AuthenticationManager authenticationManager, UserService userService) {
@@ -51,14 +55,29 @@ public class AuthenticationController {
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 
 			User user = (User) authentication.getPrincipal();
+			
+			logger.info("User " + user.getUsername() + " logged in");
+			
 			String jwt = tokenUtils.generateToken(user.getUsername(), user.getId(), user.getAuthority().getName());			
 			int expiresIn = tokenUtils.getExpiredIn();
 			Authority authority = user.getAuthority();
 
 			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, authority.getName()));
 		}
+//		catch (AuthenticationException a) {
+//			try {
+//				logger.warn("User " + authenticationRequest.getUsername() + " failed to login");
+//			} catch (Exception e) {
+//			}
+//			throw a;
+//		}		
 		catch (BadCredentialsException e) {
-			return new ResponseEntity<>("Invalid email or password.", HttpStatus.UNAUTHORIZED);
+			try {
+				logger.warn("User " + authenticationRequest.getUsername() + " failed to login");
+			} catch (Exception ex) {
+			}
+			throw e;
+//			return new ResponseEntity<>("Invalid email or password.", HttpStatus.UNAUTHORIZED);
 		}
 		catch (Exception e) {
 			return new ResponseEntity<>("An error occurred while sending request for log in.", HttpStatus.BAD_REQUEST);
@@ -80,8 +99,7 @@ public class AuthenticationController {
 	}		
 
 	@PostMapping("/new-activation-link")
-	public ResponseEntity<?> sendNewActivationLink(@RequestBody String username) {
-		
+	public ResponseEntity<?> sendNewActivationLink(@RequestBody String username) {	
 		try {		
 			userService.sendNewActivationLink(username);
 			return new ResponseEntity<>(HttpStatus.OK);

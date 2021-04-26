@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+	    
+	<Appenders>
+		        
+		<Console name="Console" target="SYSTEM_OUT">
+			            
+			<PatternLayout
+				pattern="[%d{yyyy-MM-dd HH:mm:ss}{CST}] [%p] %m%n" />
+		</Console>
+		 
+		        
+		<RollingFile name="RollingFile"
+			fileName="./logs/spring-boot-logger-log4j2-info.log"
+			filePattern="./logs/$${date:yyyy-MM}/spring-boot-logger-log4j2-info-%d{-dd-MMMM-yyyy}-%i.log.gz">
+			    
+			<PatternLayout>
+				                
+				<pattern>[%d{yyyy-MM-dd HH:mm:ss}{CST}] [%p] %m%n</pattern>
+				            
+			</PatternLayout>
+			            
+			<Policies>
+				                <!-- rollover on startup, daily and when the file reaches 
+					                    10 MegaBytes -->
+				                
+				<OnStartupTriggeringPolicy />
+				                
+				<SizeBasedTriggeringPolicy size="5 MB" />
+				                
+				<TimeBasedTriggeringPolicy />
+				            
+			</Policies>
+			        
+		</RollingFile>
+		<RollingFile name="debug"
+			fileName="./logs/spring-boot-logger-log4j2-debug.log"
+			filePattern="./logs/$${date:yyyy-MM}/spring-boot-logger-log4j2-debug-%d{-dd-MMMM-yyyy}-%i.log.gz">
+			    
+			<PatternLayout>
+				                
+				<pattern>[%d{yyyy-MM-dd HH:mm:ss}{CST}] [%p] %m%n</pattern>
+				            
+			</PatternLayout>
+			            
+			<Policies>
+				                <!-- rollover on startup, daily and when the file reaches 
+					                    10 MegaBytes -->
+				                
+				<OnStartupTriggeringPolicy />
+				                
+				<SizeBasedTriggeringPolicy size="5 MB" />
+				                
+				<TimeBasedTriggeringPolicy />
+				            
+			</Policies>
+			        
+		</RollingFile>
+		<RollingFile name="error"
+			fileName="./logs/spring-boot-logger-log4j2-error.log"
+			filePattern="./logs/$${date:yyyy-MM}/spring-boot-logger-log4j2-error-%d{-dd-MMMM-yyyy}-%i.log.gz">
+			    
+			<PatternLayout>
+				                
+				<pattern>[%d{yyyy-MM-dd HH:mm:ss}{CST}] [%p] %m%n</pattern>
+				            
+			</PatternLayout>
+			            
+			<Policies>
+				                <!-- rollover on startup, daily and when the file reaches 
+					                    10 MegaBytes -->
+				                
+				<OnStartupTriggeringPolicy />
+				                
+				<SizeBasedTriggeringPolicy size="5 MB" />
+				                
+				<TimeBasedTriggeringPolicy />
+				            
+			</Policies>
+			        
+		</RollingFile>
+
+		<RollingFile name="fatal"
+			fileName="./logs/spring-boot-logger-log4j2-fatal.log"
+			filePattern="./logs/$${date:yyyy-MM}/spring-boot-logger-log4j2-fatal-%d{-dd-MMMM-yyyy}-%i.log.gz">
+			    
+			<PatternLayout>
+				                
+				<pattern>[%d{yyyy-MM-dd HH:mm:ss}{CST}] [%p] %m%n</pattern>
+				            
+			</PatternLayout>
+			            
+			<Policies>
+				                <!-- rollover on startup, daily and when the file reaches 
+					                    10 MegaBytes -->
+				                
+				<OnStartupTriggeringPolicy />
+				                
+				<SizeBasedTriggeringPolicy size="5 MB" />
+				                
+				<TimeBasedTriggeringPolicy />
+				            
+			</Policies>
+			        
+		</RollingFile>
+		    
+
+	</Appenders>
+	 
+	    
+	<Loggers>
+		        <!-- LOG everything at INFO level -->
+		<Root level="debug">
+			            
+			<AppenderRef ref="Console" level="info" />
+			<AppenderRef ref="RollingFile" level="info"/>
+			<AppenderRef ref="debug" level="debug"/>
+        	<AppenderRef ref="fatal" level="fatal"/>
+			<AppenderRef ref="error" level="error"/>
+		</Root>
+		 
+		        <!-- LOG "com.baeldung*" at TRACE level -->
+		        
+		<Logger name="com.baeldung" level="trace"></Logger>
+		    
+	</Loggers>
+	 
+</Configuration>
