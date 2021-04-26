@@ -1,9 +1,20 @@
+var entityMap = {
+	'&': '&amp;',
+	'<': '&lt;',
+	'>': '&gt;',
+	'"': '&quot;',
+	"'": '&#39;',
+	'/': '&#x2F;',
+	'`': '&#x60;',
+	'=': '&#x3D;'
+};
+
 $(document).ready(function () {	
 	
 	$("#new-password").on('input',function(){
 		
-		let password = $('#new-password').val();
-		let passwordRepeat = $('#confirm-password').val();
+		let password = escapeHtml($('#new-password').val());
+		let passwordRepeat = escapeHtml($('#confirm-password').val());
 	
 	  	let numCharacter = /[0-9]+/i
 		let lowercaseCharacter = /[a-z]+/g
@@ -62,8 +73,8 @@ $(document).ready(function () {
 	
 	
 	$("#confirm-password").on('input',function(){
-		let password = $('#new-password').val();
-		let passwordRepeat = $('#confirm-password').val();
+		let password = escapeHtml($('#new-password').val());
+		let passwordRepeat = escapeHtml($('#confirm-password').val());
 		
 		if(passwordRepeat != '' && password != passwordRepeat){
 			$('#pswRepeatDescription').text("Passwords do not match");
@@ -80,8 +91,8 @@ $(document).ready(function () {
 function changePassword(e) {	
 	e.preventDefault();
 	$('#div_alert').empty();
-	let password = $('#new-password').val();
-	let passwordRepeat = $('#confirm-password').val();
+	let password = escapeHtml($('#new-password').val());
+	let passwordRepeat = escapeHtml($('#confirm-password').val());
 	
 	if(password == "" || password == null){
 		let alert = $('<div class="alert alert-danger alert-dismissible fade show m-1" role="alert">Password is required field.'
@@ -133,3 +144,10 @@ function changePassword(e) {
 	});
 	
 }
+
+function escapeHtml(string) {
+	return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+		return entityMap[s];
+	});
+}
+
