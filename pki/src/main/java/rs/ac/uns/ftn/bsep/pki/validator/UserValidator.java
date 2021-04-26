@@ -20,14 +20,13 @@ public class UserValidator {
 		}
 	}
 	
-	private static void validatePasswordFormat(String password) throws Exception{
+	public static void validatePasswordFormat(String password) throws Exception{
 		/*Must have at least one numeric character.
 		Must have at least one lowercase character.
 		Must have at least one uppercase character.
 		Must have at least one special symbol.
-		Password length should be at least 10.
-		For example: Helloword#123*/
-		Pattern pattern = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{10}$");
+		Password must contain a length of at least 10 characters and a maximum of 32 characters.*/
+		Pattern pattern = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[?|!@#.$%/]).{10,32}$");
         Matcher matcher = pattern.matcher(password);
         if(!matcher.matches()) {
         	throw new ValidationException("Wrong format of password.");

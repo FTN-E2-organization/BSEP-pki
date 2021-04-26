@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,13 +18,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import rs.ac.uns.ftn.bsep.pki.dto.PasswordRequestDTO;
 import rs.ac.uns.ftn.bsep.pki.model.Authority;
 import rs.ac.uns.ftn.bsep.pki.model.User;
 import rs.ac.uns.ftn.bsep.pki.security.auth.JwtAuthenticationRequest;
 import rs.ac.uns.ftn.bsep.pki.security.auth.TokenUtils;
 import rs.ac.uns.ftn.bsep.pki.security.auth.UserTokenState;
 import rs.ac.uns.ftn.bsep.pki.service.UserService;
-//***********
+
 import org.springframework.security.core.AuthenticationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -105,6 +107,26 @@ public class AuthenticationController {
 		}
 		return modelAndView;
 	}		
+	
+
+	/* kad mijenja sifru dobija link na mejl */
+	@PostMapping("/password-recovery")
+	public boolean recoverPassword(@RequestBody String username) throws MailException, InterruptedException
+	{
+		return userService.recoverPassword(username);
+	}
+	
+	@PostMapping("/password-change")
+	public ResponseEntity<?> changePassword(@RequestBody PasswordRequestDTO dto)
+	{
+		try {		
+			return new ResponseEntity<>(userService.changePassword(dto), HttpStatus.OK);
+		}
+		catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}		
+		
+	}
 
 	@PostMapping("/new-activation-link")
 	public ResponseEntity<?> sendNewActivationLink(@RequestBody String username) {	
