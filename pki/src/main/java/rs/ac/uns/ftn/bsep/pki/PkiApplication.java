@@ -16,7 +16,7 @@ public class PkiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PkiApplication.class, args);
 	}
-	/*
+	
 	@Bean
     public ServletWebServerFactory servletContainer() {
         // Enable SSL Trafic
@@ -43,7 +43,7 @@ public class PkiApplication {
     port 8081. With SSL it will use port 8443. So, any request for 8081 needs to be
     redirected to HTTPS on 8443.
      */
-	/*
+	
     private Connector httpToHttpsRedirectConnector() {
         Connector connector = new Connector(TomcatServletWebServerFactory.DEFAULT_PROTOCOL);
         connector.setScheme("http");
@@ -52,5 +52,5 @@ public class PkiApplication {
         connector.setRedirectPort(8443);
         return connector;
     }
-	*/
+	
 }
