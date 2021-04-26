@@ -9,6 +9,9 @@ var entityMap = {
 	'=': '&#x3D;'
 };
 
+
+var ipAddress;
+
 $(document).ready(function () {	
 
 	/*Login patient on submit*/
@@ -22,7 +25,8 @@ $(document).ready(function () {
 
 		var userInfoDTO = {
 			"username": username,
-			"password": password
+			"password": password,
+			"ipAddress": ipAddress
 		};
 
 		if ((username == "") || (password == "")) {
@@ -30,6 +34,11 @@ $(document).ready(function () {
 		}
 		else {
 			$("form#logging_in").removeClass("unsuccessful");
+			
+			
+			$.getJSON('https://api.ipify.org?format=json', function(data){
+			ipAddress = data.ip;
+			alert(ipAddress + "    ip address")
 			
 			$.ajax({
 				url: "/api/auth/login",
@@ -47,7 +56,8 @@ $(document).ready(function () {
 					return;
 				}
 			});
-			
+					
+			});	//getJSON
 		}
 	});
 });

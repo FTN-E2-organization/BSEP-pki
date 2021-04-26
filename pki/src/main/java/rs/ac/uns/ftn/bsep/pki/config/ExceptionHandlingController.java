@@ -14,7 +14,7 @@ public class ExceptionHandlingController {
 	@ExceptionHandler(value = Exception.class)
 	public ResponseEntity<?> defaultExceptionHandler(Exception e) {
 		try {
-			l.error("EXCEPTION: " + e.getMessage());
+//			l.error("EXCEPTION: " + e.getMessage());
 		} catch (Exception exc) {
 
 		}

@@ -27,15 +27,19 @@ import rs.ac.uns.ftn.bsep.pki.service.UserService;
 import org.springframework.security.core.AuthenticationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import java.net.InetAddress;
 
 @RestController
 @RequestMapping(value = "api/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthenticationController {
 
+	
+	InetAddress ip;
+	
 	private TokenUtils tokenUtils;
 	private AuthenticationManager authenticationManager;
 	private UserService userService;
-	private static Logger logger = LogManager.getLogger(UserController.class);
+	private static Logger logger = LogManager.getLogger(AuthenticationController.class);
 	
 	@Autowired
 	public AuthenticationController(TokenUtils tokenUtils, AuthenticationManager authenticationManager, UserService userService) {
@@ -56,7 +60,7 @@ public class AuthenticationController {
 
 			User user = (User) authentication.getPrincipal();
 			
-			logger.info("User " + user.getUsername() + " logged in");
+			logger.info("User " + user.getUsername() + " logged in, ip address: " + authenticationRequest.getIpAddress());
 			
 			String jwt = tokenUtils.generateToken(user.getUsername(), user.getId(), user.getAuthority().getName());			
 			int expiresIn = tokenUtils.getExpiredIn();
@@ -73,7 +77,11 @@ public class AuthenticationController {
 //		}		
 		catch (BadCredentialsException e) {
 			try {
-				logger.warn("User " + authenticationRequest.getUsername() + " failed to login");
+				logger.error("User " + authenticationRequest.getUsername() + " failed to login, ip address: " + authenticationRequest.getIpAddress());
+				
+				ip = InetAddress.getLocalHost();
+				System.out.println("-----------------------------------Your current IP address : " + ip);
+				
 			} catch (Exception ex) {
 			}
 			throw e;
