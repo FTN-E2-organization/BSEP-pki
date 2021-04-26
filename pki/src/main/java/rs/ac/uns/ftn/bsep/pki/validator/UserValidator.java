@@ -20,7 +20,7 @@ public class UserValidator {
 		}
 	}
 	
-	private static void validatePasswordFormat(String password) throws Exception{
+	public static void validatePasswordFormat(String password) throws Exception{
 		/*Must have at least one numeric character.
 		Must have at least one lowercase character.
 		Must have at least one uppercase character.

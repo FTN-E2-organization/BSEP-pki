@@ -10,6 +10,7 @@ public interface ConfirmationTokenRepository extends CrudRepository<Confirmation
 
 	ConfirmationToken findByConfirmationToken(String confirmationToken);
 
+	
 	@Query(value = "select * from users u, confirmation_token ct where ct.user_id = u.id and u.username=?1 limit 1", nativeQuery = true)
 	ConfirmationToken getTokenByUsername(String username);
 }
