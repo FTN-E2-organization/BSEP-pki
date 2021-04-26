@@ -160,12 +160,11 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	private boolean checkPassword(String password) {
-		String p = password.toLowerCase();
 		
 		try (BufferedReader br = new BufferedReader(new FileReader("src/main/resources/1000-most-common-passwords.txt"))) {
 		    String line;
 		    while ((line = br.readLine()) != null) {
-		       if(p.equals(line)) {
+		       if(password.equalsIgnoreCase(line)) {
 		    	   return false;
 		       }
 		    }
