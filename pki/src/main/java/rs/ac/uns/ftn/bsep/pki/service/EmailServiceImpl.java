@@ -33,7 +33,7 @@ public class EmailServiceImpl implements EmailService {
 		mailMessage.setFrom(environment.getProperty("spring.mail.username"));
 		mailMessage.setSubject("Complete Registration!");
 		mailMessage.setText("To confirm your account, please click here: "
-	            +"http://localhost:" + port + "/api/auth/confirm-account?token=" + confirmationToken.getConfirmationToken());
+	            +"https://localhost:" + port + "/api/auth/confirm-account?token=" + confirmationToken.getConfirmationToken());
 		mailSender.send(mailMessage);			
 	}
 	

@@ -30,6 +30,7 @@ $(document).ready(function () {
 		}
 		else {
 			$("form#logging_in").removeClass("unsuccessful");
+			$('#login').attr("disabled",true);
 			
 			$.ajax({
 				url: "/api/auth/login",
@@ -41,9 +42,10 @@ $(document).ready(function () {
 					redirectUser(token.accessToken);
 				},
 				error: function (xhr) {
-					let alert = $('<div class="alert alert-danger alert-dismissible fade show m-1" role="alert">Bad credentials.'
+					let alert = $('<div class="alert alert-danger alert-dismissible fade show m-1" role="alert">Invalid email or password.'
 						+ '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + '</div >')
 					$('#div_alert').append(alert);
+					$('#login').attr("disabled",false);
 					return;
 				}
 			});
