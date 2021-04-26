@@ -12,8 +12,8 @@ var entityMap = {
 $(document).ready(function () {	
 	
 	$("#password").on('input',function(){
- 		let password = $('#password').val();
-		let passwordRepeat = $('#passwordRepeat').val();
+ 		let password = escapeHtml($('#password').val());
+		let passwordRepeat = escapeHtml($('#passwordRepeat').val());
 	
 	  	let numCharacter = /[0-9]+/i
 		let lowercaseCharacter = /[a-z]+/g
@@ -72,8 +72,8 @@ $(document).ready(function () {
 	});
 	
 	$("#passwordRepeat").on('input',function(){
-		let password = $('#password').val();
-		let passwordRepeat = $('#passwordRepeat').val();
+		let password = escapeHtml($('#password').val());
+		let passwordRepeat = escapeHtml($('#passwordRepeat').val());
 		
 		if(passwordRepeat != '' && password != passwordRepeat){
 			$('#pswRepeatDescription').text("Passwords do not match");
@@ -89,7 +89,7 @@ $(document).ready(function () {
 		event.preventDefault();
 		$('#div_alert').empty();
 		
-		let username = $('#email').val();
+		let username = escapeHtml($('#email').val());
 		let password = escapeHtml($('#password').val());
 		let passwordRepeat = escapeHtml($('#passwordRepeat').val());
 		
