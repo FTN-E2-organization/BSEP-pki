@@ -18,7 +18,7 @@ $(document).ready(function () {
 	  	let numCharacter = /[0-9]+/i
 		let lowercaseCharacter = /[a-z]+/g
 		let uppercaseCharacter = /[A-Z]+/g
-		let specialSymbol = /[^A-Za-z0-9]+/i
+		let specialSymbol = /[?|!@#.$%/]+/i
 		let pswLength = $('#password').val().length;
 		
 		let strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{10,})");
@@ -44,7 +44,7 @@ $(document).ready(function () {
 		else
 			$('#specialSymbol').css("color","red");
 		
-		if(pswLength >= 10)
+		if(pswLength >= 10 && pswLength <= 32)
 			$('#pswLength').css("color","green");
 		else
 			$('#pswLength').css("color","red");
@@ -117,13 +117,15 @@ $(document).ready(function () {
 			"password": password
 		};
 		
+		$('#register').attr("disabled",true);
+		
 		$.ajax({
 			url: "/api/user/subjects",
 			type: 'POST',
 			contentType: 'application/json',
 			data: JSON.stringify(addUserDTO),
 			success: function () {
-				let alert = $('<div class="alert alert-success alert-dismissible fade show m-1" role="alert">Successful registration.Please, log in.'
+				let alert = $('<div class="alert alert-success alert-dismissible fade show m-1" role="alert">Successful registration.Activate Your account and log in.'
 				+ '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + '</div >')
 				$('#div_alert').append(alert);
 				setTimeout(function () {
@@ -134,12 +136,11 @@ $(document).ready(function () {
 				let alert = $('<div class="alert alert-danger alert-dismissible fade show m-1" role="alert">' + xhr.responseText
 					+ '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + '</div >')
 				$('#div_alert').append(alert);
+				$('#register').attr("disabled",false);
 				return;
 			}
+		});	
 	});
-		
-	});
-	
 });
 
 function escapeHtml(string) {

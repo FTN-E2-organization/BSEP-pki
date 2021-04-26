@@ -160,7 +160,6 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	private boolean checkPassword(String password) {
-		
 		try (BufferedReader br = new BufferedReader(new FileReader("src/main/resources/1000-most-common-passwords.txt"))) {
 		    String line;
 		    while ((line = br.readLine()) != null) {
@@ -169,11 +168,9 @@ public class UserServiceImpl implements UserService {
 		       }
 		    }
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		
 		return true;
