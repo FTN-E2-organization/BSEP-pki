@@ -10,6 +10,29 @@ var entityMap = {
 };
 
 $(document).ready(function () {	
+	
+	$("#email").on('input',function(){
+		let email = escapeHtml($('#email').val());
+	
+		if(email === "" || email == null){
+			$('#emailDescription').text("This is required field.");
+			$('#emailDescription').css("color","red");
+		}else{
+			$('#emailDescription').text("");
+		}
+	});
+	
+	$("#password").on('input',function(){
+		let password = escapeHtml($('#password').val());
+	
+		if(password === "" || password == null){
+			$('#pswDescription').text("This is required field.");
+			$('#pswDescription').css("color","red");
+		}else{
+			$('#pswDescription').text("");
+		}
+	});
+	
 
 	/*Login patient on submit*/
 	$('form#logging_in').submit(function (event) {
@@ -41,7 +64,7 @@ $(document).ready(function () {
 					localStorage.setItem('token', token.accessToken);
 					redirectUser(token.accessToken);
 				},
-				error: function (xhr) {
+				error: function () {
 					let alert = $('<div class="alert alert-danger alert-dismissible fade show m-1" role="alert">Invalid email or password.'
 						+ '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + '</div >')
 					$('#div_alert').append(alert);

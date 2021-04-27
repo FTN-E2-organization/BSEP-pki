@@ -9,6 +9,23 @@ var entityMap = {
 	'=': '&#x3D;'
 };
 
+
+$(document).ready(function () {	
+	
+	$("#email").on('input',function(){
+		let email = escapeHtml($('#email').val());
+	
+		if(email === "" || email == null){
+			$('#emailDescription').text("This is required field.");
+			$('#emailDescription').css("color","red");
+		}else{
+			$('#emailDescription').text("");
+		}
+	});
+	
+});
+
+
 function escapeHtml(string) {
 	return String(string).replace(/[&<>"'`=\/]/g, function (s) {
 		return entityMap[s];
