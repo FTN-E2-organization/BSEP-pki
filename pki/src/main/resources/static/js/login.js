@@ -17,7 +17,7 @@ $(document).ready(function () {
 		event.preventDefault();
 		$('#div_alert').empty();
 
-		let username = $('#email').val();
+		let username = escapeHtml($('#email').val());
 		let password = escapeHtml($('#password').val());
 
 		var userInfoDTO = {
