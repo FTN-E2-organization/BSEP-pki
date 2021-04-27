@@ -11,6 +11,24 @@ var entityMap = {
 
 $(document).ready(function () {	
 	
+	$("#email").on('input',function(){
+		let email = escapeHtml($('#email').val());
+		
+		let emailRegex = /^[^\s@]+@[^\s@]+$/i
+		
+		if(emailRegex.test(email)){
+			$('#emailDescription').text("");
+		}else{
+			$('#emailDescription').text("Wrong format of email.");
+			$('#emailDescription').css("color","red");
+		}
+		
+		if(email === "" || email == null){
+			$('#emailDescription').text("Email is required field.");
+			$('#emailDescription').css("color","red");
+		}
+	});
+	
 	$("#password").on('input',function(){
  		let password = escapeHtml($('#password').val());
 		let passwordRepeat = escapeHtml($('#passwordRepeat').val());
@@ -67,6 +85,16 @@ $(document).ready(function () {
 			$('#pswRepeatDescription').css("color","red");
 		}else{
 			$('#pswRepeatDescription').text("");
+		}
+		
+		if(password === "" || password == null){
+			$('#pswRepeatDescription').text("Password is required field.");
+			$('#pswRepeatDescription').css("color","red");
+		}
+		
+		if(passwordRepeat === "" || passwordRepeat == null){
+			$('#pswRepeatDescription').text("Repeat password is required field.");
+			$('#pswRepeatDescription').css("color","red");
 		}
 			
 	});
