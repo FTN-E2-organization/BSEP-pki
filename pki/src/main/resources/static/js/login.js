@@ -92,7 +92,7 @@ function sendNewLink() {
 	let username = $('#email').val();
 	
 	if ((username == "")) {
-		let alert = $('<div class="alert alert-warning alert-dismissible fade show m-1" role="alert">Enter your username!'
+		let alert = $('<div class="alert alert-danger alert-dismissible fade show m-1" role="alert">Enter your email!'
 			+ '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + '</div >')
 		$('#div_alert').append(alert);
 		return;

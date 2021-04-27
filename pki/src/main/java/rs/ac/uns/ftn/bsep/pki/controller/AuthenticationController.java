@@ -63,33 +63,19 @@ public class AuthenticationController {
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 
 			User user = (User) authentication.getPrincipal();
-			
-			logger.info("User " + user.getUsername() + " logged in, ip address: " + authenticationRequest.getIpAddress());
-			
+						
 			String jwt = tokenUtils.generateToken(user.getUsername(), user.getId(), user.getAuthority().getName());			
 			int expiresIn = tokenUtils.getExpiredIn();
 			Authority authority = user.getAuthority();
 
 			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, authority.getName()));
-		}
-//		catch (AuthenticationException a) {
-//			try {
-//				logger.warn("User " + authenticationRequest.getUsername() + " failed to login");
-//			} catch (Exception e) {
-//			}
-//			throw a;
-//		}		
+		}		
 		catch (BadCredentialsException e) {
 			try {
-				logger.error("User " + authenticationRequest.getUsername() + " failed to login, ip address: " + authenticationRequest.getIpAddress());
-				
-				ip = InetAddress.getLocalHost();
-				System.out.println("-----------------------------------Your current IP address : " + ip);
-				
+				logger.error("User " + authenticationRequest.getUsername() + " failed to login.");				
 			} catch (Exception ex) {
 			}
 			throw e;
-//			return new ResponseEntity<>("Invalid email or password.", HttpStatus.UNAUTHORIZED);
 		}
 		catch (Exception e) {
 			return new ResponseEntity<>("An error occurred while sending request for log in.", HttpStatus.BAD_REQUEST);
