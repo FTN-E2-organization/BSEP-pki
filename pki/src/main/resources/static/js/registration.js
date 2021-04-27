@@ -12,7 +12,7 @@ var entityMap = {
 $(document).ready(function () {	
 	
 	$("#email").on('input',function(){
-		let email = escapeHtml($('#email').val());
+		let email = $('#email').val();
 		
 		let emailRegex = /^[^\s@]+@[^\s@]+$/i
 		
@@ -30,8 +30,8 @@ $(document).ready(function () {
 	});
 	
 	$("#password").on('input',function(){
- 		let password = escapeHtml($('#password').val());
-		let passwordRepeat = escapeHtml($('#passwordRepeat').val());
+ 		let password = $('#password').val();
+		let passwordRepeat = $('#passwordRepeat').val();
 	
 	  	let numCharacter = /[0-9]+/i
 		let lowercaseCharacter = /[a-z]+/g
@@ -97,8 +97,8 @@ $(document).ready(function () {
 	});
 	
 	$("#passwordRepeat").on('input',function(){
-		let password = escapeHtml($('#password').val());
-		let passwordRepeat = escapeHtml($('#passwordRepeat').val());
+		let password = $('#password').val();
+		let passwordRepeat = $('#passwordRepeat').val();
 		
 		if(passwordRepeat === "" || passwordRepeat == null){
 			$('#pswRepeatDescription').text("This is required field.");
