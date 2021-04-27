@@ -13,7 +13,7 @@ var entityMap = {
 $(document).ready(function () {	
 	
 	$("#email").on('input',function(){
-		let email = escapeHtml($('#email').val());
+		let email = $('#email').val();
 	
 		if(email === "" || email == null){
 			$('#emailDescription').text("This is required field.");

@@ -15,7 +15,7 @@ var ipAddress;
 $(document).ready(function () {	
 	
 	$("#email").on('input',function(){
-		let email = escapeHtml($('#email').val());
+		let email = $('#email').val();
 	
 		if(email === "" || email == null){
 			$('#emailDescription').text("This is required field.");
@@ -26,7 +26,7 @@ $(document).ready(function () {
 	});
 	
 	$("#password").on('input',function(){
-		let password = escapeHtml($('#password').val());
+		let password = $('#password').val();
 	
 		if(password === "" || password == null){
 			$('#pswDescription').text("This is required field.");

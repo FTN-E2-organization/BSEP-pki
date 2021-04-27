@@ -13,8 +13,8 @@ $(document).ready(function () {
 	
 	$("#new-password").on('input',function(){
 		
-		let password = escapeHtml($('#new-password').val());
-		let passwordRepeat = escapeHtml($('#confirm-password').val());
+		let password = $('#new-password').val();
+		let passwordRepeat = $('#confirm-password').val();
 	
 	  	let numCharacter = /[0-9]+/i
 		let lowercaseCharacter = /[a-z]+/g
@@ -78,8 +78,8 @@ $(document).ready(function () {
 	
 	
 	$("#confirm-password").on('input',function(){
-		let password = escapeHtml($('#new-password').val());
-		let passwordRepeat = escapeHtml($('#confirm-password').val());
+		let password = $('#new-password').val();
+		let passwordRepeat = $('#confirm-password').val();
 		
 		if(passwordRepeat === "" || passwordRepeat == null){
 			$('#pswRepeatDescription').text("This is required field.");
