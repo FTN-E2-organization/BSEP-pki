@@ -9,6 +9,9 @@ var entityMap = {
 	'=': '&#x3D;'
 };
 
+
+var ipAddress;
+
 $(document).ready(function () {	
 	
 	$("#email").on('input',function(){
@@ -45,7 +48,8 @@ $(document).ready(function () {
 
 		var userInfoDTO = {
 			"username": username,
-			"password": password
+			"password": password,
+			"ipAddress": ipAddress
 		};
 
 		if ((username == "") || (password == "")) {
@@ -54,6 +58,10 @@ $(document).ready(function () {
 		else {
 			$("form#logging_in").removeClass("unsuccessful");
 			$('#login').attr("disabled",true);
+			
+			
+			$.getJSON('https://api.ipify.org?format=json', function(data){
+			ipAddress = data.ip;
 			
 			$.ajax({
 				url: "/api/auth/login",
@@ -72,7 +80,8 @@ $(document).ready(function () {
 					return;
 				}
 			});
-			
+					
+			});	//getJSON
 		}
 	});
 });
@@ -106,7 +115,7 @@ function sendNewLink() {
 	let username = $('#email').val();
 	
 	if ((username == "")) {
-		let alert = $('<div class="alert alert-warning alert-dismissible fade show m-1" role="alert">Enter your username!'
+		let alert = $('<div class="alert alert-danger alert-dismissible fade show m-1" role="alert">Enter your email!'
 			+ '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' + '</div >')
 		$('#div_alert').append(alert);
 		return;

@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
 import rs.ac.uns.ftn.bsep.pki.dto.PasswordRequestDTO;
 import rs.ac.uns.ftn.bsep.pki.exception.BadRequestException;
 import rs.ac.uns.ftn.bsep.pki.model.Authority;
@@ -29,13 +28,22 @@ import rs.ac.uns.ftn.bsep.pki.security.auth.UserTokenState;
 import rs.ac.uns.ftn.bsep.pki.service.UserService;
 import rs.ac.uns.ftn.bsep.pki.validator.UserValidator;
 
+import org.springframework.security.core.AuthenticationException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import java.net.InetAddress;
+
 @RestController
 @RequestMapping(value = "api/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthenticationController {
 
+	
+	InetAddress ip;
+	
 	private TokenUtils tokenUtils;
 	private AuthenticationManager authenticationManager;
 	private UserService userService;
+	private static Logger logger = LogManager.getLogger(AuthenticationController.class);
 	
 	@Autowired
 	public AuthenticationController(TokenUtils tokenUtils, AuthenticationManager authenticationManager, UserService userService) {
@@ -55,14 +63,19 @@ public class AuthenticationController {
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 
 			User user = (User) authentication.getPrincipal();
+						
 			String jwt = tokenUtils.generateToken(user.getUsername(), user.getId(), user.getAuthority().getName());			
 			int expiresIn = tokenUtils.getExpiredIn();
 			Authority authority = user.getAuthority();
 
 			return ResponseEntity.ok(new UserTokenState(jwt, expiresIn, authority.getName()));
-		}
+		}		
 		catch (BadCredentialsException e) {
-			return new ResponseEntity<>("Invalid email or password.", HttpStatus.UNAUTHORIZED);
+			try {
+				logger.error("User " + authenticationRequest.getUsername() + " failed to login.");				
+			} catch (Exception ex) {
+			}
+			throw e;
 		}
 		catch (Exception e) {
 			return new ResponseEntity<>("An error occurred while sending request for log in.", HttpStatus.BAD_REQUEST);
@@ -111,8 +124,7 @@ public class AuthenticationController {
 	}
 
 	@PostMapping("/new-activation-link")
-	public ResponseEntity<?> sendNewActivationLink(@RequestBody String username) {
-		
+	public ResponseEntity<?> sendNewActivationLink(@RequestBody String username) {	
 		try {		
 			userService.sendNewActivationLink(username);
 			return new ResponseEntity<>(HttpStatus.OK);
