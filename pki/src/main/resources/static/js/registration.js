@@ -45,6 +45,12 @@ $(document).ready(function () {
 		if(password === "" || password == null){
 			$('#pswDescription').text("This is required field.");
 			$('#pswDescription').css("color","red");
+			
+			$('#numCharacter').css("color","red");
+			$('#lowercaseCharacter').css("color","red");
+			$('#uppercaseCharacter').css("color","red");
+			$('#specialSymbol').css("color","red");
+			$('#pswLength').css("color","red");
 		}else{
 			
 		  	if(numCharacter.test(password))
