@@ -327,12 +327,15 @@ public class CertificateServiceImpl implements CertificateService{
 	@Override
 	public boolean isCertificateValid(Long id) throws Exception {
 		Certificate certificate = certificateRepository.getOne(id);
+		Certificate certificateIssuer = certificateRepository.getOne(certificate.getIssuerId());
 		KeyStoreReader ksr = new KeyStoreReader();
-		X509Certificate c = (X509Certificate) ksr.readCertificate(certificate.getKeystorePath(), enviroment.getProperty("spring.keystore.password"), certificate.getId().toString());
-	
+		X509Certificate cert = (X509Certificate) ksr.readCertificate(certificate.getKeystorePath(), enviroment.getProperty("spring.keystore.password"), certificate.getId().toString());
+		X509Certificate certIssuer = (X509Certificate) ksr.readCertificate(certificateIssuer.getKeystorePath(), enviroment.getProperty("spring.keystore.password"), certificateIssuer.getId().toString());
+		
 		Long parentId = null;
 		try {
-			parentId = CertificateMapper.toCertificateDTO(c, certificate).issuerId;
+			cert.verify(certIssuer.getPublicKey());
+			parentId = CertificateMapper.toCertificateDTO(cert, certificate).issuerId;
 		} catch (Exception e) {
 			return false;
 		}
