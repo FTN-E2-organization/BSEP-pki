@@ -60,8 +60,8 @@ $(document).ready(function () {
 			$('#login').attr("disabled",true);
 			
 			
-			$.getJSON('https://api.ipify.org?format=json', function(data){
-			ipAddress = data.ip;
+			//$.getJSON('https://api.ipify.org?format=json', function(data){
+			//ipAddress = data.ip;
 			
 			$.ajax({
 				url: "/api/auth/login",
@@ -81,7 +81,7 @@ $(document).ready(function () {
 				}
 			});
 					
-			});	//getJSON
+			//}); 
 		}
 	});
 });
